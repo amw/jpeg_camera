@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>JpegCamera Documentation</title>
+  <link rel='stylesheet' href='assets/codo.css' type='text/css'>
+  <script src='assets/codo.js'></script>
+  <script src='assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path=''></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='README.md.html' title='JpegCamera'>JpegCamera</a>
+    &raquo;
+    <a href='class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>README.md</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='class_list.html'>Classes</a>
+      <a id='file_list_link' href='file_list.html'>Files</a>
+      <a id='method_list_link' href='method_list.html'>Methods</a>
+      <a id='extra_list_link' href='extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h2>About</h2><p>JpegCamera is a JavaScript library that allows you display a camera stream on
+a web page and then capture, show and upload JPEG snapshots to the server. It
+uses HTML5 in Chrome, Firefox and Opera and falls back to Flash in less capable
+browsers.  The video stream is placed without any UI in a container of your
+choice and you control it through JavaScript API and your own UI elements.</p><p>The idea is based on a similar
+<a href="https://github.com/mattclements/jpegcam">JpegCam</a> library which was Flash only.
+Beside working without Flash and offering a cleaner, more modern API, JpegCamera
+has some nice, new features.</p><h2>Features</h2>
+<ul>
+<li>Works natively in Chrome, Firefox, Opera and with a Flash plugin in all other
+browsers.</li>
+<li>Manage and upload multiple snapshots at once. You don&#39;t have to wait for the
+first upload to finish before capturing the next image. This means you can
+take a few shots in a short interval.</li>
+<li>Allows you to retry failed uploads.</li>
+<li>Easily read server response text and code after upload.</li>
+<li>Send CSRF tokens to secure your user&#39;s session from <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery#Prevention">Cross-site request
+forgery</a></li>
+</ul>
+<h2>Dependencies</h2>
+<ul>
+<li><a href="https://github.com/blueimp/JavaScript-Canvas-to-Blob">Canvas-to-Blob</a>
+polyfill for the standard JavaScript <code>canvas.toBlob</code> method.</li>
+<li><a href="http://code.google.com/p/swfobject/">SWFObject</a> for embedding the
+Flash-based fallback.</li>
+</ul><p>For convenience these scripts are packaged with JpegCamera.</p><h2>Installation</h2><p>Copy all the files from <code>dist</code> into <code>jpeg_camera</code> directory under your server&#39;s
+root.</p><p>Load JpegCamera and it&#39;s dependencies in the <code>HEAD</code> section of your page.</p><pre><code>&lt;script src=&quot;/jpeg_camera/swfobject.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/jpeg_camera/canvas-to-blob.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/jpeg_camera/jpeg_camera.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><p>SWFObject and Canvas-to-Blob are stored in separate files so that you don&#39;t have
+to load them again if you already use them in your project. If you want to cut
+down on HTTP requests then there is a concatenated version you can use.</p><pre><code>&lt;script src=&quot;/jpeg_camera/jpeg_camera_with_dependencies.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><p>If you want to use HTML5-only version you can load jpeg_camera_no_flash.min.js.
+There is no &quot;with dependencies&quot; version of this file, so you have to remember
+to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h2>Usage</h2>
+<pre><code>camera = new JpegCamera &quot;#camera&quot;,
+  api_url: &quot;/upload_image&quot;
+
+$(&quot;#take_snapshot&quot;).click -&gt;
+  $(&quot;#results&quot;).html &quot;&quot;
+  snapshot = camera.capture()
+  snapshot.upload()</code></pre>
+<h2>Documentation</h2><p>A detailed documentation using in-code comments is maintained for
+<a href="http://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html">JpegCamera</a> and
+<a href="http://amw.github.io/jpeg_camera/doc/classes/Snapshot.html">Snapshot</a>
+classes.</p><h2>Caveats</h2><p>To use Flash fallback your camera container must be at least 215 pixels wide and
+138 pixels tall. This is the minimum to display privacy settings dialog.</p><p>With Flash in some browsers it&#39;s impossible to read response body for requests
+that finish with status codes from outside the 2XX range (like 404 Not Found or
+422 Unprocessable Entity). If you&#39;re using version of JpegCamera with Flash
+fallback your application should not rely on reading body of these responses.
+The status code number is always available.</p><h2>Contributing</h2><p>The source code is available on <a href="https://github.com/amw/jpeg_camera">Github</a>.
+Please send pull requests on topic branches.</p><p>To build dist files from source you need <code>npm</code> — Node Package Manager.</p><pre><code>npm install              # install required dependencies
+npm install -g grunt-cli # install grunt command
+grunt dist               # build js &amp; swf files
+grunt js                 # only builds js files
+grunt swf                # only builds swf file
+grunt doc                # update documentation
+grunt                    # build dist files and update documentation</code></pre><p>To build swf file you need to have <code>mxmlc</code> available in your <code>$PATH</code>. It comes
+in the <a href="http://www.adobe.com/devnet/flex/flex-sdk-download.html">Flex SDK</a>.</p><h2>Acknowledgements</h2><p>Thanks to Joseph Huckaby for creating and Matt Clements for maintaining
+Flash-based <a href="http://code.google.com/p/jpegcam/">JpegCam library</a> which I have
+been using until HTML5 became a viable solution. If you&#39;re interested here&#39;s
+<a href="https://github.com/mattclements/jpegcam">Matt&#39;s repo</a> and here&#39;s
+<a href="https://github.com/amw/jpegcam">mine</a>. Thanks to everyone else contributing to
+that project.</p><p>Copyright <a href="http://adamwrobel.com">Adam Wróbel</a>, released under the MIT License.</p>
+      </div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Mon Jul 29 2013 15:48:09 GMT+0200 (CEST)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.14).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

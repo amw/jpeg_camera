@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>JpegCamera Documentation</title>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+  <script src='../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../README.md.html' title='JpegCamera'>JpegCamera</a>
+    &raquo;
+    <a href='../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Snapshot</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../class_list.html'>Classes</a>
+      <a id='file_list_link' href='../file_list.html'>Files</a>
+      <a id='method_list_link' href='../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Snapshot
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;snapshot.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Snapshot taken using <a href='../classes/JpegCamera.html'>JpegCamera</a>.</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#show-instance'>
+        - (Snapshot) <strong>show</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Display the snapshot with the camera element it was taken with.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#hide-instance'>
+        - (Snapshot) <strong>hide</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Stop displaying the snapshot and return to showing live camera stream.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#upload-instance'>
+        - (Snapshot) <strong>upload</strong>(options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Upload the snapshot to the server.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#done-instance'>
+        - (Snapshot) <strong>done</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for upload complete event.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fail-instance'>
+        - (Snapshot) <strong>fail</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for upload error event.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#discard-instance'>
+        - (void) <strong>discard</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Hide and discard this snapshot.
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='show-instance'>
+      - (Snapshot) <strong>show</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Display the snapshot with the camera element it was taken with.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Snapshot.html'>Snapshot</a></tt>)
+      &mdash;
+      <span class='desc'>Self for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='hide-instance'>
+      - (Snapshot) <strong>hide</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Stop displaying the snapshot and return to showing live camera stream.</p><p>Ignored if camera is displaying different snapshot.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Snapshot.html'>Snapshot</a></tt>)
+      &mdash;
+      <span class='desc'>Self for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='upload-instance'>
+      - (Snapshot) <strong>upload</strong>(options = {})
+    </p>
+    <div class='docstring'>
+  <p>Upload the snapshot to the server.</p><p>The snapshot is uploaded using a POST request with JPEG file sent as RAW
+data. This not like a multipart form upload using file element where the
+file is given a name and is encoded along with other form keys. To read
+file contents on the server side use <code>request.raw_post</code> in Ruby on Rails or
+<code>$HTTP_RAW_POST_DATA</code> in PHP.</p><p>Upload completes successfully only if the server responds with status code
+200. Any other code will be handled via on_upload_fail callback. Your
+application is free to inspect the status code and response text in that
+handler to decide whether that response is acceptable or not.</p><p>You cannot have multiple uploads for one snapshot running at the same time,
+but you are free to start another upload after one succeeds or fails.</p><p>All of the options can have their defaults set when constructing camera
+object or calling <a href='../classes/JpegCamera.html#capture-instance'>JpegCamera#capture</a>.</p>
+</div>
+<div class='tags'>
+  <h3>
+    Options Hash:
+    (option):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>api_url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>URL where the snapshots will be uploaded.</span>
+    </li>
+    <li>
+      <span class='name'>csrf_token</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>CSRF token to be sent in the <strong>X-CSRF-Token</strong> header during upload.</span>
+    </li>
+    <li>
+      <span class='name'>timeout</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><strong>IGNORED</strong> (<strong>NOT</strong> <strong>IMPLEMENTED</strong>) The number of milliseconds a request can take before automatically being terminated. Default of 0 means there is no timeout.</span>
+    </li>
+    <li>
+      <span class='name'>on_upload_done</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <em>this</em>, response body will be passed as the first argument. Calling <a href='../classes/Snapshot.html#done-instance'>done</a> before the upload exits will change the handler for this upload.</span>
+    </li>
+    <li>
+      <span class='name'>on_upload_fail</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <em>this</em>, response code will be passed as the first argument followed by error message and response body. Calling <a href='../classes/Snapshot.html#fail-instance'>fail</a> before the upload exits will change the handler for this upload.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Snapshot.html'>Snapshot</a></tt>)
+      &mdash;
+      <span class='desc'>Self for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='done-instance'>
+      - (Snapshot) <strong>done</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for upload complete event.</p><p>The callback to fire when the previously requested <a href='../classes/Snapshot.html#upload-instance'>upload</a>
+operation succeeds. This is just a syntactic sugar that allows one to write:
+<code>snapshot.upload().done(done_callback)</code> instead of
+<code>snapshot.upload(on_upload_done: done_callback)</code>. This callback will be
+forgotten after the next call to <a href='../classes/Snapshot.html#upload-instance'>upload</a>.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>function to call when upload completes. Snapshot object will be available as <em>this</em>, response body will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Snapshot.html'>Snapshot</a></tt>)
+      &mdash;
+      <span class='desc'>Self for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fail-instance'>
+      - (Snapshot) <strong>fail</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for upload error event.</p><p>The callback to fire when the previously requested <a href='../classes/Snapshot.html#upload-instance'>upload</a>
+operation fails. This is just a syntactic sugar that allows one to write:
+<code>snapshot.upload().fail(fail_callback)</code> instead of
+<code>snapshot.upload(on_upload_fail: fail_callback)</code>. This callback will be
+forgotten after the next call to <a href='../classes/Snapshot.html#upload-instance'>upload</a>.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>function to call when upload fails. Snapshot object will be available as <em>this</em>, response code will be passed as the first argument with response body or error message as the second argument if available.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt><a href='../classes/Snapshot.html'>Snapshot</a></tt>)
+      &mdash;
+      <span class='desc'>Self for chaining.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='discard-instance'>
+      - (void) <strong>discard</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Hide and discard this snapshot.</p><p>After discarding a snapshot an attempt to show or upload it will raise
+an error.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>void</tt></li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Mon Jul 29 2013 15:48:09 GMT+0200 (CEST)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.14).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>
