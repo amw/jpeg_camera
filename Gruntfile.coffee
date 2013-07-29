@@ -61,11 +61,30 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-exec"
 
+  grunt.registerTask "rubygem", "Prepare gem for Ruby on Rails apps", ->
+    js_files = [
+      "jpeg_camera.js",
+      "jpeg_camera.min.js",
+      "jpeg_camera_no_flash.js",
+      "jpeg_camera_no_flash.min.js",
+      "canvas-to-blob.js",
+      "canvas-to-blob.min.js",
+      "swfobject.js",
+      "swfobject.min.js"
+    ]
+    for file in js_files
+      grunt.file.copy "dist/#{file}",
+        "vendor/assets/javascripts/jpeg_camera/#{file}"
+    grunt.file.copy "dist/jpeg_camera.swf",
+      "vendor/assets/images/jpeg_camera/jpeg_camera.swf"
+    grunt.file.copy "dist/shutter.mp3",
+      "vendor/assets/audios/jpeg_camera/shutter.mp3"
+
   grunt.registerTask "js",
     ["coffee", "uglify", "concat:add_banner", "concat:with_dependencies"]
   grunt.registerTask "swf", ["exec:swf"]
   grunt.registerTask "doc", ["exec:rm_doc", "exec:doc"]
 
-  grunt.registerTask "dist", ["js", "swf"]
+  grunt.registerTask "dist", ["js", "swf", "rubygem"]
   grunt.registerTask "all", ["dist", "doc"]
   grunt.registerTask "default", ["all"]

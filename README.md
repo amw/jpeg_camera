@@ -34,6 +34,13 @@ For convenience these scripts are packaged with JpegCamera.
 
 ## Installation
 
+You can load JpegCamera directly on any web page, but if you're writing Rails
+3.1 application consider using a gem. In either case you have an option
+of loading full library that includes HTML5 implementation with Flash fallback
+or HTML5 version only.
+
+### Standalone app
+
 Copy all the files from `dist` into `jpeg_camera` directory under your server's
 root.
 
@@ -52,6 +59,30 @@ down on HTTP requests then there is a concatenated version you can use.
 If you want to use HTML5-only version you can load jpeg_camera_no_flash.min.js.
 There is no "with dependencies" version of this file, so you have to remember
 to also load Canvas-to-Blob. You don't need SWFObject for HTML5.
+
+### Ruby on Rails 3.1 applications
+
+Require the gem in your Gemfile.
+
+    gem "jpeg_camera", "~> 1.0.0"
+
+Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
+are stored in separate files so that you don't have to load them again if you
+already use them in your project. The assets pipeline will take care of
+minifying and concatenating everything into one script.
+
+    //= require jpeg_camera/swfobject
+    //= require jpeg_camera/canvas-to-blob
+    //= require jpeg_camera/jpeg_camera
+
+If you want to use HTML5-only version then use this instead:
+
+    //= require jpeg_camera/canvas-to-blob
+    //= require jpeg_camera/jpeg_camera_no_flash
+
+Minified versions of all the scripts are also included in the gem if you don't
+want to include JpegCamera in your application.js file and would rather use
+`javascript_include_tag` on select pages of your application.
 
 ## Usage
 
