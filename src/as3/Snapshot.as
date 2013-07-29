@@ -1,5 +1,5 @@
 /* Part of JpegCamera library.
- * https://github.com/amw/jpeg_camera
+ * http://amw.github.io/jpeg_camera
  * Copyright (c) 2013 Adam Wróbel <adam@adamwrobel.com>
  */
 package

@@ -1,6 +1,6 @@
 /*! JpegCamera 1.0.0 | 2013-07-29
     (c) 2013 Adam Wrobel
-    https://github.com/amw/jpeg_camera */
+    http://amw.github.io/jpeg_camera */
 (function() {
   var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, supported_flash_version, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
