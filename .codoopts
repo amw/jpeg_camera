@@ -1,0 +1,8 @@
+--name       "JpegCamera"
+--readme     README.md
+--title      "JpegCamera Documentation"
+--output-dir ./doc
+src/
+--
+README.md
+LICENSE.md
