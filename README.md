@@ -3,7 +3,7 @@
 JpegCamera is a JavaScript library that allows you display a camera stream on
 a web page and then capture, show and upload JPEG snapshots to the server. It
 uses HTML5 in Chrome, Firefox and Opera and falls back to Flash in less capable
-browsers.  The video stream is placed without any UI in a container of your
+browsers. The video stream is placed without any UI in a container of your
 choice and you control it through JavaScript API and your own UI elements.
 
 The idea is based on a similar
