@@ -86,15 +86,18 @@ want to include JpegCamera in your application.js file and would rather use
 
 ## Usage
 
-    camera = new JpegCamera "#camera",
-      api_url: "/upload_image"
+    var camera = new JpegCamera("#camera");
 
-    $("#take_snapshot").click ->
-      $("#results").html ""
-      snapshot = camera.capture()
-      snapshot.upload()
+    var snapshot = camera.capture();
 
-## Documentation
+    snapshot.show(); // Display the snapshot
+
+    snapshot.upload({api_url: "/upload_image"}).done(function(response) {
+      response_container.innerHTML = response;
+      this.discard(); // discard snapshot and show video stream again
+    }).fail(function() {
+      alert("Upload failed.");
+    });
 
 A detailed documentation using in-code comments is maintained for
 [JpegCamera](http://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html) and

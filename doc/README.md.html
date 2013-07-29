@@ -159,14 +159,18 @@ minifying and concatenating everything into one script.</p><pre><code>//= requir
 //= require jpeg_camera/jpeg_camera_no_flash</code></pre><p>Minified versions of all the scripts are also included in the gem if you don&#39;t
 want to include JpegCamera in your application.js file and would rather use
 <code>javascript_include_tag</code> on select pages of your application.</p><h2>Usage</h2>
-<pre><code>camera = new JpegCamera &quot;#camera&quot;,
-  api_url: &quot;/upload_image&quot;
+<pre><code>var camera = new JpegCamera(&quot;#camera&quot;);
 
-$(&quot;#take_snapshot&quot;).click -&gt;
-  $(&quot;#results&quot;).html &quot;&quot;
-  snapshot = camera.capture()
-  snapshot.upload()</code></pre>
-<h2>Documentation</h2><p>A detailed documentation using in-code comments is maintained for
+var snapshot = camera.capture();
+
+snapshot.show(); // Display the snapshot
+
+snapshot.upload({api_url: &quot;/upload_image&quot;}).done(function(response) {
+  response_container.innerHTML = response;
+  this.discard(); // discard snapshot and show video stream again
+}).fail(function() {
+  alert(&quot;Upload failed.&quot;);
+});</code></pre><p>A detailed documentation using in-code comments is maintained for
 <a href="http://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html">JpegCamera</a> and
 <a href="http://amw.github.io/jpeg_camera/doc/classes/Snapshot.html">Snapshot</a>
 classes.</p><h2>Caveats</h2><p>To use Flash fallback your camera container must be at least 215 pixels wide and
@@ -192,11 +196,11 @@ that project.</p><p>Copyright <a href="http://adamwrobel.com">Adam Wróbel</a>, 
     </div>
     <div id='footer'>
   Generated on
-  Mon Jul 29 2013 16:00:49 GMT+0200 (CEST)
+  Mon Jul 29 2013 19:33:03 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
-  (Node.js v0.10.14).
+  (Node.js v0.10.13).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;
