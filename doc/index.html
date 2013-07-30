@@ -118,7 +118,7 @@
         <h2>About</h2><p>JpegCamera is a JavaScript library that allows you display a camera stream on
 a web page and then capture, show and upload JPEG snapshots to the server. It
 uses HTML5 in Chrome, Firefox and Opera and falls back to Flash in less capable
-browsers.  The video stream is placed without any UI in a container of your
+browsers. The video stream is placed without any UI in a container of your
 choice and you control it through JavaScript API and your own UI elements.</p><p>The idea is based on a similar
 <a href="https://github.com/mattclements/jpegcam">JpegCam</a> library which was Flash only.
 Beside working without Flash and offering a cleaner, more modern API, JpegCamera
@@ -150,7 +150,7 @@ root.</p><p>Load JpegCamera and it&#39;s dependencies in the <code>HEAD</code> s
 to load them again if you already use them in your project. If you want to cut
 down on HTTP requests then there is a concatenated version you can use.</p><pre><code>&lt;script src=&quot;/jpeg_camera/jpeg_camera_with_dependencies.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><p>If you want to use HTML5-only version you can load jpeg_camera_no_flash.min.js.
 There is no &quot;with dependencies&quot; version of this file, so you have to remember
-to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3>Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.0.0&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
+to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3>Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.0.2&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
 are stored in separate files so that you don&#39;t have to load them again if you
 already use them in your project. The assets pipeline will take care of
 minifying and concatenating everything into one script.</p><pre><code>//= require jpeg_camera/swfobject
@@ -168,8 +168,8 @@ snapshot.show(); // Display the snapshot
 snapshot.upload({api_url: &quot;/upload_image&quot;}).done(function(response) {
   response_container.innerHTML = response;
   this.discard(); // discard snapshot and show video stream again
-}).fail(function() {
-  alert(&quot;Upload failed.&quot;);
+}).fail(function(status_code, error_message, response) {
+  alert(&quot;Upload failed with status &quot; + status_code);
 });</code></pre><p>A detailed documentation using in-code comments is maintained for
 <a href="http://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html">JpegCamera</a> and
 <a href="http://amw.github.io/jpeg_camera/doc/classes/Snapshot.html">Snapshot</a>
@@ -196,11 +196,11 @@ that project.</p><p>Copyright <a href="http://adamwrobel.com">Adam Wróbel</a>, 
     </div>
     <div id='footer'>
   Generated on
-  Mon Jul 29 2013 19:33:03 GMT+0200 (CEST)
+  Tue Jul 30 2013 17:58:49 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
-  (Node.js v0.10.13).
+  (Node.js v0.10.14).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

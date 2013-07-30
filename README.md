@@ -64,7 +64,7 @@ to also load Canvas-to-Blob. You don't need SWFObject for HTML5.
 
 Require the gem in your Gemfile.
 
-    gem "jpeg_camera", "~> 1.0.0"
+    gem "jpeg_camera", "~> 1.0.2"
 
 Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
 are stored in separate files so that you don't have to load them again if you
@@ -95,8 +95,8 @@ want to include JpegCamera in your application.js file and would rather use
     snapshot.upload({api_url: "/upload_image"}).done(function(response) {
       response_container.innerHTML = response;
       this.discard(); // discard snapshot and show video stream again
-    }).fail(function() {
-      alert("Upload failed.");
+    }).fail(function(status_code, error_message, response) {
+      alert("Upload failed with status " + status_code);
     });
 
 A detailed documentation using in-code comments is maintained for

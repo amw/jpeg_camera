@@ -1,4 +1,4 @@
-/*! JpegCamera 1.0.0 | 2013-07-29
+/*! JpegCamera 1.0.2 | 2013-07-30
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
@@ -18,7 +18,8 @@
       quality: 0.9,
       shutter: true,
       mirror: false,
-      timeout: 0
+      timeout: 0,
+      retry_success: false
     };
 
     function JpegCamera(container, options) {
@@ -626,7 +627,7 @@
     };
 
     Snapshot.prototype.upload = function(options) {
-      var cache, csrf_token;
+      var cache;
       if (options == null) {
         options = {};
       }
@@ -634,33 +635,26 @@
         raise("discarded snapshot cannot be used");
       }
       if (this._uploading) {
-        this._debug("Upload already in progress");
+        this.camera._debug("Upload already in progress");
         return;
       }
       this._uploading = true;
+      this._retry = 1;
       this._upload_options = options;
       cache = this._options();
       if (!cache.api_url) {
         this.camera._debug("Snapshot#upload called without valid api_url");
         throw "Snapshot#upload called without valid api_url";
       }
-      if ("string" === typeof cache.csrf_token && cache.csrf_token.length > 0) {
-        csrf_token = cache.csrf_token;
-      } else {
-        csrf_token = null;
-      }
-      this._done = false;
-      this._response = null;
-      this._fail = false;
-      this._status = null;
-      this._error_message = null;
-      this.camera._upload(this, cache.api_url, csrf_token, cache.timeout);
+      this._start_upload(cache);
       return this;
     };
 
     Snapshot.prototype._upload_options = {};
 
     Snapshot.prototype._uploading = false;
+
+    Snapshot.prototype._retry = 1;
 
     Snapshot.prototype.done = function(callback) {
       var cache;
@@ -707,25 +701,78 @@
       return this.camera._extend({}, this.camera.options, this.options, this._upload_options);
     };
 
+    Snapshot.prototype._start_upload = function(cache) {
+      var csrf_token;
+      if ("string" === typeof cache.csrf_token && cache.csrf_token.length > 0) {
+        csrf_token = cache.csrf_token;
+      } else {
+        csrf_token = null;
+      }
+      this._done = false;
+      this._response = null;
+      this._fail = false;
+      this._status = null;
+      this._error_message = null;
+      return this.camera._upload(this, cache.api_url, csrf_token, cache.timeout);
+    };
+
     Snapshot.prototype._upload_done = function() {
-      var cache;
-      this.camera._debug("Upload completed");
-      this._uploading = false;
+      var cache, delay, retry_decision, that;
+      this.camera._debug("Upload completed with status " + this._status);
       this._done = true;
       cache = this._options();
-      if (cache.on_upload_done) {
-        return cache.on_upload_done.call(this, this._response);
+      retry_decision = cache.retry_success && cache.retry_if && cache.retry_if.call(this, this._status, this._error_message, this._response, this._retry);
+      if (true === retry_decision) {
+        retry_decision = 0;
+      }
+      if ("number" === typeof retry_decision) {
+        this._retry++;
+        if (retry_decision > 0) {
+          delay = parseInt(retry_decision);
+          this.camera._debug("Will retry the upload in " + delay + "ms (attempt #" + this._retry + ")");
+          that = this;
+          return setTimeout((function() {
+            return that._start_upload(cache);
+          }), delay);
+        } else {
+          this.camera._debug("Will retry the upload immediately (attempt #" + this._retry + ")");
+          return this._start_upload(cache);
+        }
+      } else {
+        this._uploading = false;
+        if (cache.on_upload_done) {
+          return cache.on_upload_done.call(this, this._response);
+        }
       }
     };
 
     Snapshot.prototype._upload_fail = function() {
-      var cache;
+      var cache, delay, retry_decision, that;
       this.camera._debug("Upload failed with status " + this._status);
-      this._uploading = false;
       this._fail = true;
       cache = this._options();
-      if (cache.on_upload_fail) {
-        return cache.on_upload_fail.call(this, this._status, this._error_message, this._response);
+      retry_decision = cache.retry_if && cache.retry_if.call(this, this._status, this._error_message, this._response, this._retry);
+      if (true === retry_decision) {
+        retry_decision = 0;
+      }
+      if ("number" === typeof retry_decision) {
+        this._retry++;
+        if (retry_decision > 0) {
+          delay = parseInt(retry_decision);
+          this.camera._debug("Will retry the upload in " + delay + "ms (attempt #" + this._retry + ")");
+          that = this;
+          return setTimeout((function() {
+            return that._start_upload(cache);
+          }), delay);
+        } else {
+          this.camera._debug("Will retry the upload immediately (attempt #" + this._retry + ")");
+          return this._start_upload(cache);
+        }
+      } else {
+        this._uploading = false;
+        if (cache.on_upload_fail) {
+          return cache.on_upload_fail.call(this, this._status, this._error_message, this._response);
+        }
       }
     };
 

@@ -23,6 +23,7 @@ class JpegCamera
     shutter: true
     mirror: false
     timeout: 0
+    retry_success: false
 
   # Construct new camera.
   #
@@ -51,16 +52,16 @@ class JpegCamera
   # @option options shutter_url [String] URL to the shutter sound file.
   #   "/jpeg_camera/shutter.mp3" by default.
   # @option options on_ready [Function] Function to call when camera is ready.
-  #   Inside the callback camera object can be accessed as _this_. See also
+  #   Inside the callback camera object can be accessed as `this`. See also
   #   {JpegCamera#ready}.
   # @option options on_error [Function] Function to call when camera error
   #   occurs. Error message will be passed as the first argument. Inside the
-  #   callback camera object can be accessed as _this_. See also
+  #   callback camera object can be accessed as `this`. See also
   #   {JpegCamera#error}.
   # @option options on_debug [Function] This callback can be used to log various
   #   events and information that can be useful when debugging JpegCamera. Debug
   #   message will be passed as the first argument. Inside the callback camera
-  #   object can be accessed as _this_. There is a default implementation of
+  #   object can be accessed as `this`. There is a default implementation of
   #   this callback that logs messages to window.console if available.
   # @option options quality [Float] Quality of the JPEG file that will be
   #   uploaded to the server. Should be between 0 and 1. 0.9 by default. Can be
@@ -87,14 +88,33 @@ class JpegCamera
   #   terminated. Default of 0 means there is no timeout. Can be overwritten
   #   when calling {JpegCamera#capture capture} or {Snapshot#upload}.
   # @option options on_upload_done [Function] Function to call when upload
-  #   completes. Snapshot object will be available as _this_, response body will
+  #   completes. Snapshot object will be available as `this`, response body will
   #   be passed as the first argument. Can be overwritten when calling
   #   {JpegCamera#capture capture} or {Snapshot#upload}.
   # @option options on_upload_fail [Function] Function to call when upload
-  #   fails. Snapshot object will be available as _this_, response code will
+  #   fails. Snapshot object will be available as `this`, response code will
   #   be passed as the first argument followed by error message and response
   #   body. Can be overwritten when calling {JpegCamera#capture capture} or
   #   {Snapshot#upload}.
+  # @option options retry_if [Function] Function to be called before any upload
+  #   done/fail callbacks to decide if the upload should be retried. By default
+  #   it's null and uploads are never retried.
+  #   Inside the function snapshot object will be available as `this` and the
+  #   arguments will be: `status_code`, `error_message`, `response`, `retry`.
+  #   `retry` is a number incremented for each retry and starting with 1 when
+  #   the upload finishes for the first time.
+  #   If the function returns `true` or `0` then upload will be retried
+  #   immediately. Number greater than `0` will delay the retry by
+  #   that many milliseconds. Any other value will be treated as a decision not
+  #   to retry the upload and one of the `on_upload_done` or `on_upload_fail`
+  #   callbacks will be fired instead.
+  #   Can be overwritten when calling {JpegCamera#capture capture} or
+  #   {Snapshot#upload}.
+  # @option options retry_success [Boolean] By default `retry_if` is not called
+  #   for uploads that finish with a status code from the 2XX range. Set this
+  #   to `true` if you want to retry some of these responses. This can be
+  #   useful if you're experiencing some network oddities. Can be overwritten
+  #   when calling {JpegCamera#capture capture} or {Snapshot#upload}.
   constructor: (container, options) ->
     if "string" == typeof container
       @container = document.querySelector container
@@ -117,7 +137,7 @@ class JpegCamera
   # If the event has already happened the argument will be called immediately.
   #
   # @param callback [Function] function to call when camera is ready. Camera
-  #   object will be available as _this_.
+  #   object will be available as `this`.
   #
   # @return [JpegCamera] Self for chaining.
   ready: (callback) ->
@@ -139,7 +159,7 @@ class JpegCamera
   # If the event has already happened the argument will be called immediately.
   #
   # @param callback [Function] function to call when errors occur. Camera
-  #   object will be available as _this_, error message will be passed as the
+  #   object will be available as `this`, error message will be passed as the
   #   first argument.
   #
   # @return [JpegCamera] Self for chaining.
@@ -177,13 +197,31 @@ class JpegCamera
   #   terminated. Default of 0 means there is no timeout. Can be overwritten
   #   when calling {Snapshot#upload}.
   # @option options on_upload_done [Function] Function to call when upload
-  #   completes. Snapshot object will be available as _this_, response body will
+  #   completes. Snapshot object will be available as `this`, response body will
   #   be passed as the first argument. Can be overwritten when calling
   #   {Snapshot#upload}.
   # @option options on_upload_fail [Function] Function to call when upload
-  #   fails. Snapshot object will be available as _this_, response code will
+  #   fails. Snapshot object will be available as `this`, response code will
   #   be passed as the first argument followed by error message and response
   #   body. Can be overwritten when calling {Snapshot#upload}.
+  # @option options retry_if [Function] Function to be called before any upload
+  #   done/fail callbacks to decide if the upload should be retried. By default
+  #   it's null and uploads are never retried.
+  #   Inside the function snapshot object will be available as `this` and the
+  #   arguments will be: `status_code`, `error_message`, `response`, `retry`.
+  #   `retry` is a number incremented for each retry and starting with 1 when
+  #   the upload finishes for the first time.
+  #   If the function returns `true` or `0` then upload will be retried
+  #   immediately. Number greater than `0` will delay the retry by
+  #   that many milliseconds. Any other value will be treated as a decision not
+  #   to retry the upload and one of the `on_upload_done` or `on_upload_fail`
+  #   callbacks will be fired instead.
+  #   Can be overwritten when calling {Snapshot#upload}.
+  # @option options retry_success [Boolean] By default `retry_if` is not called
+  #   for uploads that finish with a status code from the 2XX range. Set this
+  #   to `true` if you want to retry some of these responses. This can be
+  #   useful if you're experiencing some network oddities. Can be overwritten
+  #   when calling {Snapshot#upload}.
   #
   # @return [Snapshot] The snapshot that was taken.
   capture: (options = {}) ->

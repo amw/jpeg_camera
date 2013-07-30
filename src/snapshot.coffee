@@ -57,23 +57,40 @@ class Snapshot
   #   The number of milliseconds a request can take before automatically being
   #   terminated. Default of 0 means there is no timeout.
   # @option options on_upload_done [Function] Function to call when upload
-  #   completes. Snapshot object will be available as _this_, response body will
+  #   completes. Snapshot object will be available as `this`, response body will
   #   be passed as the first argument. Calling {Snapshot#done done} before the
   #   upload exits will change the handler for this upload.
   # @option options on_upload_fail [Function] Function to call when upload
-  #   fails. Snapshot object will be available as _this_, response code will
+  #   fails. Snapshot object will be available as `this`, response code will
   #   be passed as the first argument followed by error message and response
   #   body. Calling {Snapshot#fail fail} before the upload exits will change
   #   the handler for this upload.
+  # @option options retry_if [Function] Function to be called before any upload
+  #   done/fail callbacks to decide if the upload should be retried. By default
+  #   it's null and uploads are never retried.
+  #   Inside the function snapshot object will be available as `this` and the
+  #   arguments will be: `status_code`, `error_message`, `response`, `retry`.
+  #   `retry` is a number incremented for each retry and starting with 1 when
+  #   the upload finishes for the first time.
+  #   If the function returns `true` or `0` then upload will be retried
+  #   immediately. Number greater than `0` will delay the retry by
+  #   that many milliseconds. Any other value will be treated as a decision not
+  #   to retry the upload and one of the `on_upload_done` or `on_upload_fail`
+  #   callbacks will be fired instead.
+  # @option options retry_success [Boolean] By default `retry_if` is not called
+  #   for uploads that finish with a status code from the 2XX range. Set this
+  #   to `true` if you want to retry some of these responses. This can be
+  #   useful if you're experiencing some network oddities.
   #
   # @return [Snapshot] Self for chaining.
   upload: (options = {}) ->
     raise "discarded snapshot cannot be used" if @_discarded
 
     if @_uploading
-      @_debug "Upload already in progress"
+      @camera._debug "Upload already in progress"
       return
     @_uploading = true
+    @_retry = 1
 
     @_upload_options = options
     cache = @_options()
@@ -82,22 +99,13 @@ class Snapshot
       @camera._debug "Snapshot#upload called without valid api_url"
       throw "Snapshot#upload called without valid api_url"
 
-    if "string" == typeof cache.csrf_token && cache.csrf_token.length > 0
-      csrf_token = cache.csrf_token
-    else
-      csrf_token = null
+    @_start_upload cache
 
-    @_done = false
-    @_response = null
-    @_fail = false
-    @_status = null
-    @_error_message = null
-
-    @camera._upload @, cache.api_url, csrf_token, cache.timeout
     @
 
   _upload_options: {}
   _uploading: false
+  _retry: 1
 
   # Bind callback for upload complete event.
   #
@@ -110,7 +118,7 @@ class Snapshot
   # If the event has already happened the argument will be called immediately.
   #
   # @param callback [Function] function to call when upload completes. Snapshot
-  #   object will be available as _this_, response body will be passed as the
+  #   object will be available as `this`, response body will be passed as the
   #   first argument.
   #
   # @return [Snapshot] Self for chaining.
@@ -138,7 +146,7 @@ class Snapshot
   # If the event has already happened the argument will be called immediately.
   #
   # @param callback [Function] function to call when upload fails. Snapshot
-  #   object will be available as _this_, response code will be passed as the
+  #   object will be available as `this`, response code will be passed as the
   #   first argument with response body or error message as the second argument
   #   if available.
   #
@@ -172,24 +180,86 @@ class Snapshot
   _options: ->
     @camera._extend {}, @camera.options, @options, @_upload_options
 
+  # Send the upload request
+  #
+  # @private
+  _start_upload: (cache) ->
+    if "string" == typeof cache.csrf_token && cache.csrf_token.length > 0
+      csrf_token = cache.csrf_token
+    else
+      csrf_token = null
+
+    @_done = false
+    @_response = null
+    @_fail = false
+    @_status = null
+    @_error_message = null
+
+    @camera._upload @, cache.api_url, csrf_token, cache.timeout
+
   # Called by the camera engine when upload completes.
   #
   # @private
   _upload_done: ->
-    @camera._debug "Upload completed"
-    @_uploading = false
+    @camera._debug "Upload completed with status #{@_status}"
     @_done = true
+
     cache = @_options()
-    if cache.on_upload_done
-      cache.on_upload_done.call @, @_response
+
+    retry_decision =
+      cache.retry_success &&
+      cache.retry_if &&
+      cache.retry_if.call(@, @_status, @_error_message, @_response, @_retry)
+
+    if true == retry_decision
+      retry_decision = 0
+
+    if "number" == typeof retry_decision
+      @_retry++
+      if retry_decision > 0
+        delay = parseInt retry_decision
+        @camera._debug \
+          "Will retry the upload in #{delay}ms (attempt ##{@_retry})"
+
+        that = this
+        setTimeout (-> that._start_upload cache), delay
+      else
+        @camera._debug "Will retry the upload immediately (attempt ##{@_retry})"
+        @_start_upload cache
+    else
+      @_uploading = false
+      if cache.on_upload_done
+        cache.on_upload_done.call @, @_response
 
   # Called by the camera engine when upload fails.
   #
   # @private
   _upload_fail: ->
     @camera._debug "Upload failed with status #{@_status}"
-    @_uploading = false
     @_fail = true
+
     cache = @_options()
-    if cache.on_upload_fail
-      cache.on_upload_fail.call @, @_status, @_error_message, @_response
+
+    retry_decision =
+      cache.retry_if &&
+      cache.retry_if.call(@, @_status, @_error_message, @_response, @_retry)
+
+    if true == retry_decision
+      retry_decision = 0
+
+    if "number" == typeof retry_decision
+      @_retry++
+      if retry_decision > 0
+        delay = parseInt retry_decision
+        @camera._debug \
+          "Will retry the upload in #{delay}ms (attempt ##{@_retry})"
+
+        that = this
+        setTimeout (-> that._start_upload cache), delay
+      else
+        @camera._debug "Will retry the upload immediately (attempt ##{@_retry})"
+        @_start_upload cache
+    else
+      @_uploading = false
+      if cache.on_upload_fail
+        cache.on_upload_fail.call @, @_status, @_error_message, @_response

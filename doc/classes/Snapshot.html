@@ -275,7 +275,7 @@ object or calling <a href='../classes/JpegCamera.html#capture-instance'>JpegCame
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <em>this</em>, response body will be passed as the first argument. Calling <a href='../classes/Snapshot.html#done-instance'>done</a> before the upload exits will change the handler for this upload.</span>
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument. Calling <a href='../classes/Snapshot.html#done-instance'>done</a> before the upload exits will change the handler for this upload.</span>
     </li>
     <li>
       <span class='name'>on_upload_fail</span>
@@ -283,7 +283,23 @@ object or calling <a href='../classes/JpegCamera.html#capture-instance'>JpegCame
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <em>this</em>, response code will be passed as the first argument followed by error message and response body. Calling <a href='../classes/Snapshot.html#fail-instance'>fail</a> before the upload exits will change the handler for this upload.</span>
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument followed by error message and response body. Calling <a href='../classes/Snapshot.html#fail-instance'>fail</a> before the upload exits will change the handler for this upload.</span>
+    </li>
+    <li>
+      <span class='name'>retry_if</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to be called before any upload done/fail callbacks to decide if the upload should be retried. By default it&#39;s null and uploads are never retried. Inside the function snapshot object will be available as <code>this</code> and the arguments will be: <code>status_code</code>, <code>error_message</code>, <code>response</code>, <code>retry</code>. <code>retry</code> is a number incremented for each retry and starting with 1 when the upload finishes for the first time. If the function returns <code>true</code> or <code>0</code> then upload will be retried immediately. Number greater than <code>0</code> will delay the retry by that many milliseconds. Any other value will be treated as a decision not to retry the upload and one of the <code>on_upload_done</code> or <code>on_upload_fail</code> callbacks will be fired instead.</span>
+    </li>
+    <li>
+      <span class='name'>retry_success</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>By default <code>retry_if</code> is not called for uploads that finish with a status code from the 2XX range. Set this to <code>true</code> if you want to retry some of these responses. This can be useful if you&#39;re experiencing some network oddities.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -317,7 +333,7 @@ forgotten after the next call to <a href='../classes/Snapshot.html#upload-instan
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>function to call when upload completes. Snapshot object will be available as <em>this</em>, response body will be passed as the first argument.</span>
+      <span class='desc'>function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -351,7 +367,7 @@ forgotten after the next call to <a href='../classes/Snapshot.html#upload-instan
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>function to call when upload fails. Snapshot object will be available as <em>this</em>, response code will be passed as the first argument with response body or error message as the second argument if available.</span>
+      <span class='desc'>function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument with response body or error message as the second argument if available.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -385,7 +401,7 @@ an error.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Jul 29 2013 16:00:49 GMT+0200 (CEST)
+  Tue Jul 30 2013 17:58:49 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
