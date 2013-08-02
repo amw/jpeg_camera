@@ -89,6 +89,7 @@ if !window.JpegCamera &&
       @_flash._upload snapshot.id, api_url, csrf_token, timeout
 
     _flash_prepared: ->
+      @_block_element_access()
       @_prepared()
 
     # Called on both - upload success and error

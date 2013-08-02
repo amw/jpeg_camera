@@ -22,6 +22,8 @@ has some nice, new features.
 - Easily read server response text and code after upload.
 - Send CSRF tokens to secure your user's session from [Cross-site request
   forgery](http://en.wikipedia.org/wiki/Cross-site_request_forgery#Prevention)
+- Prevents users from messing with HTML5 VIDEO or Flash object elements
+  by overlaying transparent DIV over them after initialization.
 
 ## Dependencies
 

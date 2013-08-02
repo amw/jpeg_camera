@@ -318,6 +318,26 @@ class JpegCamera
     if @options.on_error
       @options.on_error.call @, @_error_occured
 
+  # Shows an overlay over the container to block mouse access.
+  #
+  # Prevents changing flash permission after camera has been enabled or stopping
+  # the HTML5 video stream - both options available through context menu of
+  # Flash object or <video> elements.
+  #
+  # @private
+  _block_element_access: ->
+    @_overlay = document.createElement "div"
+    @_overlay.style.width = "100%"
+    @_overlay.style.height = "100%"
+    @_overlay.style.position = "absolute"
+    @_overlay.style.top = 0
+    @_overlay.style.left = 0
+    @_overlay.style.zIndex = 2
+
+    @container.appendChild @_overlay
+
+  _overlay: null
+
   # Helper for setting prefixed CSS declarations.
   #
   # @private

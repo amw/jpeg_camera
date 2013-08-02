@@ -71,6 +71,8 @@ if navigator.getUserMedia
           else
             that.video.src = stream
 
+          that._block_element_access()
+
           that._wait_for_video_ready()
       failure =
         # XXX Receives NavigatorUserMediaError object and searches for
