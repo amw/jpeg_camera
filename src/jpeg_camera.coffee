@@ -25,6 +25,19 @@ class JpegCamera
     timeout: 0
     retry_success: false
 
+  @_canvas_supported: !!document.createElement('canvas').getContext
+
+  # Tells whether the browser supports `canvas` element and you can use
+  # {Snapshot#get_canvas} method to display snapshots outside the camera
+  # container.
+  #
+  # All browsers except Internet Explorer 8 and earlier support `canvas`
+  # element.
+  #
+  # @return [Boolean] True if `canvas` is supported.
+  @canvas_supported: ->
+    @_canvas_supported
+
   # Construct new camera.
   #
   # JpegCamera will fill the entire container element. If the element's aspect

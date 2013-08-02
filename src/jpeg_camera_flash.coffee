@@ -79,6 +79,29 @@ if !window.JpegCamera &&
     _engine_display: (snapshot) ->
       @_flash._display snapshot.id
 
+    _engine_get_canvas: (snapshot) ->
+      snapshot._image_data ||= @_engine_get_image_data snapshot
+      canvas = document.createElement("canvas")
+      canvas.width = snapshot._image_data.width
+      canvas.height = snapshot._image_data.height
+      context = canvas.getContext "2d"
+      context.putImageData snapshot._image_data, 0, 0
+      canvas
+
+    _engine_get_image_data: (snapshot) ->
+      data = @_flash._get_image_data snapshot.id
+      if JpegCamera.canvas_supported()
+        canvas = document.createElement("canvas")
+        canvas.width = data.width
+        canvas.height = data.height
+        context = canvas.getContext "2d"
+        native_data = context.createImageData data.width, data.height
+        for value, i in data.data
+          native_data.data[i] = value
+        native_data
+      else
+        data
+
     _engine_discard: (snapshot) ->
       @_flash._discard snapshot.id
 

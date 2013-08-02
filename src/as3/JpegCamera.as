@@ -108,6 +108,7 @@ package {
       ExternalInterface.addCallback("_discard", discard);
       ExternalInterface.addCallback("_show_stream", showStream);
       ExternalInterface.addCallback("_upload", upload);
+      ExternalInterface.addCallback("_get_image_data", getImageData);
     }
 
     //
@@ -188,6 +189,10 @@ package {
       }
 
       snapshots[snapshotId].upload(url, csrfToken, timeout);
+    }
+
+    public function getImageData(snapshotId:uint):Object {
+      return snapshots[snapshotId].getImageData();
     }
 
     //

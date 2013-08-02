@@ -74,6 +74,37 @@ package
       return this.bitmap;
     }
 
+    public function getImageData():Object {
+      var result:Object = new Object();
+      var array:Array = new Array(data.height * data.width * 4);
+
+      var index:uint = 0;
+      var pixel:uint, red:uint, green:uint, blue:uint;
+
+      for (var y:uint = 0; y < data.height; ++y) {
+        for (var x:uint = 0; x < data.width; ++x) {
+          pixel = data.getPixel(x, y);
+
+          red = pixel >> 16 & 0xff;
+          green = pixel >> 8 & 0xff;
+          blue = pixel & 0xff;
+
+          array[index + 0] = red;
+          array[index + 1] = green;
+          array[index + 2] = blue;
+          array[index + 3] = 255;
+
+          index += 4;
+        }
+      }
+
+      result.data = array;
+      result.width = data.width;
+      result.height = data.height;
+
+      return result;
+    }
+
     public function upload(url:String, csrfToken:String, timeout:uint):void {
       if (!jpegFile) {
         debug("Generating JPEG file");

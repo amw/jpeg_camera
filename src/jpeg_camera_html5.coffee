@@ -142,6 +142,19 @@ if navigator.getUserMedia
 
       @container.appendChild @displayed_canvas
 
+    _engine_get_canvas: (snapshot) ->
+      canvas = document.createElement "canvas"
+      canvas.width = snapshot._canvas.width
+      canvas.height = snapshot._canvas.height
+      context = canvas.getContext "2d"
+      context.drawImage snapshot._canvas, 0, 0
+      canvas
+
+    _engine_get_image_data: (snapshot) ->
+      canvas = snapshot._canvas
+      context = canvas.getContext "2d"
+      context.getImageData 0, 0, canvas.width, canvas.height
+
     _engine_discard: (snapshot) ->
       if snapshot._xhr
         snapshot._xhr.abort()

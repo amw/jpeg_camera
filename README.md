@@ -18,6 +18,8 @@ has some nice, new features.
 - Manage and upload multiple snapshots at once. You don't have to wait for the
   first upload to finish before capturing the next image. This means you can
   take a few shots in a short interval.
+- You can get snapshots for display outside the camera container in browsers
+  that support `canvas` element - even when using Flash fallback.
 - Allows you to retry failed uploads.
 - Easily read server response text and code after upload.
 - Send CSRF tokens to secure your user's session from [Cross-site request

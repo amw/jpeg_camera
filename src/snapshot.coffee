@@ -31,6 +31,110 @@ class Snapshot
       @camera.show_stream()
     @
 
+  # Get canvas element showing the snapshot.
+  #
+  # This can be used to display the snapshot outside the camera's container.
+  # You can show multiple snapshots at a time and allow the user to pick one
+  # he likes best.
+  #
+  # Canvas produced by this method has a resolution of the snapshot (which
+  # depends on the camera's native resolution), not that of the camera's
+  # container. Use CSS to display this canvas in different sizes.
+  #
+  # Because reading image data can take a while when Flash fallback is being
+  # used this method does not return the `canvas` element immediately. Instead
+  # it accepts a callback that later will be called with the `canvas` element as
+  # an argument. Snapshot will be available as `this`.
+  #
+  # Multiple calls to this method will yield the same canvas element.
+  #
+  # One caveat is that the underlaying data of this canvas is not mirrored like
+  # the stream shown in the camera container. Special CSS transform directive
+  # is applied on it so that it looks like the picture in the camera when
+  # displayed. This only matters when manipulating the canvas or reading it's
+  # data. You can read more about mirroring in {JpegCamera#capture}.
+  #
+  # This method doesn't work in Internet Explorer 8 or earlier, because it does
+  # not support `canvas` element. Call {JpegCamera.canvas_supported} to learn
+  # whether you can use this method.
+  #
+  # @param callback [Function] Function to call when `canvas` element is
+  #   available. Snapshot object will be available as `this`, the `canvas`
+  #   element will be passed as the first argument.
+  #
+  # @return [Boolean] Whether canvas is supported in this browser.
+  get_canvas: (callback) ->
+    raise "discarded snapshot cannot be used" if @_discarded
+
+    false unless JpegCamera._canvas_supported
+
+    # FIXME This method is supposed to always return the same object, but if
+    # you call it again before this timeout runs, a new timeout will be
+    # scheduled and new data created.
+    that = this
+    setTimeout ->
+        that._extra_canvas ||= that.camera._engine_get_canvas that
+
+        JpegCamera._add_prefixed_style that._extra_canvas,
+          "transform", "scalex(-1.0)"
+
+        callback.call that, that._extra_canvas
+      , 10
+    true
+
+  _extra_canvas: null
+
+  # Get ImageData object containing color values for each pixel of the snapshot.
+  #
+  # This can be used to analyze the data of the image, e.g. calculate mean
+  # color value and color standard deviation to check lighting condition and let
+  # the user know that more light might be required.
+  #
+  # Data produced by this method has a resolution of the snapshot (which depends
+  # on the camera's native resolution), not that of the camera's container.
+  #
+  # Read more about ImageData object on [Mozilla's website
+  # ](https://developer.mozilla.org/en-US/docs/Web/API/ImageData).
+  #
+  # Because reading image data can take a while when Flash fallback is being
+  # used this method does not return the data immediately. Instead it accepts
+  # a callback that later will be called with the data object as an argument.
+  # Snapshot will be available as `this`.
+  #
+  # Multiple calls to this method will yield the same data object.
+  #
+  # One caveat is that the returned data is not mirrored like the stream shown
+  # in the camera container. This only matters when manipulating the canvas or
+  # reading it's data. You can read more about mirroring in
+  # {JpegCamera#capture}.
+  #
+  # This method returns native [ImageData
+  # ](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) object in all
+  # browsers except Internet Explorer 8 or earlier which does not support
+  # the `canvas` element. In that browser a generic JavaScript object will be
+  # returned that mimics the native format. Call {JpegCamera.canvas_supported}
+  # to learn whether `canvas` is supported by the browser.
+  #
+  # @param callback [Function] Function to call when data is available. Snapshot
+  #   object will be available as `this`, the data will be passed as the
+  #   first argument.
+  #
+  # @return [void]
+  get_image_data: (callback) ->
+    raise "discarded snapshot cannot be used" if @_discarded
+
+    # FIXME This method is supposed to always return the same object, but if
+    # you call it again before this timeout runs, a new timeout will be
+    # scheduled and new data created.
+    that = this
+    setTimeout ->
+        that._image_data ||= that.camera._engine_get_image_data that
+        callback.call that, that._image_data
+      , 5
+
+  _image_data: null
+
+
   # Upload the snapshot to the server.
   #
   # The snapshot is uploaded using a POST request with JPEG file sent as RAW
@@ -117,7 +221,7 @@ class Snapshot
   #
   # If the event has already happened the argument will be called immediately.
   #
-  # @param callback [Function] function to call when upload completes. Snapshot
+  # @param callback [Function] Function to call when upload completes. Snapshot
   #   object will be available as `this`, response body will be passed as the
   #   first argument.
   #
@@ -145,7 +249,7 @@ class Snapshot
   #
   # If the event has already happened the argument will be called immediately.
   #
-  # @param callback [Function] function to call when upload fails. Snapshot
+  # @param callback [Function] Function to call when upload fails. Snapshot
   #   object will be available as `this`, response code will be passed as the
   #   first argument with response body or error message as the second argument
   #   if available.
