@@ -60,14 +60,14 @@ if !window.JpegCamera &&
           that._debug "Flash loaded"
           that._flash = document.getElementById flash_object_id
 
-      @internal_container = document.createElement "div"
-      @internal_container.id = "jpeg_camera_flash_" + @_id
-      @internal_container.style.width = "100%"
-      @internal_container.style.height = "100%"
+      container_to_be_replaced = document.createElement "div"
+      container_to_be_replaced.id = "jpeg_camera_flash_" + @_id
+      container_to_be_replaced.style.width = "100%"
+      container_to_be_replaced.style.height = "100%"
 
-      @container.appendChild @internal_container
+      @container.appendChild container_to_be_replaced
 
-      swfobject.embedSWF @options.swf_url, @internal_container.id,
+      swfobject.embedSWF @options.swf_url, container_to_be_replaced.id,
         width, height, '9', null, flashvars, params, attributes, callback
 
     _engine_play_shutter_sound: ->

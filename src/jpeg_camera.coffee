@@ -117,14 +117,19 @@ class JpegCamera
   #   when calling {JpegCamera#capture capture} or {Snapshot#upload}.
   constructor: (container, options) ->
     if "string" == typeof container
-      @container = document.querySelector container
-    else
-      @container = container
+      container = document.querySelector container
 
-    unless @container && @container.offsetWidth
+    unless container && container.offsetWidth
       throw "JpegCamera: invalid container"
 
-    @container.innerHTML = ""
+    container.innerHTML = ""
+
+    @container = document.createElement "div"
+    @container.style.width = "100%"
+    @container.style.height = "100%"
+    @container.style.position = "relative"
+
+    container.appendChild @container
 
     @options = @_extend {}, @constructor.DefaultOptions, options
 

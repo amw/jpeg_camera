@@ -14,13 +14,6 @@ if navigator.getUserMedia
     _engine_init: ->
       @_debug "Using HTML5 engine"
 
-      @internal_container = document.createElement "div"
-      @internal_container.style.width = "100%"
-      @internal_container.style.height = "100%"
-      @internal_container.style.position = "relative"
-
-      @container.appendChild @internal_container
-
       vertical_padding = Math.floor @_view_height() * 0.2
       horizontal_padding = Math.floor @_view_width() * 0.2
 
@@ -40,7 +33,7 @@ if navigator.getUserMedia
       @message.innerHTML =
         "Please allow camera access when prompted by the browser."
 
-      @internal_container.appendChild @message
+      @container.appendChild @message
 
       @video_container = document.createElement "div"
       @video_container.style.width = "#{@_view_width()}px"
@@ -49,7 +42,7 @@ if navigator.getUserMedia
       @video_container.style.position = "absolute"
       @video_container.style.zIndex = 1
 
-      @internal_container.appendChild @video_container
+      @container.appendChild @video_container
 
       @video = document.createElement 'video'
       @video.autoplay = true
@@ -119,7 +112,7 @@ if navigator.getUserMedia
 
     _engine_display: (snapshot) ->
       if @displayed_canvas
-        @internal_container.removeChild @displayed_canvas
+        @container.removeChild @displayed_canvas
 
       @displayed_canvas = snapshot._canvas
       @displayed_canvas.style.width = "#{@_view_width()}px"
@@ -130,7 +123,7 @@ if navigator.getUserMedia
       @displayed_canvas.style.zIndex = 2
       @_add_prefixed_style @displayed_canvas, "transform", "scalex(-1.0)"
 
-      @internal_container.appendChild @displayed_canvas
+      @container.appendChild @displayed_canvas
 
     _engine_discard: (snapshot) ->
       if snapshot._xhr
@@ -141,7 +134,7 @@ if navigator.getUserMedia
 
     _engine_show_stream: ->
       if @displayed_canvas
-        @internal_container.removeChild @displayed_canvas
+        @container.removeChild @displayed_canvas
         @displayed_canvas = null
 
       @video_container.style.display = "block"
