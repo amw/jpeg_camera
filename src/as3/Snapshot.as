@@ -29,8 +29,8 @@ package
     private var id:uint;
     private var camera:JpegCamera;
 
-    public var bitmap:Bitmap;
     private var data:BitmapData;
+    private var bitmap:Bitmap;
     private var jpegFile:ByteArray;
 
     private var mirror:Boolean;
@@ -68,6 +68,10 @@ package
 
       data.draw(video, matrix, null, null, null, false);
       bitmap = new Bitmap(data);
+    }
+
+    public function getBitmap():Bitmap {
+      return this.bitmap;
     }
 
     public function upload(url:String, csrfToken:String, timeout:uint):void {

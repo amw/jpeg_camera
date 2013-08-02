@@ -157,7 +157,7 @@ package {
         return false;
       }
 
-      displayedBitmap = snapshots[snapshotId].bitmap;
+      displayedBitmap = snapshots[snapshotId].getBitmap();
       var scale:Number = viewWidth / displayedBitmap.width;
       displayedBitmap.y = 0;
       displayedBitmap.x = viewWidth;
