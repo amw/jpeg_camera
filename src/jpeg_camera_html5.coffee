@@ -61,8 +61,7 @@ if navigator.getUserMedia
           ]
 
       that = this
-
-      navigator.getUserMedia get_user_media_options,
+      success =
         (stream) ->
           that._remove_message()
 
@@ -72,6 +71,7 @@ if navigator.getUserMedia
             that.video.src = stream
 
           that._wait_for_video_ready()
+      failure =
         (error) ->
           # XXX Receives NavigatorUserMediaError object and searches for
           # constant name matching error.code. With the current specification
@@ -83,6 +83,12 @@ if navigator.getUserMedia
             that._got_error key
             return
           that._got_error "UNKNOWN ERROR"
+
+      # XXX In an older spec first parameter was a string
+      try
+        navigator.getUserMedia get_user_media_options, success, failure
+      catch
+        navigator.getUserMedia "video", success, failure
 
     _engine_play_shutter_sound: ->
       return unless @shutter_buffer
