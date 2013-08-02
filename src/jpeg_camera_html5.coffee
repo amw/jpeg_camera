@@ -31,7 +31,8 @@ if navigator.getUserMedia
       @message.style.position = "absolute"
       @message.style.zIndex = 3
       @message.innerHTML =
-        "Please allow camera access when prompted by the browser."
+        "Please allow camera access when prompted by the browser.<br><br>" +
+        "Look for camera icon around your address bar."
 
       @container.appendChild @message
 
@@ -72,11 +73,18 @@ if navigator.getUserMedia
 
           that._wait_for_video_ready()
       failure =
+        # XXX Receives NavigatorUserMediaError object and searches for
+        # constant name matching error.code. With the current specification
+        # version this will always evaluate to
+        # `that._got_error("PERMISSION_DENIED")`.
         (error) ->
-          # XXX Receives NavigatorUserMediaError object and searches for
-          # constant name matching error.code. With the current specification
-          # version this will always evaluate to
-          # `that._got_error("PERMISSION_DENIED")`.
+          that.message.innerHTML =
+            "<span style=\"color: red;\">" +
+              "You have denied camera access." +
+            "</span><br><br>" +
+            "Look for camera icon around your address bar to change your " +
+            "decision."
+
           code = error.code
           for key, value of error
             continue if key == "code"
