@@ -26,7 +26,7 @@ package
 
   public class Snapshot
   {
-    private var id:int;
+    private var id:uint;
     private var camera:JpegCamera;
 
     public var bitmap:Bitmap;
@@ -41,8 +41,8 @@ package
     private var errorMessage:String;
 
     public function Snapshot(
-      id:int, camera:JpegCamera, video:Video,
-      width:int, height:int,
+      id:uint, camera:JpegCamera, video:Video,
+      width:uint, height:uint,
       mirror:Boolean, quality:Number
     ) {
       this.id = id;
@@ -70,7 +70,7 @@ package
       bitmap = new Bitmap(data);
     }
 
-    public function upload(url:String, csrfToken:String, timeout:int):void {
+    public function upload(url:String, csrfToken:String, timeout:uint):void {
       if (!jpegFile) {
         debug("Generating JPEG file");
 

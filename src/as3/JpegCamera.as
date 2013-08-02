@@ -42,7 +42,7 @@ package {
   import Snapshot;
 
   public class JpegCamera extends Sprite {
-    private var id:int;
+    private var id:uint;
 
     private var snapshots:Dictionary = new Dictionary();
 
@@ -50,8 +50,8 @@ package {
 
     private var shutterSound:Sound;
 
-    private var viewWidth:int;
-    private var viewHeight:int;
+    private var viewWidth:uint;
+    private var viewHeight:uint;
 
     private var camera:Camera;
 
@@ -125,13 +125,13 @@ package {
     }
 
     public function capture(
-      snapshotId:int, mirror:Boolean, quality:Number
+      snapshotId:uint, mirror:Boolean, quality:Number
     ):Boolean {
       var videoRatio:Number = camera.width / camera.height;
       var viewRatio:Number = viewWidth / viewHeight;
 
-      var snapshotWidth:int = camera.width;
-      var snapshotHeight:int = camera.height;
+      var snapshotWidth:uint = camera.width;
+      var snapshotHeight:uint = camera.height;
 
       if (videoRatio > viewRatio) {
         // crop width
@@ -151,7 +151,7 @@ package {
       return true;
     }
 
-    public function display(snapshotId:int):Boolean {
+    public function display(snapshotId:uint):Boolean {
       if (!snapshots[snapshotId]) {
         debug("Missing snapshot");
         return false;
@@ -168,7 +168,7 @@ package {
       return true;
     }
 
-    public function discard(snapshotId:int):void {
+    public function discard(snapshotId:uint):void {
       delete snapshots[snapshotId];
     }
 
@@ -180,7 +180,7 @@ package {
     }
 
     public function upload(
-      snapshotId:int, url:String, csrfToken:String, timeout:int
+      snapshotId:uint, url:String, csrfToken:String, timeout:uint
     ):void {
       if (!snapshots[snapshotId]) {
         debug("Missing snapshot");
@@ -201,7 +201,7 @@ package {
 
     // Called on both - upload success and error
     public function uploadComplete(
-      snapshotId:int, status:int, error:String, response:String
+      snapshotId:uint, status:int, error:String, response:String
     ):void {
       callJs("_flash_upload_complete", snapshotId, status, error, response);
     }
@@ -212,7 +212,7 @@ package {
 
     private function initCamera():void {
       // Hack to auto-select iSight camera on Mac
-      for (var i:int = 0, len:int = Camera.names.length; i < len; i++) {
+      for (var i:uint = 0, len:uint = Camera.names.length; i < len; i++) {
         if (Camera.names[i] == "USB Video Class Video") {
           camera = Camera.getCamera(String(i));
           break;
