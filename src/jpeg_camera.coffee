@@ -294,10 +294,6 @@ class JpegCamera
   _displayed_snapshot: null
 
   # @private
-  _upload: (snapshot, api_url, csrf_token, timeout) ->
-    @_engine_upload snapshot, api_url, csrf_token, timeout
-
-  # @private
   _discard: (snapshot) ->
     if @_displayed_snapshot == snapshot
       @show_stream()

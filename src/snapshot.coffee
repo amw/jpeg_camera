@@ -195,7 +195,7 @@ class Snapshot
     @_status = null
     @_error_message = null
 
-    @camera._upload @, cache.api_url, csrf_token, cache.timeout
+    @camera._engine_upload @, cache.api_url, csrf_token, cache.timeout
 
   # Called by the camera engine when upload completes.
   #
