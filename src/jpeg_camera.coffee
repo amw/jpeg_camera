@@ -305,6 +305,7 @@ class JpegCamera
   #
   # @private
   _prepared: ->
+    @_debug "Camera is ready"
     @_is_ready = true
     if @options.on_ready
       @options.on_ready.call @
