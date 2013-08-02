@@ -21,7 +21,7 @@ if navigator.getUserMedia
       @message.class = "message"
       @message.style.width = "100%"
       @message.style.height = "100%"
-      @_add_prefixed_style @message, "boxSizing", "border-box"
+      JpegCamera._add_prefixed_style @message, "boxSizing", "border-box"
       @message.style.overflow = "hidden"
       @message.style.textAlign = "center"
       @message.style.paddingTop = "#{vertical_padding}px"
@@ -46,7 +46,7 @@ if navigator.getUserMedia
 
       @video = document.createElement 'video'
       @video.autoplay = true
-      @_add_prefixed_style @video, "transform", "scalex(-1.0)"
+      JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
 
       window.AudioContext ||= window.webkitAudioContext
       @_load_shutter_sound() if window.AudioContext
@@ -127,7 +127,8 @@ if navigator.getUserMedia
       @displayed_canvas.style.left = 0
       @displayed_canvas.style.position = "absolute"
       @displayed_canvas.style.zIndex = 2
-      @_add_prefixed_style @displayed_canvas, "transform", "scalex(-1.0)"
+      JpegCamera._add_prefixed_style @displayed_canvas,
+        "transform", "scalex(-1.0)"
 
       @container.appendChild @displayed_canvas
 
@@ -241,14 +242,6 @@ if navigator.getUserMedia
         setTimeout (-> that._wait_for_video_ready()), 100
 
     _status_checks_count: 0
-
-    _add_prefixed_style: (element, style, value) ->
-      uppercase_style = style.charAt(0).toUpperCase() + style.slice(1)
-      element.style[style] = value
-      element.style["Webkit" + uppercase_style] = value
-      element.style["Moz" + uppercase_style] = value
-      element.style["ms" + uppercase_style] = value
-      element.style["O" + uppercase_style] = value
 
     _get_video_crop: ->
       view_width = @_view_width()

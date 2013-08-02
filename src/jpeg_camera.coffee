@@ -317,3 +317,14 @@ class JpegCamera
     @_error_occured = error
     if @options.on_error
       @options.on_error.call @, @_error_occured
+
+  # Helper for setting prefixed CSS declarations.
+  #
+  # @private
+  @_add_prefixed_style: (element, style, value) ->
+    uppercase_style = style.charAt(0).toUpperCase() + style.slice(1)
+    element.style[style] = value
+    element.style["Webkit" + uppercase_style] = value
+    element.style["Moz" + uppercase_style] = value
+    element.style["ms" + uppercase_style] = value
+    element.style["O" + uppercase_style] = value
