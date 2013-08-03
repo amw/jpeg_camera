@@ -30,7 +30,6 @@ package
     private var camera:JpegCamera;
 
     private var data:BitmapData;
-    private var bitmap:Bitmap;
     private var jpegFile:ByteArray;
 
     private var mirror:Boolean;
@@ -66,12 +65,11 @@ package
       var matrix:Matrix = new Matrix();
       matrix.translate(x_offset, y_offset);
 
-      data.draw(video, matrix, null, null, null, false);
-      bitmap = new Bitmap(data);
+      data.draw(video, matrix);
     }
 
     public function getBitmap():Bitmap {
-      return this.bitmap;
+      return new Bitmap(data);
     }
 
     public function getImageData():Object {

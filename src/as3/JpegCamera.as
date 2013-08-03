@@ -158,6 +158,10 @@ package {
         return false;
       }
 
+      if (displayedBitmap) {
+        removeChild(displayedBitmap);
+      }
+
       displayedBitmap = snapshots[snapshotId].getBitmap();
       var scale:Number = viewWidth / displayedBitmap.width;
       displayedBitmap.y = 0;
@@ -176,7 +180,7 @@ package {
     public function showStream():void {
       if (displayedBitmap) {
         removeChild(displayedBitmap);
-        displayedBitmap = null
+        displayedBitmap = null;
       }
     }
 
