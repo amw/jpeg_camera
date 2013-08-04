@@ -189,6 +189,37 @@ class JpegCamera
 
   _error_occured: false
 
+  @StatsCaptureScale = 0.2
+
+  # Peak into video stream and calculate pixel statistics.
+  #
+  # Currently two properties are available:
+  #   - mean gray value of pixels (0-255)
+  #   - standard deviation of gray values
+  #
+  # Can be useful to give the user hints about bad lighting. It uses full
+  # capture area, but at much lower resolution. It's more efficient than taking
+  # a regular capture and calling {Snapshot#get_stats}.
+  #
+  # Because reading image data can take a while when Flash fallback is being
+  # used this method does not return the data immediately. Instead it accepts
+  # a callback that later will be called with the data object as an argument.
+  # The camera object will be available as `this`.
+  #
+  # @param callback [Function] Function to call when data is available. Camera
+  #   object will be available as `this`, the data will be passed as the
+  #   first argument.
+  #
+  # @return [Object] Object with `mean` and `std` properties.
+  get_stats: (callback) ->
+    snapshot = new Snapshot @, {}
+
+    @_engine_capture snapshot, false, 0.1, JpegCamera.StatsCaptureScale
+
+    that = this
+    snapshot.get_stats (stats) ->
+      callback.call that, stats
+
   # Capture camera snapshot.
   #
   # All of the options can have their defaults set when constructing camera
@@ -251,7 +282,7 @@ class JpegCamera
     if _options.shutter
       @_engine_play_shutter_sound()
 
-    @_engine_capture snapshot, _options.mirror, _options.quality
+    @_engine_capture snapshot, _options.mirror, _options.quality, 1.0
 
     snapshot
 

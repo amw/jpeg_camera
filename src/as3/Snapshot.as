@@ -26,7 +26,7 @@ package
 
   public class Snapshot
   {
-    private var id:uint;
+    private var id:int;
     private var camera:JpegCamera;
 
     private var data:BitmapData;
@@ -40,16 +40,14 @@ package
     private var errorMessage:String;
 
     public function Snapshot(
-      id:uint, camera:JpegCamera, video:Video,
+      id:int, camera:JpegCamera, video:Video,
       width:uint, height:uint,
-      mirror:Boolean, quality:Number
+      mirror:Boolean, quality:Number, scale:Number
     ) {
       this.id = id;
       this.camera = camera;
       this.mirror = mirror;
       this.quality = quality;
-
-      data = new BitmapData(width, height);
 
       var x_offset:int = 0;
       var y_offset:int = 0;
@@ -62,8 +60,14 @@ package
         y_offset = -Math.round((video.videoHeight - height) / 2.0)
       }
 
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+
+      data = new BitmapData(width, height, false, 0xffffffff);
+
       var matrix:Matrix = new Matrix();
       matrix.translate(x_offset, y_offset);
+      matrix.scale(scale, scale);
 
       data.draw(video, matrix);
     }

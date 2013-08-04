@@ -126,27 +126,14 @@ package {
     }
 
     public function capture(
-      snapshotId:uint, mirror:Boolean, quality:Number
+      snapshotId:uint, mirror:Boolean, quality:Number, scale:Number
     ):Boolean {
-      var videoRatio:Number = camera.width / camera.height;
-      var viewRatio:Number = viewWidth / viewHeight;
-
-      var snapshotWidth:uint = camera.width;
-      var snapshotHeight:uint = camera.height;
-
-      if (videoRatio > viewRatio) {
-        // crop width
-        snapshotWidth = Math.round(camera.height * viewRatio);
-      }
-      else if (videoRatio < viewRatio) {
-        // crop height
-        snapshotHeight = Math.round(camera.width / viewRatio);
-      }
+      var size:Object = getSnapshotNaturalSize();
 
       snapshots[snapshotId] = new Snapshot(
         snapshotId, this, this.video,
-        snapshotWidth, snapshotHeight,
-        mirror, quality
+        size.width, size.height,
+        mirror, quality, scale
       );
 
       return true;
@@ -163,11 +150,10 @@ package {
       }
 
       displayedBitmap = snapshots[snapshotId].getBitmap();
-      var scale:Number = viewWidth / displayedBitmap.width;
       displayedBitmap.y = 0;
       displayedBitmap.x = viewWidth;
-      displayedBitmap.scaleX = -scale;
-      displayedBitmap.scaleY =  scale;
+      displayedBitmap.scaleX = -viewWidth / displayedBitmap.width;
+      displayedBitmap.scaleY =  viewHeight / displayedBitmap.height;
       displayedBitmap.smoothing = true;
       addChild(displayedBitmap);
 
@@ -328,9 +314,32 @@ package {
           debug("Privacy panel closed.");
           stage.removeEventListener(MouseEvent.MOUSE_MOVE, detectPanelClosure);
           showingSettings = false;
+
           callJs("_flash_prepared");
         }
       }
+    }
+
+    private function getSnapshotNaturalSize():Object {
+      var videoRatio:Number = camera.width / camera.height;
+      var viewRatio:Number = viewWidth / viewHeight;
+
+      var snapshotWidth:uint = camera.width;
+      var snapshotHeight:uint = camera.height;
+
+      if (videoRatio > viewRatio) {
+        // crop width
+        snapshotWidth = Math.round(camera.height * viewRatio);
+      }
+      else if (videoRatio < viewRatio) {
+        // crop height
+        snapshotHeight = Math.round(camera.width / viewRatio);
+      }
+
+      var result:Object = new Object();
+      result.width = snapshotWidth;
+      result.height = snapshotHeight;
+      return result;
     }
 
     private function callJs(method:String, ... args):* {

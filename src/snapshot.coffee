@@ -31,6 +31,28 @@ class Snapshot
       @camera.show_stream()
     @
 
+  # Calculate snapshot pixel statistics.
+  #
+  # Currently two properties are available:
+  #   - mean gray value of pixels (0-255)
+  #   - standard deviation of gray values
+  #
+  # Because reading image data can take a while when Flash fallback is being
+  # used this method does not return the data immediately. Instead it accepts
+  # a callback that later will be called with the data object as an argument.
+  # Snapshot will be available as `this`.
+  #
+  # @param callback [Function] Function to call when data is available. Snapshot
+  #   object will be available as `this`, the data will be passed as the
+  #   first argument.
+  #
+  # @return [Object] Object with `mean` and `std` properties.
+  get_stats: (callback) ->
+    raise "discarded snapshot cannot be used" if @_discarded
+
+    @get_image_data (data) ->
+      @_get_stats data, callback
+
   # Get canvas element showing the snapshot.
   #
   # This can be used to display the snapshot outside the camera's container.
@@ -85,10 +107,6 @@ class Snapshot
   _extra_canvas: null
 
   # Get ImageData object containing color values for each pixel of the snapshot.
-  #
-  # This can be used to analyze the data of the image, e.g. calculate mean
-  # color value and color standard deviation to check lighting condition and let
-  # the user know that more light might be required.
   #
   # Data produced by this method has a resolution of the snapshot (which depends
   # on the camera's native resolution), not that of the camera's container.
@@ -300,6 +318,39 @@ class Snapshot
     @_error_message = null
 
     @camera._engine_upload @, cache.api_url, csrf_token, cache.timeout
+
+  # Calculate the snapshot pixel statistics given image data and call callback.
+  #
+  # @private
+  _get_stats: (data, callback) ->
+    unless @_stats
+      n = data.width * data.height
+      sum = 0.0
+      gray_values = new Array(n)
+
+      for i in [0...n] by 1
+        index = i * 4
+        gray =
+          0.2126 * data.data[index + 0] + # red
+          0.7152 * data.data[index + 1] + # green
+          0.0722 * data.data[index + 2]   # blue
+        gray = Math.round gray
+
+        sum += gray
+        gray_values[i] = gray
+
+      mean = Math.round sum / n
+
+      sum_of_square_distances = 0
+      for gray in gray_values
+        sum_of_square_distances += Math.pow gray - mean, 2
+
+      @_stats =
+        mean: mean
+        std: Math.round(Math.sqrt(sum_of_square_distances / n))
+    callback.call @, @_stats
+
+  _stats: null
 
   # Called by the camera engine when upload completes.
   #

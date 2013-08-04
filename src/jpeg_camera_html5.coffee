@@ -115,19 +115,19 @@ if navigator.getUserMedia
       source.connect @audio_context.destination
       source.start 0
 
-    _engine_capture: (snapshot, mirror, quality) ->
+    _engine_capture: (snapshot, mirror, quality, scale) ->
       crop = @_get_capture_crop()
 
       canvas = document.createElement "canvas"
-      canvas.width = crop.width
-      canvas.height = crop.height
+      canvas.width = Math.round crop.width * scale
+      canvas.height = Math.round crop.height * scale
 
       context = canvas.getContext "2d"
       context.drawImage @video,
         crop.x_offset, crop.y_offset,
         crop.width, crop.height,
         0, 0,
-        crop.width, crop.height
+        Math.round(crop.width * scale), Math.round(crop.height * scale)
 
       snapshot._canvas = canvas
       snapshot._mirror = mirror

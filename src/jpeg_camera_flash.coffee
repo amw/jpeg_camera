@@ -76,8 +76,8 @@ if !window.JpegCamera &&
     _engine_play_shutter_sound: ->
       @_flash._play_shutter()
 
-    _engine_capture: (snapshot, mirror, quality) ->
-      @_flash._capture snapshot.id, mirror, quality
+    _engine_capture: (snapshot, mirror, quality, scale) ->
+      @_flash._capture snapshot.id, mirror, quality, scale
 
     _engine_display: (snapshot) ->
       @_flash._display snapshot.id
