@@ -29,6 +29,10 @@ has some nice, new features.
 - Makes sure the camera is really ready by checking stream's color standard
   deviation. Safeguard from weird all-black or all-white snapshots.
 
+## Demo
+
+Check out the [demo page](http://amw.github.io/jpeg_camera/demo/).
+
 ## Dependencies
 
 - [Canvas-to-Blob](https://github.com/blueimp/JavaScript-Canvas-to-Blob)
