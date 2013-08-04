@@ -207,8 +207,13 @@ package {
     //
 
     private function initCamera():void {
-      // Hack to auto-select iSight camera on Mac
       for (var i:uint = 0, len:uint = Camera.names.length; i < len; i++) {
+        debug("Found camera \"" + Camera.names[i] + "\"");
+      }
+
+      // XXX Hack to auto-select iSight camera on Mac
+      // Doesn't really seem to be needed.
+      for (i = 0, len = Camera.names.length; i < len; i++) {
         if (Camera.names[i] == "USB Video Class Video") {
           camera = Camera.getCamera(String(i));
           break;
