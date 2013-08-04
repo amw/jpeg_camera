@@ -3,6 +3,13 @@ navigator.getUserMedia ||=
   navigator.mozGetUserMedia ||
   navigator.msGetUserMedia
 
+# @private
+check_canvas_to_blob = ->
+  canvas = document.createElement "canvas"
+  if canvas.getContext && !canvas.toBlob
+    throw "JpegCamera: Canvas-to-Blob is not loaded"
+check_canvas_to_blob()
+
 if navigator.getUserMedia
   # JpegCamera implementation that uses _getUserMedia_ to capture snapshots,
   # _canvas_element_ to display them, _XHR_ to upload them to the server and
