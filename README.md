@@ -121,6 +121,10 @@ that finish with status codes from outside the 2XX range (like 404 Not Found or
 fallback your application should not rely on reading body of these responses.
 The status code number is always available.
 
+Current stable versions of Firefox and Opera support getUserMedia, but do not
+support Web Audio API. I have decided against loading a Flash object in
+these browsers so JpegCamera will be silent.
+
 ## Contributing
 
 The source code is available on [Github](https://github.com/amw/jpeg_camera).
