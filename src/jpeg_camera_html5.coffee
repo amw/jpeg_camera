@@ -104,7 +104,7 @@ if navigator.getUserMedia
       # XXX In an older spec first parameter was a string
       try
         navigator.getUserMedia get_user_media_options, success, failure
-      catch
+      catch error
         navigator.getUserMedia "video", success, failure
 
     _engine_play_shutter_sound: ->
