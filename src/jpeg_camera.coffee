@@ -349,10 +349,32 @@ class JpegCamera
   #
   # @private
   _prepared: ->
-    @_debug "Camera is ready"
-    @_is_ready = true
-    if @options.on_ready
-      @options.on_ready.call @
+    # XXX Since this method is called from inside the Flash object, we need to
+    # return control to make flash object usable again.
+    that = this
+    setTimeout (-> that._wait_until_stream_looks_ok true), 1
+
+  # This peaks into the video stream using very small rendering and calculates
+  # colors mean value and standard deviation. If standard deviation is
+  # negligible then we assume camera isn't ready yet and wait a little longer.
+  #
+  # @private
+  _wait_until_stream_looks_ok: (show_debug) ->
+    @get_stats (stats) ->
+      if stats.std > 2
+        @_debug "Stream mean gray value = " + stats.mean +
+          " standard deviation = " + stats.std
+        @_debug "Camera is ready"
+
+        @_is_ready = true
+        if @options.on_ready
+          @options.on_ready.call @
+      else
+        if show_debug
+          @_debug "Stream mean gray value = " + stats.mean +
+            " standard deviation = " + stats.std
+        that = this
+        setTimeout (-> that._wait_until_stream_looks_ok false), 100
 
   # Called by the engine when error occurs.
   #

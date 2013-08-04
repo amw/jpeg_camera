@@ -26,6 +26,8 @@ has some nice, new features.
   forgery](http://en.wikipedia.org/wiki/Cross-site_request_forgery#Prevention)
 - Prevents users from messing with HTML5 VIDEO or Flash object elements
   by overlaying transparent DIV over them after initialization.
+- Makes sure the camera is really ready by checking stream's color standard
+  deviation. Safeguard from weird all-black or all-white snapshots.
 
 ## Dependencies
 
