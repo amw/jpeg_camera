@@ -168,6 +168,7 @@ package {
       displayedBitmap.x = viewWidth;
       displayedBitmap.scaleX = -scale;
       displayedBitmap.scaleY =  scale;
+      displayedBitmap.smoothing = true;
       addChild(displayedBitmap);
 
       return true;
@@ -263,6 +264,7 @@ package {
     private function cameraUnmuted():void {
       video = new Video(camera.width, camera.height);
       video.attachCamera(camera);
+      video.smoothing = true;
 
       debug("Camera resolution " + camera.width + "x" + camera.height);
 
