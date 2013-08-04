@@ -73,28 +73,17 @@ package
     }
 
     public function getImageData():Object {
-      var result:Object = new Object();
-      var array:Array = new Array(data.height * data.width * 4);
+      var array:Array = new Array(data.height * data.width);
 
       var index:uint = 0;
-      var pixel:uint, red:uint, green:uint, blue:uint;
 
       for (var y:uint = 0; y < data.height; ++y) {
         for (var x:uint = 0; x < data.width; ++x) {
-          pixel = data.getPixel(x, y);
-
-          red = pixel >> 16 & 0xff;
-          green = pixel >> 8 & 0xff;
-          blue = pixel & 0xff;
-
-          array[index + 0] = red;
-          array[index + 1] = green;
-          array[index + 2] = blue;
-          array[index + 3] = 255;
-
-          index += 4;
+          array[index++] = data.getPixel(x, y);
         }
       }
+
+      var result:Object = new Object();
 
       result.data = array;
       result.width = data.width;
