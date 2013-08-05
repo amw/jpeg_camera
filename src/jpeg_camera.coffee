@@ -137,6 +137,9 @@ class JpegCamera
 
     container.innerHTML = ""
 
+    @view_width = parseInt container.offsetWidth, 10
+    @view_height = parseInt container.offsetHeight, 10
+
     @container = document.createElement "div"
     @container.style.width = "100%"
     @container.style.height = "100%"
@@ -326,11 +329,6 @@ class JpegCamera
     @options.on_debug.call @, message if @options.on_debug
 
   # @private
-  _view_width: -> parseInt @container.offsetWidth, 10
-  # @private
-  _view_height: -> parseInt @container.offsetHeight, 10
-
-  # @private
   _display: (snapshot) ->
     @_engine_display snapshot
     @_displayed_snapshot = snapshot
@@ -404,6 +402,9 @@ class JpegCamera
     @container.appendChild @_overlay
 
   _overlay: null
+
+  view_width: null
+  view_height: null
 
   # Helper for setting prefixed CSS declarations.
   #

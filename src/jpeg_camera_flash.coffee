@@ -31,10 +31,7 @@ if !window.JpegCamera &&
       @_id = @constructor._next_id++
       @constructor._instances[@_id] = @
 
-      width = @_view_width()
-      height = @_view_height()
-
-      if width < 215 || height < 138
+      if @view_width < 215 || @view_height < 138
         @_got_error "camera is too small to display privacy dialog"
         return
 
@@ -52,8 +49,8 @@ if !window.JpegCamera &&
         align: "middle"
       flashvars =
         id: @_id
-        width: width
-        height: height
+        width: @view_width
+        height: @view_height
         shutter_url: @options.shutter_url
       that = this
       callback = (event) ->
@@ -71,7 +68,8 @@ if !window.JpegCamera &&
       @container.appendChild container_to_be_replaced
 
       swfobject.embedSWF @options.swf_url, container_to_be_replaced.id,
-        width, height, '9', null, flashvars, params, attributes, callback
+        @view_width, @view_height, '9', null, flashvars, params, attributes,
+        callback
 
     _engine_play_shutter_sound: ->
       @_flash._play_shutter()

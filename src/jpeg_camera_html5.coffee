@@ -22,8 +22,8 @@ if navigator.getUserMedia
     _engine_init: ->
       @_debug "Using HTML5 engine"
 
-      vertical_padding = Math.floor @_view_height() * 0.2
-      horizontal_padding = Math.floor @_view_width() * 0.2
+      vertical_padding = Math.floor @view_height * 0.2
+      horizontal_padding = Math.floor @view_width * 0.2
 
       @message = document.createElement "div"
       @message.class = "message"
@@ -45,8 +45,8 @@ if navigator.getUserMedia
       @container.appendChild @message
 
       @video_container = document.createElement "div"
-      @video_container.style.width = "#{@_view_width()}px"
-      @video_container.style.height = "#{@_view_height()}px"
+      @video_container.style.width = "#{@view_width}px"
+      @video_container.style.height = "#{@view_height}px"
       @video_container.style.overflow = "hidden"
       @video_container.style.position = "absolute"
       @video_container.style.zIndex = 1
@@ -139,8 +139,8 @@ if navigator.getUserMedia
         @container.removeChild @displayed_canvas
 
       @displayed_canvas = snapshot._canvas
-      @displayed_canvas.style.width = "#{@_view_width()}px"
-      @displayed_canvas.style.height = "#{@_view_height()}px"
+      @displayed_canvas.style.width = "#{@view_width}px"
+      @displayed_canvas.style.height = "#{@view_height}px"
       @displayed_canvas.style.top = 0
       @displayed_canvas.style.left = 0
       @displayed_canvas.style.position = "absolute"
@@ -275,39 +275,33 @@ if navigator.getUserMedia
     _status_checks_count: 0
 
     _get_video_crop: ->
-      view_width = @_view_width()
-      view_height = @_view_height()
-
       video_ratio = @video_width / @video_height
-      view_ratio = view_width / view_height
+      view_ratio = @view_width / @view_height
 
       if video_ratio >= view_ratio
         # fill height, crop width
         @_debug "Filling height"
-        video_scale = view_height / @video_height
+        video_scale = @view_height / @video_height
         scaled_video_width = Math.round @video_width * video_scale
 
         width: scaled_video_width
-        height: view_height
-        x_offset: -Math.floor((scaled_video_width - view_width) / 2.0)
+        height: @view_height
+        x_offset: -Math.floor((scaled_video_width - @view_width) / 2.0)
         y_offset: 0
       else
         # fill width, crop height
         @_debug "Filling width"
-        video_scale = view_width / @video_width
+        video_scale = @view_width / @video_width
         scaled_video_height = Math.round @video_height * video_scale
 
-        width: view_width
+        width: @view_width
         height: scaled_video_height
         x_offset: 0
-        y_offset: -Math.floor((scaled_video_height - view_height) / 2.0)
+        y_offset: -Math.floor((scaled_video_height - @view_height) / 2.0)
 
     _get_capture_crop: ->
-      view_width = @_view_width()
-      view_height = @_view_height()
-
       video_ratio = @video_width / @video_height
-      view_ratio = view_width / view_height
+      view_ratio = @view_width / @view_height
 
       if video_ratio >= view_ratio
         # take full height, crop width

@@ -36,6 +36,8 @@
         throw "JpegCamera: invalid container";
       }
       container.innerHTML = "";
+      this.view_width = parseInt(container.offsetWidth, 10);
+      this.view_height = parseInt(container.offsetHeight, 10);
       this.container = document.createElement("div");
       this.container.style.width = "100%";
       this.container.style.height = "100%";
@@ -136,14 +138,6 @@
       }
     };
 
-    JpegCamera.prototype._view_width = function() {
-      return parseInt(this.container.offsetWidth, 10);
-    };
-
-    JpegCamera.prototype._view_height = function() {
-      return parseInt(this.container.offsetHeight, 10);
-    };
-
     JpegCamera.prototype._display = function(snapshot) {
       this._engine_display(snapshot);
       return this._displayed_snapshot = snapshot;
@@ -211,6 +205,10 @@
 
     JpegCamera.prototype._overlay = null;
 
+    JpegCamera.prototype.view_width = null;
+
+    JpegCamera.prototype.view_height = null;
+
     JpegCamera._add_prefixed_style = function(element, style, value) {
       var uppercase_style;
       uppercase_style = style.charAt(0).toUpperCase() + style.slice(1);
@@ -248,8 +246,8 @@
       JpegCameraHtml5.prototype._engine_init = function() {
         var error, failure, get_user_media_options, horizontal_padding, success, that, vertical_padding;
         this._debug("Using HTML5 engine");
-        vertical_padding = Math.floor(this._view_height() * 0.2);
-        horizontal_padding = Math.floor(this._view_width() * 0.2);
+        vertical_padding = Math.floor(this.view_height * 0.2);
+        horizontal_padding = Math.floor(this.view_width * 0.2);
         this.message = document.createElement("div");
         this.message["class"] = "message";
         this.message.style.width = "100%";
@@ -266,8 +264,8 @@
         this.message.innerHTML = "Please allow camera access when prompted by the browser.<br><br>" + "Look for camera icon around your address bar.";
         this.container.appendChild(this.message);
         this.video_container = document.createElement("div");
-        this.video_container.style.width = "" + (this._view_width()) + "px";
-        this.video_container.style.height = "" + (this._view_height()) + "px";
+        this.video_container.style.width = "" + this.view_width + "px";
+        this.video_container.style.height = "" + this.view_height + "px";
         this.video_container.style.overflow = "hidden";
         this.video_container.style.position = "absolute";
         this.video_container.style.zIndex = 1;
@@ -356,8 +354,8 @@
           this.container.removeChild(this.displayed_canvas);
         }
         this.displayed_canvas = snapshot._canvas;
-        this.displayed_canvas.style.width = "" + (this._view_width()) + "px";
-        this.displayed_canvas.style.height = "" + (this._view_height()) + "px";
+        this.displayed_canvas.style.width = "" + this.view_width + "px";
+        this.displayed_canvas.style.height = "" + this.view_height + "px";
         this.displayed_canvas.style.top = 0;
         this.displayed_canvas.style.left = 0;
         this.displayed_canvas.style.position = "absolute";
@@ -500,40 +498,36 @@
       JpegCameraHtml5.prototype._status_checks_count = 0;
 
       JpegCameraHtml5.prototype._get_video_crop = function() {
-        var scaled_video_height, scaled_video_width, video_ratio, video_scale, view_height, view_ratio, view_width;
-        view_width = this._view_width();
-        view_height = this._view_height();
+        var scaled_video_height, scaled_video_width, video_ratio, video_scale, view_ratio;
         video_ratio = this.video_width / this.video_height;
-        view_ratio = view_width / view_height;
+        view_ratio = this.view_width / this.view_height;
         if (video_ratio >= view_ratio) {
           this._debug("Filling height");
-          video_scale = view_height / this.video_height;
+          video_scale = this.view_height / this.video_height;
           scaled_video_width = Math.round(this.video_width * video_scale);
           return {
             width: scaled_video_width,
-            height: view_height,
-            x_offset: -Math.floor((scaled_video_width - view_width) / 2.0),
+            height: this.view_height,
+            x_offset: -Math.floor((scaled_video_width - this.view_width) / 2.0),
             y_offset: 0
           };
         } else {
           this._debug("Filling width");
-          video_scale = view_width / this.video_width;
+          video_scale = this.view_width / this.video_width;
           scaled_video_height = Math.round(this.video_height * video_scale);
           return {
-            width: view_width,
+            width: this.view_width,
             height: scaled_video_height,
             x_offset: 0,
-            y_offset: -Math.floor((scaled_video_height - view_height) / 2.0)
+            y_offset: -Math.floor((scaled_video_height - this.view_height) / 2.0)
           };
         }
       };
 
       JpegCameraHtml5.prototype._get_capture_crop = function() {
-        var snapshot_height, snapshot_width, video_ratio, view_height, view_ratio, view_width;
-        view_width = this._view_width();
-        view_height = this._view_height();
+        var snapshot_height, snapshot_width, video_ratio, view_ratio;
         video_ratio = this.video_width / this.video_height;
-        view_ratio = view_width / view_height;
+        view_ratio = this.view_width / this.view_height;
         if (video_ratio >= view_ratio) {
           snapshot_width = Math.round(this.video_height * view_ratio);
           return {
