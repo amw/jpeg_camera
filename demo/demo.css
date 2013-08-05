@@ -37,7 +37,7 @@ input {
   overflow-y: hidden;
 }
 
-#snapshots > * {
+#snapshots canvas, #snapshots img {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -49,7 +49,7 @@ input {
   border: 3px solid transparent;
 }
 
-#snapshots > .selected {
+#snapshots .selected {
   border: 3px solid #000;
 }
 

@@ -33,6 +33,12 @@ $(function() {
       $(element).data("snapshot", this).addClass("item");
 
       var $container = $("#snapshots").append(element);
+      var $camera = $("#camera");
+      var camera_ratio = $camera.innerWidth() / $camera.innerHeight();
+
+      var height = $container.height()
+      element.style.height = "" + height + "px";
+      element.style.width = "" + Math.round(camera_ratio * height) + "px";
 
       var scroll = $container[0].scrollWidth - $container.innerWidth();
 
