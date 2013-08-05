@@ -129,12 +129,18 @@ browsers.</li>
 <li>Manage and upload multiple snapshots at once. You don&#39;t have to wait for the
 first upload to finish before capturing the next image. This means you can
 take a few shots in a short interval.</li>
+<li>You can get snapshots for display outside the camera container in browsers
+that support <code>canvas</code> element - even when using Flash fallback.</li>
 <li>Allows you to retry failed uploads.</li>
 <li>Easily read server response text and code after upload.</li>
 <li>Send CSRF tokens to secure your user&#39;s session from <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery#Prevention">Cross-site request
 forgery</a></li>
+<li>Prevents users from messing with HTML5 VIDEO or Flash object elements
+by overlaying transparent DIV over them after initialization.</li>
+<li>Makes sure the camera is really ready by checking stream&#39;s color standard
+deviation. Safeguard from weird all-black or all-white snapshots.</li>
 </ul>
-<h2>Dependencies</h2>
+<h2>Demo</h2><p>Check out the <a href="http://amw.github.io/jpeg_camera/demo/">demo page</a>.</p><h2>Dependencies</h2>
 <ul>
 <li><a href="https://github.com/blueimp/JavaScript-Canvas-to-Blob">Canvas-to-Blob</a>
 polyfill for the standard JavaScript <code>canvas.toBlob</code> method.</li>
@@ -150,7 +156,7 @@ root.</p><p>Load JpegCamera and it&#39;s dependencies in the <code>HEAD</code> s
 to load them again if you already use them in your project. If you want to cut
 down on HTTP requests then there is a concatenated version you can use.</p><pre><code>&lt;script src=&quot;/jpeg_camera/jpeg_camera_with_dependencies.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><p>If you want to use HTML5-only version you can load jpeg_camera_no_flash.min.js.
 There is no &quot;with dependencies&quot; version of this file, so you have to remember
-to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3>Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.0.2&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
+to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3>Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.1.0&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
 are stored in separate files so that you don&#39;t have to load them again if you
 already use them in your project. The assets pipeline will take care of
 minifying and concatenating everything into one script.</p><pre><code>//= require jpeg_camera/swfobject
@@ -178,7 +184,9 @@ classes.</p><h2>Caveats</h2><p>To use Flash fallback your camera container must 
 that finish with status codes from outside the 2XX range (like 404 Not Found or
 422 Unprocessable Entity). If you&#39;re using version of JpegCamera with Flash
 fallback your application should not rely on reading body of these responses.
-The status code number is always available.</p><h2>Contributing</h2><p>The source code is available on <a href="https://github.com/amw/jpeg_camera">Github</a>.
+The status code number is always available.</p><p>Current stable versions of Firefox and Opera support getUserMedia, but do not
+support Web Audio API. I have decided against loading a Flash object in
+these browsers so JpegCamera will be silent.</p><h2>Contributing</h2><p>The source code is available on <a href="https://github.com/amw/jpeg_camera">Github</a>.
 Please send pull requests on topic branches.</p><p>To build dist files from source you need <code>npm</code> — Node Package Manager.</p><pre><code>npm install              # install required dependencies
 npm install -g grunt-cli # install grunt command
 grunt dist               # build js &amp; swf files
@@ -196,11 +204,11 @@ that project.</p><p>Copyright <a href="http://adamwrobel.com">Adam Wróbel</a>, 
     </div>
     <div id='footer'>
   Generated on
-  Tue Jul 30 2013 17:58:49 GMT+0200 (CEST)
+  Mon Aug 05 2013 02:04:24 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
-  (Node.js v0.10.14).
+  (Node.js v0.10.13).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

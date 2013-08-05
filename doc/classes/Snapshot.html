@@ -144,6 +144,36 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#get_stats-instance'>
+        - (Object) <strong>get_stats</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Calculate snapshot pixel statistics.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_canvas-instance'>
+        - (Boolean) <strong>get_canvas</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Get canvas element showing the snapshot.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_image_data-instance'>
+        - (void) <strong>get_image_data</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Get ImageData object containing color values for each pixel of the snapshot.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#upload-instance'>
         - (Snapshot) <strong>upload</strong>(options = {})
       </a>
@@ -220,6 +250,121 @@
       &mdash;
       <span class='desc'>Self for chaining.</span>
     </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_stats-instance'>
+      - (Object) <strong>get_stats</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Calculate snapshot pixel statistics.</p><p>Currently two properties are available: - mean gray value of pixels (0-255) - standard deviation of gray values</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with the data object as an argument.
+Snapshot will be available as <code>this</code>.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the data will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Object</tt>)
+      &mdash;
+      <span class='desc'>Object with <code>mean</code> and <code>std</code> properties.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_canvas-instance'>
+      - (Boolean) <strong>get_canvas</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Get canvas element showing the snapshot.</p><p>This can be used to display the snapshot outside the camera&#39;s container.
+You can show multiple snapshots at a time and allow the user to pick one
+he likes best.</p><p>Canvas produced by this method has a resolution of the snapshot (which
+depends on the camera&#39;s native resolution), not that of the camera&#39;s
+container. Use CSS to display this canvas in different sizes.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the <code>canvas</code> element immediately. Instead
+it accepts a callback that later will be called with the <code>canvas</code> element as
+an argument. Snapshot will be available as <code>this</code>.</p><p>Multiple calls to this method will yield the same canvas element.</p><p>One caveat is that the underlaying data of this canvas is not mirrored like
+the stream shown in the camera container. Special CSS transform directive
+is applied on it so that it looks like the picture in the camera when
+displayed. This only matters when manipulating the canvas or reading it&#39;s
+data. You can read more about mirroring in <a href='../classes/JpegCamera.html#capture-instance'>JpegCamera#capture</a>.</p><p>This method doesn&#39;t work in Internet Explorer 8 or earlier, because it does
+not support <code>canvas</code> element. Call <a href='../classes/JpegCamera.html#canvas_supported-class'>JpegCamera.canvas_supported</a> to learn
+whether you can use this method.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when <code>canvas</code> element is available. Snapshot object will be available as <code>this</code>, the <code>canvas</code> element will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Boolean</tt>)
+      &mdash;
+      <span class='desc'>Whether canvas is supported in this browser.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_image_data-instance'>
+      - (void) <strong>get_image_data</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Get ImageData object containing color values for each pixel of the snapshot.</p><p>Data produced by this method has a resolution of the snapshot (which depends
+on the camera&#39;s native resolution), not that of the camera&#39;s container.</p><p>Read more about ImageData object on <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">Mozilla&#39;s website
+</a>.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with the data object as an argument.
+Snapshot will be available as <code>this</code>.</p><p>Multiple calls to this method will yield the same data object.</p><p>One caveat is that the returned data is not mirrored like the stream shown
+in the camera container. This only matters when manipulating the canvas or
+reading it&#39;s data. You can read more about mirroring in
+<a href='../classes/JpegCamera.html#capture-instance'>JpegCamera#capture</a>.</p><p>This method returns native <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData
+</a> object in all
+browsers except Internet Explorer 8 or earlier which does not support
+the <code>canvas</code> element. In that browser a generic JavaScript object will be
+returned that mimics the native format. Call <a href='../classes/JpegCamera.html#canvas_supported-class'>JpegCamera.canvas_supported</a>
+to learn whether <code>canvas</code> is supported by the browser.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the data will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>void</tt></li>
   </ul>
 </div>
   </div>
@@ -333,7 +478,7 @@ forgotten after the next call to <a href='../classes/Snapshot.html#upload-instan
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument.</span>
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -367,7 +512,7 @@ forgotten after the next call to <a href='../classes/Snapshot.html#upload-instan
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument with response body or error message as the second argument if available.</span>
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument with response body or error message as the second argument if available.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -401,11 +546,11 @@ an error.</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Jul 30 2013 17:58:49 GMT+0200 (CEST)
+  Mon Aug 05 2013 02:04:24 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
-  (Node.js v0.10.14).
+  (Node.js v0.10.13).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

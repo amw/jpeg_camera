@@ -1,6 +1,6 @@
 {
   "name": "jpeg-camera",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "homepage": "http://amw.github.io/jpeg_camera",
   "devDependencies": {
     "grunt": "~0.4.1",

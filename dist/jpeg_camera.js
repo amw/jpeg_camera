@@ -1,8 +1,8 @@
-/*! JpegCamera 1.0.2 | 2013-07-30
+/*! JpegCamera 1.1.0 | 2013-08-05
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
-  var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, supported_flash_version, _ref, _ref1,
+  var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, check_canvas_to_blob, supported_flash_version, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -22,16 +22,25 @@
       retry_success: false
     };
 
+    JpegCamera._canvas_supported = !!document.createElement('canvas').getContext;
+
+    JpegCamera.canvas_supported = function() {
+      return this._canvas_supported;
+    };
+
     function JpegCamera(container, options) {
       if ("string" === typeof container) {
-        this.container = document.querySelector(container);
-      } else {
-        this.container = container;
+        container = document.querySelector(container);
       }
-      if (!(this.container && this.container.offsetWidth)) {
+      if (!(container && container.offsetWidth)) {
         throw "JpegCamera: invalid container";
       }
-      this.container.innerHTML = "";
+      container.innerHTML = "";
+      this.container = document.createElement("div");
+      this.container.style.width = "100%";
+      this.container.style.height = "100%";
+      this.container.style.position = "relative";
+      container.appendChild(this.container);
       this.options = this._extend({}, this.constructor.DefaultOptions, options);
       this._engine_init();
     }
@@ -56,6 +65,18 @@
 
     JpegCamera.prototype._error_occured = false;
 
+    JpegCamera.StatsCaptureScale = 0.2;
+
+    JpegCamera.prototype.get_stats = function(callback) {
+      var snapshot, that;
+      snapshot = new Snapshot(this, {});
+      this._engine_capture(snapshot, false, 0.1, JpegCamera.StatsCaptureScale);
+      that = this;
+      return snapshot.get_stats(function(stats) {
+        return callback.call(that, stats);
+      });
+    };
+
     JpegCamera.prototype.capture = function(options) {
       var snapshot, _options;
       if (options == null) {
@@ -67,7 +88,7 @@
       if (_options.shutter) {
         this._engine_play_shutter_sound();
       }
-      this._engine_capture(snapshot, _options.mirror, _options.quality);
+      this._engine_capture(snapshot, _options.mirror, _options.quality, 1.0);
       return snapshot;
     };
 
@@ -130,10 +151,6 @@
 
     JpegCamera.prototype._displayed_snapshot = null;
 
-    JpegCamera.prototype._upload = function(snapshot, api_url, csrf_token, timeout) {
-      return this._engine_upload(snapshot, api_url, csrf_token, timeout);
-    };
-
     JpegCamera.prototype._discard = function(snapshot) {
       if (this._displayed_snapshot === snapshot) {
         this.show_stream();
@@ -144,10 +161,33 @@
     };
 
     JpegCamera.prototype._prepared = function() {
-      this._is_ready = true;
-      if (this.options.on_ready) {
-        return this.options.on_ready.call(this);
-      }
+      var that;
+      that = this;
+      return setTimeout((function() {
+        return that._wait_until_stream_looks_ok(true);
+      }), 1);
+    };
+
+    JpegCamera.prototype._wait_until_stream_looks_ok = function(show_debug) {
+      return this.get_stats(function(stats) {
+        var that;
+        if (stats.std > 2) {
+          this._debug("Stream mean gray value = " + stats.mean + " standard deviation = " + stats.std);
+          this._debug("Camera is ready");
+          this._is_ready = true;
+          if (this.options.on_ready) {
+            return this.options.on_ready.call(this);
+          }
+        } else {
+          if (show_debug) {
+            this._debug("Stream mean gray value = " + stats.mean + " standard deviation = " + stats.std);
+          }
+          that = this;
+          return setTimeout((function() {
+            return that._wait_until_stream_looks_ok(false);
+          }), 100);
+        }
+      });
     };
 
     JpegCamera.prototype._got_error = function(error) {
@@ -158,11 +198,44 @@
       }
     };
 
+    JpegCamera.prototype._block_element_access = function() {
+      this._overlay = document.createElement("div");
+      this._overlay.style.width = "100%";
+      this._overlay.style.height = "100%";
+      this._overlay.style.position = "absolute";
+      this._overlay.style.top = 0;
+      this._overlay.style.left = 0;
+      this._overlay.style.zIndex = 2;
+      return this.container.appendChild(this._overlay);
+    };
+
+    JpegCamera.prototype._overlay = null;
+
+    JpegCamera._add_prefixed_style = function(element, style, value) {
+      var uppercase_style;
+      uppercase_style = style.charAt(0).toUpperCase() + style.slice(1);
+      element.style[style] = value;
+      element.style["Webkit" + uppercase_style] = value;
+      element.style["Moz" + uppercase_style] = value;
+      element.style["ms" + uppercase_style] = value;
+      return element.style["O" + uppercase_style] = value;
+    };
+
     return JpegCamera;
 
   })();
 
   navigator.getUserMedia || (navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+  check_canvas_to_blob = function() {
+    var canvas;
+    canvas = document.createElement("canvas");
+    if (canvas.getContext && !canvas.toBlob) {
+      throw "JpegCamera: Canvas-to-Blob is not loaded";
+    }
+  };
+
+  check_canvas_to_blob();
 
   if (navigator.getUserMedia) {
     JpegCameraHtml5 = (function(_super) {
@@ -174,20 +247,15 @@
       }
 
       JpegCameraHtml5.prototype._engine_init = function() {
-        var get_user_media_options, horizontal_padding, that, vertical_padding;
+        var error, failure, get_user_media_options, horizontal_padding, success, that, vertical_padding;
         this._debug("Using HTML5 engine");
-        this.internal_container = document.createElement("div");
-        this.internal_container.style.width = "100%";
-        this.internal_container.style.height = "100%";
-        this.internal_container.style.position = "relative";
-        this.container.appendChild(this.internal_container);
         vertical_padding = Math.floor(this._view_height() * 0.2);
         horizontal_padding = Math.floor(this._view_width() * 0.2);
         this.message = document.createElement("div");
         this.message["class"] = "message";
         this.message.style.width = "100%";
         this.message.style.height = "100%";
-        this._add_prefixed_style(this.message, "boxSizing", "border-box");
+        JpegCamera._add_prefixed_style(this.message, "boxSizing", "border-box");
         this.message.style.overflow = "hidden";
         this.message.style.textAlign = "center";
         this.message.style.paddingTop = "" + vertical_padding + "px";
@@ -196,18 +264,18 @@
         this.message.style.paddingRight = "" + horizontal_padding + "px";
         this.message.style.position = "absolute";
         this.message.style.zIndex = 3;
-        this.message.innerHTML = "Please allow camera access when prompted by the browser.";
-        this.internal_container.appendChild(this.message);
+        this.message.innerHTML = "Please allow camera access when prompted by the browser.<br><br>" + "Look for camera icon around your address bar.";
+        this.container.appendChild(this.message);
         this.video_container = document.createElement("div");
         this.video_container.style.width = "" + (this._view_width()) + "px";
         this.video_container.style.height = "" + (this._view_height()) + "px";
         this.video_container.style.overflow = "hidden";
         this.video_container.style.position = "absolute";
         this.video_container.style.zIndex = 1;
-        this.internal_container.appendChild(this.video_container);
+        this.container.appendChild(this.video_container);
         this.video = document.createElement('video');
         this.video.autoplay = true;
-        this._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
+        JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
         window.AudioContext || (window.AudioContext = window.webkitAudioContext);
         if (window.AudioContext) {
           this._load_shutter_sound();
@@ -228,16 +296,19 @@
           }
         };
         that = this;
-        return navigator.getUserMedia(get_user_media_options, function(stream) {
+        success = function(stream) {
           that._remove_message();
           if (window.URL) {
             that.video.src = URL.createObjectURL(stream);
           } else {
             that.video.src = stream;
           }
+          that._block_element_access();
           return that._wait_for_video_ready();
-        }, function(error) {
+        };
+        failure = function(error) {
           var code, key, value;
+          that.message.innerHTML = "<span style=\"color: red;\">" + "You have denied camera access." + "</span><br><br>" + "Look for camera icon around your address bar to change your " + "decision.";
           code = error.code;
           for (key in error) {
             value = error[key];
@@ -248,7 +319,13 @@
             return;
           }
           return that._got_error("UNKNOWN ERROR");
-        });
+        };
+        try {
+          return navigator.getUserMedia(get_user_media_options, success, failure);
+        } catch (_error) {
+          error = _error;
+          return navigator.getUserMedia("video", success, failure);
+        }
       };
 
       JpegCameraHtml5.prototype._engine_play_shutter_sound = function() {
@@ -262,14 +339,14 @@
         return source.start(0);
       };
 
-      JpegCameraHtml5.prototype._engine_capture = function(snapshot, mirror, quality) {
+      JpegCameraHtml5.prototype._engine_capture = function(snapshot, mirror, quality, scale) {
         var canvas, context, crop;
         crop = this._get_capture_crop();
         canvas = document.createElement("canvas");
-        canvas.width = crop.width;
-        canvas.height = crop.height;
+        canvas.width = Math.round(crop.width * scale);
+        canvas.height = Math.round(crop.height * scale);
         context = canvas.getContext("2d");
-        context.drawImage(this.video, crop.x_offset, crop.y_offset, crop.width, crop.height, 0, 0, crop.width, crop.height);
+        context.drawImage(this.video, crop.x_offset, crop.y_offset, crop.width, crop.height, 0, 0, Math.round(crop.width * scale), Math.round(crop.height * scale));
         snapshot._canvas = canvas;
         snapshot._mirror = mirror;
         return snapshot._quality = quality;
@@ -277,7 +354,7 @@
 
       JpegCameraHtml5.prototype._engine_display = function(snapshot) {
         if (this.displayed_canvas) {
-          this.internal_container.removeChild(this.displayed_canvas);
+          this.container.removeChild(this.displayed_canvas);
         }
         this.displayed_canvas = snapshot._canvas;
         this.displayed_canvas.style.width = "" + (this._view_width()) + "px";
@@ -286,8 +363,25 @@
         this.displayed_canvas.style.left = 0;
         this.displayed_canvas.style.position = "absolute";
         this.displayed_canvas.style.zIndex = 2;
-        this._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
-        return this.internal_container.appendChild(this.displayed_canvas);
+        JpegCamera._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
+        return this.container.appendChild(this.displayed_canvas);
+      };
+
+      JpegCameraHtml5.prototype._engine_get_canvas = function(snapshot) {
+        var canvas, context;
+        canvas = document.createElement("canvas");
+        canvas.width = snapshot._canvas.width;
+        canvas.height = snapshot._canvas.height;
+        context = canvas.getContext("2d");
+        context.drawImage(snapshot._canvas, 0, 0);
+        return canvas;
+      };
+
+      JpegCameraHtml5.prototype._engine_get_image_data = function(snapshot) {
+        var canvas, context;
+        canvas = snapshot._canvas;
+        context = canvas.getContext("2d");
+        return context.getImageData(0, 0, canvas.width, canvas.height);
       };
 
       JpegCameraHtml5.prototype._engine_discard = function(snapshot) {
@@ -301,7 +395,7 @@
 
       JpegCameraHtml5.prototype._engine_show_stream = function() {
         if (this.displayed_canvas) {
-          this.internal_container.removeChild(this.displayed_canvas);
+          this.container.removeChild(this.displayed_canvas);
           this.displayed_canvas = null;
         }
         return this.video_container.style.display = "block";
@@ -406,16 +500,6 @@
 
       JpegCameraHtml5.prototype._status_checks_count = 0;
 
-      JpegCameraHtml5.prototype._add_prefixed_style = function(element, style, value) {
-        var uppercase_style;
-        uppercase_style = style.charAt(0).toUpperCase() + style.slice(1);
-        element.style[style] = value;
-        element.style["Webkit" + uppercase_style] = value;
-        element.style["Moz" + uppercase_style] = value;
-        element.style["ms" + uppercase_style] = value;
-        return element.style["O" + uppercase_style] = value;
-      };
-
       JpegCameraHtml5.prototype._get_video_crop = function() {
         var scaled_video_height, scaled_video_width, video_ratio, video_scale, view_height, view_ratio, view_width;
         view_width = this._view_width();
@@ -482,6 +566,10 @@
 
   supported_flash_version = '9';
 
+  if (!window.swfobject) {
+    throw "JpegCamera: SWFObject is not loaded";
+  }
+
   if (!window.JpegCamera && window.swfobject && swfobject.hasFlashPlayerVersion(supported_flash_version)) {
     JpegCameraFlash = (function(_super) {
       __extends(JpegCameraFlash, _super);
@@ -506,7 +594,7 @@
       JpegCameraFlash._next_id = 1;
 
       JpegCameraFlash.prototype._engine_init = function() {
-        var attributes, callback, flash_object_id, flashvars, height, params, that, width;
+        var attributes, callback, container_to_be_replaced, flash_object_id, flashvars, height, params, that, width;
         this._debug("Using Flash engine");
         this._id = this.constructor._next_id++;
         this.constructor._instances[this._id] = this;
@@ -544,24 +632,66 @@
             return that._flash = document.getElementById(flash_object_id);
           }
         };
-        this.internal_container = document.createElement("div");
-        this.internal_container.id = "jpeg_camera_flash_" + this._id;
-        this.internal_container.style.width = "100%";
-        this.internal_container.style.height = "100%";
-        this.container.appendChild(this.internal_container);
-        return swfobject.embedSWF(this.options.swf_url, this.internal_container.id, width, height, '9', null, flashvars, params, attributes, callback);
+        container_to_be_replaced = document.createElement("div");
+        container_to_be_replaced.id = "jpeg_camera_flash_" + this._id;
+        container_to_be_replaced.style.width = "100%";
+        container_to_be_replaced.style.height = "100%";
+        this.container.appendChild(container_to_be_replaced);
+        return swfobject.embedSWF(this.options.swf_url, container_to_be_replaced.id, width, height, '9', null, flashvars, params, attributes, callback);
       };
 
       JpegCameraFlash.prototype._engine_play_shutter_sound = function() {
         return this._flash._play_shutter();
       };
 
-      JpegCameraFlash.prototype._engine_capture = function(snapshot, mirror, quality) {
-        return this._flash._capture(snapshot.id, mirror, quality);
+      JpegCameraFlash.prototype._engine_capture = function(snapshot, mirror, quality, scale) {
+        return this._flash._capture(snapshot.id, mirror, quality, scale);
       };
 
       JpegCameraFlash.prototype._engine_display = function(snapshot) {
         return this._flash._display(snapshot.id);
+      };
+
+      JpegCameraFlash.prototype._engine_get_canvas = function(snapshot) {
+        var canvas, context;
+        snapshot._image_data || (snapshot._image_data = this._engine_get_image_data(snapshot));
+        canvas = document.createElement("canvas");
+        canvas.width = snapshot._image_data.width;
+        canvas.height = snapshot._image_data.height;
+        context = canvas.getContext("2d");
+        context.putImageData(snapshot._image_data, 0, 0);
+        return canvas;
+      };
+
+      JpegCameraFlash.prototype._engine_get_image_data = function(snapshot) {
+        var blue, canvas, context, flash_data, green, i, index, pixel, red, result, _i, _len, _ref2;
+        flash_data = this._flash._get_image_data(snapshot.id);
+        if (JpegCamera.canvas_supported()) {
+          canvas = document.createElement("canvas");
+          canvas.width = flash_data.width;
+          canvas.height = flash_data.height;
+          context = canvas.getContext("2d");
+          result = context.createImageData(flash_data.width, flash_data.height);
+        } else {
+          result = {
+            data: [],
+            width: flash_data.width,
+            height: flash_data.height
+          };
+        }
+        _ref2 = flash_data.data;
+        for (i = _i = 0, _len = _ref2.length; _i < _len; i = ++_i) {
+          pixel = _ref2[i];
+          index = i * 4;
+          red = pixel >> 16 & 0xff;
+          green = pixel >> 8 & 0xff;
+          blue = pixel & 0xff;
+          result.data[index + 0] = red;
+          result.data[index + 1] = green;
+          result.data[index + 2] = blue;
+          result.data[index + 3] = 255;
+        }
+        return result;
       };
 
       JpegCameraFlash.prototype._engine_discard = function(snapshot) {
@@ -577,6 +707,7 @@
       };
 
       JpegCameraFlash.prototype._flash_prepared = function() {
+        this._block_element_access();
         return this._prepared();
       };
 
@@ -625,6 +756,48 @@
       }
       return this;
     };
+
+    Snapshot.prototype.get_stats = function(callback) {
+      if (this._discarded) {
+        raise("discarded snapshot cannot be used");
+      }
+      return this.get_image_data(function(data) {
+        return this._get_stats(data, callback);
+      });
+    };
+
+    Snapshot.prototype.get_canvas = function(callback) {
+      var that;
+      if (this._discarded) {
+        raise("discarded snapshot cannot be used");
+      }
+      if (!JpegCamera._canvas_supported) {
+        false;
+      }
+      that = this;
+      setTimeout(function() {
+        that._extra_canvas || (that._extra_canvas = that.camera._engine_get_canvas(that));
+        JpegCamera._add_prefixed_style(that._extra_canvas, "transform", "scalex(-1.0)");
+        return callback.call(that, that._extra_canvas);
+      }, 10);
+      return true;
+    };
+
+    Snapshot.prototype._extra_canvas = null;
+
+    Snapshot.prototype.get_image_data = function(callback) {
+      var that;
+      if (this._discarded) {
+        raise("discarded snapshot cannot be used");
+      }
+      that = this;
+      return setTimeout(function() {
+        that._image_data || (that._image_data = that.camera._engine_get_image_data(that));
+        return callback.call(that, that._image_data);
+      }, 5);
+    };
+
+    Snapshot.prototype._image_data = null;
 
     Snapshot.prototype.upload = function(options) {
       var cache;
@@ -713,8 +886,37 @@
       this._fail = false;
       this._status = null;
       this._error_message = null;
-      return this.camera._upload(this, cache.api_url, csrf_token, cache.timeout);
+      return this.camera._engine_upload(this, cache.api_url, csrf_token, cache.timeout);
     };
+
+    Snapshot.prototype._get_stats = function(data, callback) {
+      var gray, gray_values, i, index, mean, n, sum, sum_of_square_distances, _i, _j, _len;
+      if (!this._stats) {
+        n = data.width * data.height;
+        sum = 0.0;
+        gray_values = new Array(n);
+        for (i = _i = 0; _i < n; i = _i += 1) {
+          index = i * 4;
+          gray = 0.2126 * data.data[index + 0] + 0.7152 * data.data[index + 1] + 0.0722 * data.data[index + 2];
+          gray = Math.round(gray);
+          sum += gray;
+          gray_values[i] = gray;
+        }
+        mean = Math.round(sum / n);
+        sum_of_square_distances = 0;
+        for (_j = 0, _len = gray_values.length; _j < _len; _j++) {
+          gray = gray_values[_j];
+          sum_of_square_distances += Math.pow(gray - mean, 2);
+        }
+        this._stats = {
+          mean: mean,
+          std: Math.round(Math.sqrt(sum_of_square_distances / n))
+        };
+      }
+      return callback.call(this, this._stats);
+    };
+
+    Snapshot.prototype._stats = null;
 
     Snapshot.prototype._upload_done = function() {
       var cache, delay, retry_decision, that;

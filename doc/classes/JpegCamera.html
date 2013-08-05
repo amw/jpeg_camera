@@ -133,6 +133,19 @@ else {
 </div>
 <div class='tags'>
 </div>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#canvas_supported-class'>
+        + (Boolean) <strong>canvas_supported</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Tells whether the browser supports <code>canvas</code> element and you can use <a href='../classes/Snapshot.html#get_canvas-instance'>Snapshot#get_canvas</a> method to display snapshots outside the camera container.
+    </span>
+  </li>
+</ul>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -168,6 +181,16 @@ else {
   </li>
   <li>
     <span class='signature'>
+      <a href='#get_stats-instance'>
+        - (Object) <strong>get_stats</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Peak into video stream and calculate pixel statistics.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#capture-instance'>
         - (Snapshot) <strong>capture</strong>(options = {})
       </a>
@@ -197,6 +220,31 @@ else {
     </span>
   </li>
 </ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='canvas_supported-class'>
+      + (Boolean) <strong>canvas_supported</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Tells whether the browser supports <code>canvas</code> element and you can use
+<a href='../classes/Snapshot.html#get_canvas-instance'>Snapshot#get_canvas</a> method to display snapshots outside the camera
+container.</p><p>All browsers except Internet Explorer 8 and earlier support <code>canvas</code>
+element.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Boolean</tt>)
+      &mdash;
+      <span class='desc'>True if <code>canvas</code> is supported.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
       <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
@@ -419,6 +467,41 @@ user revokes access.</p><p>If the event has already happened the argument will b
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='get_stats-instance'>
+      - (Object) <strong>get_stats</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Peak into video stream and calculate pixel statistics.</p><p>Currently two properties are available: - mean gray value of pixels (0-255) - standard deviation of gray values</p><p>Can be useful to give the user hints about bad lighting. It uses full
+capture area, but at much lower resolution. It&#39;s more efficient than taking
+a regular capture and calling <a href='../classes/Snapshot.html#get_stats-instance'>Snapshot#get_stats</a>.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with the data object as an argument.
+The camera object will be available as <code>this</code>.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Camera object will be available as <code>this</code>, the data will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Object</tt>)
+      &mdash;
+      <span class='desc'>Object with <code>mean</code> and <code>std</code> properties.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='capture-instance'>
       - (Snapshot) <strong>capture</strong>(options = {})
     </p>
@@ -566,11 +649,11 @@ object.</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Jul 30 2013 17:58:49 GMT+0200 (CEST)
+  Mon Aug 05 2013 02:04:24 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0
-  (Node.js v0.10.14).
+  (Node.js v0.10.13).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;
