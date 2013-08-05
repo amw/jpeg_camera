@@ -1,4 +1,4 @@
-/*! JpegCamera 1.1.0 | 2013-08-05
+/*! JpegCamera 1.1.1 | 2013-08-05
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
@@ -30,7 +30,7 @@
 
     function JpegCamera(container, options) {
       if ("string" === typeof container) {
-        container = document.querySelector(container);
+        container = document.getElementById(container.replace("#", ""));
       }
       if (!(container && container.offsetWidth)) {
         throw "JpegCamera: invalid container";
@@ -235,9 +235,8 @@
     }
   };
 
-  check_canvas_to_blob();
-
   if (navigator.getUserMedia) {
+    check_canvas_to_blob();
     JpegCameraHtml5 = (function(_super) {
       __extends(JpegCameraHtml5, _super);
 

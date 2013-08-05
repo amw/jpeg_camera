@@ -57,7 +57,7 @@ class JpegCamera
   # Various options provided here can be overwritten when calling
   # {JpegCamera#capture capture} or {Snapshot#upload}.
   #
-  # @param container [String, DOMElement] CSS selector string or DOM element.
+  # @param container [DOMElement, String] DOM element or element's ID.
   #
   # @option options swf_url [String] URL to the SWF file that should be used
   #   for fallback if HTML5 cannot be used. "/jpeg_camera/jpeg_camera.swf" by
@@ -130,7 +130,7 @@ class JpegCamera
   #   when calling {JpegCamera#capture capture} or {Snapshot#upload}.
   constructor: (container, options) ->
     if "string" == typeof container
-      container = document.querySelector container
+      container = document.getElementById container.replace("#", "")
 
     unless container && container.offsetWidth
       throw "JpegCamera: invalid container"
