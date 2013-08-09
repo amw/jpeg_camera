@@ -128,6 +128,11 @@ if !window.JpegCamera &&
 
     _flash_prepared: ->
       @_block_element_access()
+
+      # XXX steal focus from the flash object
+      document.body.tabIndex = 0
+      document.body.focus()
+
       @_prepared()
 
     # Called on both - upload success and error

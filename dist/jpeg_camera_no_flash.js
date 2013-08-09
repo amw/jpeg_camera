@@ -1,4 +1,4 @@
-/*! JpegCamera 1.1.2 | 2013-08-05
+/*! JpegCamera 1.1.3 | 2013-08-09
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
