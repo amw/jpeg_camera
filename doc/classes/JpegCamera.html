@@ -182,7 +182,7 @@ else {
   <li>
     <span class='signature'>
       <a href='#get_stats-instance'>
-        - (Object) <strong>get_stats</strong>(callback)
+        - (void) <strong>get_stats</strong>(callback)
       </a>
     </span>
     <span class='desc'>
@@ -468,14 +468,14 @@ user revokes access.</p><p>If the event has already happened the argument will b
   </div>
   <div class='method_details'>
     <p class='signature' id='get_stats-instance'>
-      - (Object) <strong>get_stats</strong>(callback)
+      - (void) <strong>get_stats</strong>(callback)
     </p>
     <div class='docstring'>
-  <p>Peak into video stream and calculate pixel statistics.</p><p>Currently two properties are available: - mean gray value of pixels (0-255) - standard deviation of gray values</p><p>Can be useful to give the user hints about bad lighting. It uses full
+  <p>Peak into video stream and calculate pixel statistics.</p><p>Can be useful to give the user hints about bad lighting. It uses full
 capture area, but at much lower resolution. It&#39;s more efficient than taking
 a regular capture and calling <a href='../classes/Snapshot.html#get_stats-instance'>Snapshot#get_stats</a>.</p><p>Because reading image data can take a while when Flash fallback is being
 used this method does not return the data immediately. Instead it accepts
-a callback that later will be called with the data object as an argument.
+a callback that later will be called with a <a href='../classes/Stats.html'>Stats</a> instance as an argument.
 The camera object will be available as <code>this</code>.</p>
 </div>
 <div class='tags'>
@@ -487,17 +487,13 @@ The camera object will be available as <code>this</code>.</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Function to call when data is available. Camera object will be available as <code>this</code>, the data will be passed as the first argument.</span>
+      <span class='desc'>Function to call when data is available. Camera object will be available as <code>this</code>, the <a href='../classes/Stats.html'>Stats</a> instance will be passed as the first argument.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
   <ul class='return'>
     <li>
-      <span class='type'></span>
-      (<tt>Object</tt>)
-      &mdash;
-      <span class='desc'>Object with <code>mean</code> and <code>std</code> properties.</span>
-    </li>
+      <span class='type'></span><tt>void</tt></li>
   </ul>
 </div>
   </div>
@@ -649,11 +645,11 @@ object.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Aug 05 2013 13:04:48 GMT+0200 (CEST)
+  Wed Sep 11 2013 22:42:51 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.7.0
-  (Node.js v0.10.14).
+  v1.7.2
+  (Node.js v0.10.16).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

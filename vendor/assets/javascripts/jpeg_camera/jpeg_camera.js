@@ -1,8 +1,8 @@
-/*! JpegCamera 1.1.3 | 2013-08-09
+/*! JpegCamera 1.1.3 | 2013-09-11
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
-  var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, check_canvas_to_blob, supported_flash_version, _ref, _ref1,
+  var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, Stats, check_canvas_to_blob, supported_flash_version, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -784,10 +784,11 @@
         raise("discarded snapshot cannot be used");
       }
       that = this;
-      return setTimeout(function() {
+      setTimeout(function() {
         that._image_data || (that._image_data = that.camera._engine_get_image_data(that));
         return callback.call(that, that._image_data);
       }, 5);
+      return null;
     };
 
     Snapshot.prototype._image_data = null;
@@ -901,10 +902,9 @@
           gray = gray_values[_j];
           sum_of_square_distances += Math.pow(gray - mean, 2);
         }
-        this._stats = {
-          mean: mean,
-          std: Math.round(Math.sqrt(sum_of_square_distances / n))
-        };
+        this._stats = new Stats();
+        this._stats.mean = mean;
+        this._stats.std = Math.round(Math.sqrt(sum_of_square_distances / n));
       }
       return callback.call(this, this._stats);
     };
@@ -972,6 +972,17 @@
     };
 
     return Snapshot;
+
+  })();
+
+  Stats = (function() {
+    function Stats() {}
+
+    Stats.prototype.mean = null;
+
+    Stats.prototype.std = null;
+
+    return Stats;
 
   })();
 

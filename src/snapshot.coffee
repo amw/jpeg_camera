@@ -31,22 +31,18 @@ class Snapshot
       @camera.show_stream()
     @
 
-  # Calculate snapshot pixel statistics.
-  #
-  # Currently two properties are available:
-  #   - mean gray value of pixels (0-255)
-  #   - standard deviation of gray values
+  # Calculate snapshot pixel statistics (mean gray value, std).
   #
   # Because reading image data can take a while when Flash fallback is being
   # used this method does not return the data immediately. Instead it accepts
-  # a callback that later will be called with the data object as an argument.
+  # a callback that later will be called with a {Stats} object as an argument.
   # Snapshot will be available as `this`.
   #
   # @param callback [Function] Function to call when data is available. Snapshot
-  #   object will be available as `this`, the data will be passed as the
-  #   first argument.
+  #   object will be available as `this`, the {Stats} instance will be passed
+  #   as the first argument.
   #
-  # @return [Object] Object with `mean` and `std` properties.
+  # @return [void]
   get_stats: (callback) ->
     raise "discarded snapshot cannot be used" if @_discarded
 
@@ -149,6 +145,8 @@ class Snapshot
         that._image_data ||= that.camera._engine_get_image_data that
         callback.call that, that._image_data
       , 5
+
+    null
 
   _image_data: null
 
@@ -345,9 +343,9 @@ class Snapshot
       for gray in gray_values
         sum_of_square_distances += Math.pow gray - mean, 2
 
-      @_stats =
-        mean: mean
-        std: Math.round(Math.sqrt(sum_of_square_distances / n))
+      @_stats = new Stats()
+      @_stats.mean = mean
+      @_stats.std = Math.round(Math.sqrt(sum_of_square_distances / n))
     callback.call @, @_stats
 
   _stats: null

@@ -196,24 +196,20 @@ class JpegCamera
 
   # Peak into video stream and calculate pixel statistics.
   #
-  # Currently two properties are available:
-  #   - mean gray value of pixels (0-255)
-  #   - standard deviation of gray values
-  #
   # Can be useful to give the user hints about bad lighting. It uses full
   # capture area, but at much lower resolution. It's more efficient than taking
   # a regular capture and calling {Snapshot#get_stats}.
   #
   # Because reading image data can take a while when Flash fallback is being
   # used this method does not return the data immediately. Instead it accepts
-  # a callback that later will be called with the data object as an argument.
+  # a callback that later will be called with a {Stats} instance as an argument.
   # The camera object will be available as `this`.
   #
   # @param callback [Function] Function to call when data is available. Camera
-  #   object will be available as `this`, the data will be passed as the
-  #   first argument.
+  #   object will be available as `this`, the {Stats} instance will be passed
+  #   as the first argument.
   #
-  # @return [Object] Object with `mean` and `std` properties.
+  # @return [void]
   get_stats: (callback) ->
     snapshot = new Snapshot @, {}
 

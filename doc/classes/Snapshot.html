@@ -145,11 +145,11 @@
   <li>
     <span class='signature'>
       <a href='#get_stats-instance'>
-        - (Object) <strong>get_stats</strong>(callback)
+        - (void) <strong>get_stats</strong>(callback)
       </a>
     </span>
     <span class='desc'>
-      Calculate snapshot pixel statistics.
+      Calculate snapshot pixel statistics (mean gray value, std).
     </span>
   </li>
   <li>
@@ -255,12 +255,12 @@
   </div>
   <div class='method_details'>
     <p class='signature' id='get_stats-instance'>
-      - (Object) <strong>get_stats</strong>(callback)
+      - (void) <strong>get_stats</strong>(callback)
     </p>
     <div class='docstring'>
-  <p>Calculate snapshot pixel statistics.</p><p>Currently two properties are available: - mean gray value of pixels (0-255) - standard deviation of gray values</p><p>Because reading image data can take a while when Flash fallback is being
+  <p>Calculate snapshot pixel statistics (mean gray value, std).</p><p>Because reading image data can take a while when Flash fallback is being
 used this method does not return the data immediately. Instead it accepts
-a callback that later will be called with the data object as an argument.
+a callback that later will be called with a <a href='../classes/Stats.html'>Stats</a> object as an argument.
 Snapshot will be available as <code>this</code>.</p>
 </div>
 <div class='tags'>
@@ -272,17 +272,13 @@ Snapshot will be available as <code>this</code>.</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the data will be passed as the first argument.</span>
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the <a href='../classes/Stats.html'>Stats</a> instance will be passed as the first argument.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
   <ul class='return'>
     <li>
-      <span class='type'></span>
-      (<tt>Object</tt>)
-      &mdash;
-      <span class='desc'>Object with <code>mean</code> and <code>std</code> properties.</span>
-    </li>
+      <span class='type'></span><tt>void</tt></li>
   </ul>
 </div>
   </div>
@@ -546,11 +542,11 @@ an error.</p>
     </div>
     <div id='footer'>
   Generated on
-  Mon Aug 05 2013 13:04:48 GMT+0200 (CEST)
+  Wed Sep 11 2013 22:42:51 GMT+0200 (CEST)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.7.0
-  (Node.js v0.10.14).
+  v1.7.2
+  (Node.js v0.10.16).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

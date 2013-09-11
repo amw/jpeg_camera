@@ -16,12 +16,14 @@ module.exports = (grunt) ->
             "src/jpeg_camera.coffee",
             "src/jpeg_camera_html5.coffee",
             "src/jpeg_camera_flash.coffee",
-            "src/snapshot.coffee"
+            "src/snapshot.coffee",
+            "src/stats.coffee"
           ]
           "dist/jpeg_camera_no_flash.js": [
             "src/jpeg_camera.coffee",
             "src/jpeg_camera_html5.coffee",
-            "src/snapshot.coffee"
+            "src/snapshot.coffee",
+            "src/stats.coffee"
           ]
     uglify:
       minify:
