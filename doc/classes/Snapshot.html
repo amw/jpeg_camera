@@ -373,17 +373,18 @@ to learn whether <code>canvas</code> is supported by the browser.</p>
 data. This not like a multipart form upload using file element where the
 file is given a name and is encoded along with other form keys. To read
 file contents on the server side use <code>request.raw_post</code> in Ruby on Rails or
-<code>$HTTP_RAW_POST_DATA</code> in PHP.</p><p>Upload completes successfully only if the server responds with status code
-200. Any other code will be handled via on_upload_fail callback. Your
+<code>$HTTP_RAW_POST_DATA</code> in PHP.</p><p>Upload completes successfully only if the server responds with status code</p><ol>
+<li>Any other code will be handled via on_upload_fail callback. Your
 application is free to inspect the status code and response text in that
-handler to decide whether that response is acceptable or not.</p><p>You cannot have multiple uploads for one snapshot running at the same time,
+handler to decide whether that response is acceptable or not.</li>
+</ol><p>You cannot have multiple uploads for one snapshot running at the same time,
 but you are free to start another upload after one succeeds or fails.</p><p>All of the options can have their defaults set when constructing camera
 object or calling <a href='../classes/JpegCamera.html#capture-instance'>JpegCamera#capture</a>.</p>
 </div>
 <div class='tags'>
   <h3>
     Options Hash:
-    (option):
+    (options):
   </h3>
   <ul class='options'>
     <li>
@@ -542,11 +543,11 @@ an error.</p>
     </div>
     <div id='footer'>
   Generated on
-  Wed Sep 11 2013 22:42:51 GMT+0200 (CEST)
+  Thu Nov 07 2013 00:16:57 GMT+0100 (CET)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.2
-  (Node.js v0.10.16).
+  (Node.js v0.10.21).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

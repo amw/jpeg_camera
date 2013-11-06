@@ -126,14 +126,14 @@ if !window.JpegCamera &&
     _engine_upload: (snapshot, api_url, csrf_token, timeout) ->
       @_flash._upload snapshot.id, api_url, csrf_token, timeout
 
-    _flash_prepared: ->
+    _flash_prepared: (width, height) ->
       @_block_element_access()
 
       # XXX steal focus from the flash object
       document.body.tabIndex = 0
       document.body.focus()
 
-      @_prepared()
+      @_prepared(width, height)
 
     # Called on both - upload success and error
     _flash_upload_complete: (snapshot_id, status_code, error, response) ->

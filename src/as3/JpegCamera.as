@@ -257,8 +257,6 @@ package {
       video.attachCamera(camera);
       video.smoothing = true;
 
-      debug("Camera resolution " + camera.width + "x" + camera.height);
-
       var videoRatio:Number = camera.width / camera.height;
       var viewRatio:Number = viewWidth / viewHeight;
       var videoScale:Number;
@@ -290,7 +288,7 @@ package {
       addChild(video);
 
       if (!showingSettings) {
-        callJs("_flash_prepared");
+        callJs("_flash_prepared", camera.width, camera.height);
       }
     }
 
@@ -320,7 +318,7 @@ package {
           stage.removeEventListener(MouseEvent.MOUSE_MOVE, detectPanelClosure);
           showingSettings = false;
 
-          callJs("_flash_prepared");
+          callJs("_flash_prepared", camera.width, camera.height);
         }
       }
     }

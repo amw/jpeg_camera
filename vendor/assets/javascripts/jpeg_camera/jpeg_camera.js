@@ -1,4 +1,4 @@
-/*! JpegCamera 1.1.3 | 2013-09-11
+/*! JpegCamera 1.1.3 | 2013-11-07
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
@@ -50,7 +50,10 @@
     JpegCamera.prototype.ready = function(callback) {
       this.options.on_ready = callback;
       if (this.options.on_ready && this._is_ready) {
-        this.options.on_ready.call(this);
+        this.options.on_ready.call(this, {
+          video_width: this.video_width,
+          video_height: this.video_height
+        });
       }
       return this;
     };
@@ -154,8 +157,11 @@
       return delete this._snapshots[snapshot.id];
     };
 
-    JpegCamera.prototype._prepared = function() {
+    JpegCamera.prototype._prepared = function(video_width, video_height) {
       var that;
+      this.video_width = video_width;
+      this.video_height = video_height;
+      this._debug("Camera resolution " + this.video_width + "x" + this.video_height + "px");
       that = this;
       return setTimeout((function() {
         return that._wait_until_stream_looks_ok(true);
@@ -170,7 +176,10 @@
           this._debug("Camera is ready");
           this._is_ready = true;
           if (this.options.on_ready) {
-            return this.options.on_ready.call(this);
+            return this.options.on_ready.call(this, {
+              video_width: this.video_width,
+              video_height: this.video_height
+            });
           }
         } else {
           if (show_debug) {
@@ -476,14 +485,13 @@
           this.video_container.appendChild(this.video);
           this.video_width = video_width;
           this.video_height = video_height;
-          this._debug("Camera resolution " + this.video_width + "x" + this.video_height + "px");
           crop = this._get_video_crop();
           this.video.style.position = "relative";
           this.video.style.width = "" + crop.width + "px";
           this.video.style.height = "" + crop.height + "px";
           this.video.style.left = "" + crop.x_offset + "px";
           this.video.style.top = "" + crop.y_offset + "px";
-          return this._prepared();
+          return this._prepared(this.video_width, this.video_height);
         } else if (this._status_checks_count > 100) {
           return this._got_error("Camera failed to initialize in 10 seconds");
         } else {
@@ -697,11 +705,11 @@
         return this._flash._upload(snapshot.id, api_url, csrf_token, timeout);
       };
 
-      JpegCameraFlash.prototype._flash_prepared = function() {
+      JpegCameraFlash.prototype._flash_prepared = function(width, height) {
         this._block_element_access();
         document.body.tabIndex = 0;
         document.body.focus();
-        return this._prepared();
+        return this._prepared(width, height);
       };
 
       JpegCameraFlash.prototype._flash_upload_complete = function(snapshot_id, status_code, error, response) {

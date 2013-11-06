@@ -254,8 +254,6 @@ if navigator.getUserMedia
         @video_width = video_width
         @video_height = video_height
 
-        @_debug "Camera resolution #{@video_width}x#{@video_height}px"
-
         crop = @_get_video_crop()
 
         @video.style.position = "relative"
@@ -264,7 +262,7 @@ if navigator.getUserMedia
         @video.style.left = "#{crop.x_offset}px"
         @video.style.top = "#{crop.y_offset}px"
 
-        @_prepared()
+        @_prepared(@video_width, @video_height)
       else if @_status_checks_count > 100
         @_got_error "Camera failed to initialize in 10 seconds"
       else

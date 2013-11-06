@@ -275,7 +275,7 @@ full camera frame without showing the whole frame to the user.</p><p>Resizing co
   </ul>
   <h3>
     Options Hash:
-    (option):
+    (options):
   </h3>
   <ul class='options'>
     <li>
@@ -300,7 +300,7 @@ full camera frame without showing the whole frame to the user.</p><p>Resizing co
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Function to call when camera is ready. Inside the callback camera object can be accessed as <code>this</code>. See also <a href='../classes/JpegCamera.html#ready-instance'>JpegCamera#ready</a>.</span>
+      <span class='desc'>Function to call when camera is ready. Inside the callback camera object can be accessed as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution. See also <a href='../classes/JpegCamera.html#ready-instance'>JpegCamera#ready</a>.</span>
     </li>
     <li>
       <span class='name'>on_error</span>
@@ -420,7 +420,7 @@ full camera frame without showing the whole frame to the user.</p><p>Resizing co
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>function to call when camera is ready. Camera object will be available as <code>this</code>.</span>
+      <span class='desc'>function to call when camera is ready. Camera object will be available as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution. </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -508,7 +508,7 @@ object.</p>
 <div class='tags'>
   <h3>
     Options Hash:
-    (option):
+    (options):
   </h3>
   <ul class='options'>
     <li>
@@ -645,11 +645,11 @@ object.</p>
     </div>
     <div id='footer'>
   Generated on
-  Wed Sep 11 2013 22:42:51 GMT+0200 (CEST)
+  Thu Nov 07 2013 00:16:57 GMT+0100 (CET)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.2
-  (Node.js v0.10.16).
+  (Node.js v0.10.21).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

@@ -65,8 +65,10 @@ class JpegCamera
   # @option options shutter_url [String] URL to the shutter sound file.
   #   "/jpeg_camera/shutter.mp3" by default.
   # @option options on_ready [Function] Function to call when camera is ready.
-  #   Inside the callback camera object can be accessed as `this`. See also
-  #   {JpegCamera#ready}.
+  #   Inside the callback camera object can be accessed as `this`. This
+  #   function will receive object with `video_width` and `video_height`
+  #   properties as the first argument. These indicate camera's native
+  #   resolution. See also {JpegCamera#ready}.
   # @option options on_error [Function] Function to call when camera error
   #   occurs. Error message will be passed as the first argument. Inside the
   #   callback camera object can be accessed as `this`. See also
@@ -158,13 +160,17 @@ class JpegCamera
   # If the event has already happened the argument will be called immediately.
   #
   # @param callback [Function] function to call when camera is ready. Camera
-  #   object will be available as `this`.
+  #   object will be available as `this`. This function will receive object with
+  #   `video_width` and `video_height` properties as the first argument. These
+  #   indicate camera's native resolution. 
   #
   # @return [JpegCamera] Self for chaining.
   ready: (callback) ->
     @options.on_ready = callback
     if @options.on_ready && @_is_ready
-      @options.on_ready.call @
+      @options.on_ready.call @,
+        video_width: @video_width,
+        video_height: @video_height
     @
 
   _is_ready: false
@@ -342,7 +348,12 @@ class JpegCamera
   # Called by the engine when camera is ready.
   #
   # @private
-  _prepared: ->
+  _prepared: (video_width, video_height) ->
+    @video_width = video_width
+    @video_height = video_height
+
+    @_debug "Camera resolution #{@video_width}x#{@video_height}px"
+
     # XXX Since this method is called from inside the Flash object, we need to
     # return control to make flash object usable again.
     that = this
@@ -362,7 +373,9 @@ class JpegCamera
 
         @_is_ready = true
         if @options.on_ready
-          @options.on_ready.call @
+          @options.on_ready.call @,
+            video_width: @video_width,
+            video_height: @video_height
       else
         if show_debug
           @_debug "Stream mean gray value = " + stats.mean +

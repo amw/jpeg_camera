@@ -137,8 +137,11 @@ $(function() {
       swf_url: "../dist/jpeg_camera.swf"
     }
 
-    camera = new JpegCamera("#camera", options).ready(function() {
+    camera = new JpegCamera("#camera", options).ready(function(info) {
       $("#take_snapshots").show();
+
+      $("#camera_info").html(
+        "Camera resolution: " + info.video_width + "x" + info.video_height);
 
       this.get_stats(update_stream_stats);
     });
