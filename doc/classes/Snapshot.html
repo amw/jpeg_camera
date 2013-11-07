@@ -164,6 +164,16 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#get_blob-instance'>
+        - (Boolean) <strong>get_blob</strong>(callback, mime_type = "image/jpeg")
+      </a>
+    </span>
+    <span class='desc'>
+      Get the file that would be uploaded to the server as a Blob object.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#get_image_data-instance'>
         - (void) <strong>get_image_data</strong>(callback)
       </a>
@@ -312,6 +322,51 @@ whether you can use this method.</p>
       </span>
       &mdash;
       <span class='desc'>Function to call when <code>canvas</code> element is available. Snapshot object will be available as <code>this</code>, the <code>canvas</code> element will be passed as the first argument.</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Boolean</tt>)
+      &mdash;
+      <span class='desc'>Whether canvas is supported in this browser.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_blob-instance'>
+      - (Boolean) <strong>get_blob</strong>(callback, mime_type = "image/jpeg")
+    </p>
+    <div class='docstring'>
+  <p>Get the file that would be uploaded to the server as a Blob object.</p><p>This can be useful if you want to stream the data via a websocket. Note that
+using <code>upload</code> is more efficient if all you want to do is upload this file
+to a server via POST call.</p><p>This method doesn&#39;t work in Internet Explorer 8 or earlier, because it does
+not support <code>canvas</code> element. Call <a href='../classes/JpegCamera.html#canvas_supported-class'>JpegCamera.canvas_supported</a> to learn
+whether you can use this method.</p><p>Because preparing image blob can take a while this method does not return
+the data immediately. Instead it accepts a callback that later will be
+called with the data object as an argument. Snapshot will be available as
+<code>this</code>.</p><p>Multiple calls to this method will yield the same data object.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the blob object will be passed as the first argument.</span>
+    </li>
+    <li>
+      <span class='name'>mime_type</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Mime type of the requested blob. &quot;image/jpeg&quot; by default.</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -543,7 +598,7 @@ an error.</p>
     </div>
     <div id='footer'>
   Generated on
-  Thu Nov 07 2013 00:16:57 GMT+0100 (CET)
+  Thu Nov 07 2013 02:47:42 GMT+0100 (CET)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.2

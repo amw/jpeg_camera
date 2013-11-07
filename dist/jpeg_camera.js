@@ -1,4 +1,4 @@
-/*! JpegCamera 1.1.3 | 2013-11-07
+/*! JpegCamera 1.2.0 | 2013-11-07
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
@@ -19,7 +19,8 @@
       shutter: true,
       mirror: false,
       timeout: 0,
-      retry_success: false
+      retry_success: false,
+      scale: 1.0
     };
 
     JpegCamera._canvas_supported = !!document.createElement('canvas').getContext;
@@ -83,7 +84,7 @@
     };
 
     JpegCamera.prototype.capture = function(options) {
-      var snapshot, _options;
+      var scale, snapshot, _options;
       if (options == null) {
         options = {};
       }
@@ -93,7 +94,9 @@
       if (_options.shutter) {
         this._engine_play_shutter_sound();
       }
-      this._engine_capture(snapshot, _options.mirror, _options.quality, 1.0);
+      scale = Math.min(1.0, _options.scale);
+      scale = Math.max(0.01, scale);
+      this._engine_capture(snapshot, _options.mirror, _options.quality, scale);
       return snapshot;
     };
 
@@ -390,13 +393,31 @@
         return context.getImageData(0, 0, canvas.width, canvas.height);
       };
 
+      JpegCameraHtml5.prototype._engine_get_blob = function(snapshot, mime, mirror, quality, callback) {
+        var canvas, context;
+        if (mirror) {
+          canvas = document.createElement("canvas");
+          canvas.width = snapshot._canvas.width;
+          canvas.height = snapshot._canvas.height;
+          context = canvas.getContext("2d");
+          context.setTransform(1, 0, 0, 1, 0, 0);
+          context.translate(canvas.width, 0);
+          context.scale(-1, 1);
+          context.drawImage(snapshot._canvas, 0, 0);
+        } else {
+          canvas = snapshot._canvas;
+        }
+        return canvas.toBlob((function(blob) {
+          return callback(blob);
+        }), mime, quality);
+      };
+
       JpegCameraHtml5.prototype._engine_discard = function(snapshot) {
         if (snapshot._xhr) {
           snapshot._xhr.abort();
         }
         delete snapshot._xhr;
-        delete snapshot._canvas;
-        return delete snapshot._jpeg_blob;
+        return delete snapshot._canvas;
       };
 
       JpegCameraHtml5.prototype._engine_show_stream = function() {
@@ -408,10 +429,9 @@
       };
 
       JpegCameraHtml5.prototype._engine_upload = function(snapshot, api_url, csrf_token, timeout) {
-        var canvas, context, handler, that, xhr;
-        that = this;
-        if (snapshot._jpeg_blob) {
-          this._debug("Uploading the file");
+        this._debug("Uploading the file");
+        return snapshot.get_blob(function(blob) {
+          var handler, xhr;
           handler = function(event) {
             delete snapshot._xhr;
             snapshot._status = event.target.status;
@@ -432,27 +452,9 @@
           xhr.onload = handler;
           xhr.onerror = handler;
           xhr.onabort = handler;
-          xhr.send(snapshot._jpeg_blob);
+          xhr.send(blob);
           return snapshot._xhr = xhr;
-        } else {
-          this._debug("Generating JPEG file");
-          if (snapshot._mirror) {
-            canvas = document.createElement("canvas");
-            canvas.width = snapshot._canvas.width;
-            canvas.height = snapshot._canvas.height;
-            context = canvas.getContext("2d");
-            context.setTransform(1, 0, 0, 1, 0, 0);
-            context.translate(canvas.width, 0);
-            context.scale(-1, 1);
-            context.drawImage(snapshot._canvas, 0, 0);
-          } else {
-            canvas = snapshot._canvas;
-          }
-          return canvas.toBlob(function(blob) {
-            snapshot._jpeg_blob = blob;
-            return that._engine_upload(snapshot, api_url, csrf_token, timeout);
-          }, "image/jpeg", this.quality);
-        }
+        }, "image/jpeg");
       };
 
       JpegCameraHtml5.prototype._remove_message = function() {
@@ -693,6 +695,26 @@
         return result;
       };
 
+      JpegCameraFlash.prototype._engine_get_blob = function(snapshot, mime, mirror, quality, callback) {
+        var canvas, context;
+        snapshot._extra_canvas || (snapshot._extra_canvas = this._engine_get_canvas(snapshot));
+        if (mirror) {
+          canvas = document.createElement("canvas");
+          canvas.width = snapshot._canvas.width;
+          canvas.height = snapshot._canvas.height;
+          context = canvas.getContext("2d");
+          context.setTransform(1, 0, 0, 1, 0, 0);
+          context.translate(canvas.width, 0);
+          context.scale(-1, 1);
+          context.drawImage(snapshot._extra_canvas, 0, 0);
+        } else {
+          canvas = snapshot._extra_canvas;
+        }
+        return canvas.toBlob((function(blob) {
+          return callback(blob);
+        }), mime, quality);
+      };
+
       JpegCameraFlash.prototype._engine_discard = function(snapshot) {
         return this._flash._discard(snapshot.id);
       };
@@ -780,11 +802,47 @@
         that._extra_canvas || (that._extra_canvas = that.camera._engine_get_canvas(that));
         JpegCamera._add_prefixed_style(that._extra_canvas, "transform", "scalex(-1.0)");
         return callback.call(that, that._extra_canvas);
-      }, 10);
+      }, 1);
       return true;
     };
 
     Snapshot.prototype._extra_canvas = null;
+
+    Snapshot.prototype.get_blob = function(callback, mime_type) {
+      var that;
+      if (mime_type == null) {
+        mime_type = "image/jpeg";
+      }
+      if (this._discarded) {
+        raise("discarded snapshot cannot be used");
+      }
+      if (!JpegCamera._canvas_supported) {
+        false;
+      }
+      that = this;
+      setTimeout(function() {
+        var mirror, quality;
+        if (that._blob_mime !== mime_type) {
+          that._blob = null;
+        }
+        that._blob_mime = mime_type;
+        if (that._blob) {
+          return callback.call(that, that._blob);
+        } else {
+          mirror = that.options.mirror;
+          quality = that.options.quality;
+          return that.camera._engine_get_blob(that, mime_type, mirror, quality, function(b) {
+            that._blob = b;
+            return callback.call(that, that._blob);
+          });
+        }
+      }, 1);
+      return true;
+    };
+
+    Snapshot.prototype._blob = null;
+
+    Snapshot.prototype._blob_mime = null;
 
     Snapshot.prototype.get_image_data = function(callback) {
       var that;
@@ -795,7 +853,7 @@
       setTimeout(function() {
         that._image_data || (that._image_data = that.camera._engine_get_image_data(that));
         return callback.call(that, that._image_data);
-      }, 5);
+      }, 1);
       return null;
     };
 
@@ -869,6 +927,9 @@
 
     Snapshot.prototype.discard = function() {
       this.camera._discard(this);
+      delete this._extra_canvas;
+      delete this._image_data;
+      delete this._blob;
       return void 0;
     };
 

@@ -528,6 +528,14 @@ object.</p>
       <span class='desc'>The video stream and images displayed on the client side mimic a mirror, because that&#39;s how people are used to seeing themselves. By default images are uploaded to the server in their natural orientation - how the front facing camera sees the user. This option can be set to true to upload images the way the user sees them. <em>Cannot</em> be overwritten at the time of upload.</span>
     </li>
     <li>
+      <span class='name'>scale</span>
+      <span class='type'>
+        (<tt>Float</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>By default snapshots are captured and uploaded using highest possible resolution. Set this to a number less than 1.0 to get smaller snapshots.</span>
+    </li>
+    <li>
       <span class='name'>shutter</span>
       <span class='type'>
         (<tt>Boolean</tt>)
@@ -645,7 +653,7 @@ object.</p>
     </div>
     <div id='footer'>
   Generated on
-  Thu Nov 07 2013 00:16:57 GMT+0100 (CET)
+  Thu Nov 07 2013 02:47:42 GMT+0100 (CET)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.2

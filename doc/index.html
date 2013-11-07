@@ -156,7 +156,7 @@ root.</p><p>Load JpegCamera and it&#39;s dependencies in the <code>HEAD</code> s
 to load them again if you already use them in your project. If you want to cut
 down on HTTP requests then there is a concatenated version you can use.</p><pre><code>&lt;script src=&quot;/jpeg_camera/jpeg_camera_with_dependencies.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre><p>If you want to use HTML5-only version you can load jpeg_camera_no_flash.min.js.
 There is no &quot;with dependencies&quot; version of this file, so you have to remember
-to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3 id="ruby-on-rails-3-1-applications">Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.1.3&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
+to also load Canvas-to-Blob. You don&#39;t need SWFObject for HTML5.</p><h3 id="ruby-on-rails-3-1-applications">Ruby on Rails 3.1 applications</h3><p>Require the gem in your Gemfile.</p><pre><code>gem &quot;jpeg_camera&quot;, &quot;~&gt; 1.2.0&quot;</code></pre><p>Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
 are stored in separate files so that you don&#39;t have to load them again if you
 already use them in your project. The assets pipeline will take care of
 minifying and concatenating everything into one script.</p><pre><code>//= require jpeg_camera/swfobject
