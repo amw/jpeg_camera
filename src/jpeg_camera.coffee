@@ -24,6 +24,7 @@ class JpegCamera
     mirror: false
     timeout: 0
     retry_success: false
+    scale: 1.0
 
   @_canvas_supported: !!document.createElement('canvas').getContext
 
@@ -240,6 +241,9 @@ class JpegCamera
   #   natural orientation - how the front facing camera sees the user.
   #   This option can be set to true to upload images the way the user sees
   #   them. _Cannot_ be overwritten at the time of upload.
+  # @option options scale [Float] By default snapshots are captured and uploaded
+  #   using highest possible resolution. Set this to a number less than 1.0 to
+  #   get smaller snapshots.
   # @option options shutter [Boolean] Whether to play the shutter sound.
   # @option options api_url [String] URL where the snapshots will be uploaded.
   #   Can be overwritten when calling {Snapshot#upload}.
@@ -287,7 +291,10 @@ class JpegCamera
     if _options.shutter
       @_engine_play_shutter_sound()
 
-    @_engine_capture snapshot, _options.mirror, _options.quality, 1.0
+    scale = Math.min 1.0, _options.scale
+    scale = Math.max 0.01, scale
+
+    @_engine_capture snapshot, _options.mirror, _options.quality, scale
 
     snapshot
 
