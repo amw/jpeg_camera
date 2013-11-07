@@ -117,6 +117,24 @@ if !window.JpegCamera &&
         result.data[index + 3] = 255
       result
 
+    _engine_get_blob: (snapshot, mime, mirror, quality, callback) ->
+      snapshot._extra_canvas ||= @_engine_get_canvas snapshot
+
+      if mirror
+        canvas = document.createElement "canvas"
+        canvas.width = snapshot._canvas.width
+        canvas.height = snapshot._canvas.height
+
+        context = canvas.getContext "2d"
+        context.setTransform 1, 0, 0, 1, 0, 0 # reset transformation matrix
+        context.translate canvas.width, 0
+        context.scale -1, 1
+        context.drawImage snapshot._extra_canvas, 0, 0
+      else
+        canvas = snapshot._extra_canvas
+
+      canvas.toBlob ((blob) -> callback blob), mime, quality
+
     _engine_discard: (snapshot) ->
       @_flash._discard snapshot.id
 

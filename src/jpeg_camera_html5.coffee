@@ -163,12 +163,27 @@ if navigator.getUserMedia
       context = canvas.getContext "2d"
       context.getImageData 0, 0, canvas.width, canvas.height
 
+    _engine_get_blob: (snapshot, mime, mirror, quality, callback) ->
+      if mirror
+        canvas = document.createElement "canvas"
+        canvas.width = snapshot._canvas.width
+        canvas.height = snapshot._canvas.height
+
+        context = canvas.getContext "2d"
+        context.setTransform 1, 0, 0, 1, 0, 0 # reset transformation matrix
+        context.translate canvas.width, 0
+        context.scale -1, 1
+        context.drawImage snapshot._canvas, 0, 0
+      else
+        canvas = snapshot._canvas
+
+      canvas.toBlob ((blob) -> callback blob), mime, quality
+
     _engine_discard: (snapshot) ->
       if snapshot._xhr
         snapshot._xhr.abort()
       delete snapshot._xhr
       delete snapshot._canvas
-      delete snapshot._jpeg_blob
 
     _engine_show_stream: ->
       if @displayed_canvas
@@ -178,53 +193,32 @@ if navigator.getUserMedia
       @video_container.style.display = "block"
 
     _engine_upload: (snapshot, api_url, csrf_token, timeout) ->
-      that = this
+      @_debug "Uploading the file"
 
-      if snapshot._jpeg_blob
-        @_debug "Uploading the file"
+      snapshot.get_blob (blob) ->
+          handler = (event) ->
+            delete snapshot._xhr
 
-        handler = (event) ->
-          delete snapshot._xhr
+            snapshot._status = event.target.status
+            snapshot._response = event.target.responseText
 
-          snapshot._status = event.target.status
-          snapshot._response = event.target.responseText
+            if snapshot._status >= 200 && snapshot._status < 300
+              snapshot._upload_done()
+            else
+              snapshot._error_message =
+                event.target.statusText || "Unknown error"
+              snapshot._upload_fail()
+          xhr = new XMLHttpRequest()
+          xhr.open 'POST', api_url
+          xhr.timeout = timeout
+          xhr.setRequestHeader "X-CSRF-Token", csrf_token if csrf_token
+          xhr.onload = handler
+          xhr.onerror = handler
+          xhr.onabort = handler
+          xhr.send blob
 
-          if snapshot._status >= 200 && snapshot._status < 300
-            snapshot._upload_done()
-          else
-            snapshot._error_message = event.target.statusText || "Unknown error"
-            snapshot._upload_fail()
-        xhr = new XMLHttpRequest()
-        xhr.open 'POST', api_url
-        xhr.timeout = timeout
-        xhr.setRequestHeader "X-CSRF-Token", csrf_token if csrf_token
-        xhr.onload = handler
-        xhr.onerror = handler
-        xhr.onabort = handler
-        xhr.send snapshot._jpeg_blob
-
-        snapshot._xhr = xhr
-      else
-        @_debug "Generating JPEG file"
-
-        if snapshot._mirror
-          canvas = document.createElement "canvas"
-          canvas.width = snapshot._canvas.width
-          canvas.height = snapshot._canvas.height
-
-          context = canvas.getContext "2d"
-          context.setTransform 1, 0, 0, 1, 0, 0 # reset transformation matrix
-          context.translate canvas.width, 0
-          context.scale -1, 1
-          context.drawImage snapshot._canvas, 0, 0
-        else
-          canvas = snapshot._canvas
-
-        canvas.toBlob (blob) ->
-            snapshot._jpeg_blob = blob
-            # call ourselves again with the same parameters
-            that._engine_upload snapshot, api_url, csrf_token, timeout
-          , "image/jpeg", @quality
+          snapshot._xhr = xhr
+        , "image/jpeg"
 
     _remove_message: ->
       @message.style.display = "none"

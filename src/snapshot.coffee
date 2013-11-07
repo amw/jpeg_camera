@@ -102,6 +102,56 @@ class Snapshot
 
   _extra_canvas: null
 
+  # Get the file that would be uploaded to the server as a Blob object.
+  #
+  # This can be useful if you want to stream the data via a websocket. Note that
+  # using `upload` is more efficient if all you want to do is upload this file
+  # to a server via POST call.
+  #
+  # This method doesn't work in Internet Explorer 8 or earlier, because it does
+  # not support `canvas` element. Call {JpegCamera.canvas_supported} to learn
+  # whether you can use this method.
+  #
+  # Because preparing image blob can take a while this method does not return
+  # the data immediately. Instead it accepts a callback that later will be
+  # called with the data object as an argument. Snapshot will be available as
+  # `this`.
+  #
+  # Multiple calls to this method will yield the same data object.
+  #
+  # @param callback [Function] Function to call when data is available. Snapshot
+  #   object will be available as `this`, the blob object will be passed as the
+  #   first argument.
+  # @param mime_type [String] Mime type of the requested blob. "image/jpeg" by
+  #   default.
+  #
+  # @return [Boolean] Whether canvas is supported in this browser.
+  get_blob: (callback, mime_type = "image/jpeg") ->
+    raise "discarded snapshot cannot be used" if @_discarded
+
+    false unless JpegCamera._canvas_supported
+
+    # FIXME This method is supposed to always return the same object, but if
+    # you call it again before this timeout runs, a new timeout will be
+    # scheduled and new data created.
+    that = this
+    setTimeout ->
+        that._blob = null if that._blob_mime != mime_type
+        that._blob_mime = mime_type
+        if that._blob
+          callback.call that, that._blob
+        else
+          mirror = that.options.mirror
+          quality = that.options.quality
+          that.camera._engine_get_blob that, mime_type, mirror, quality, (b) ->
+            that._blob = b
+            callback.call that, that._blob
+      , 1
+    true
+
+  _blob: null
+  _blob_mime: null
+
   # Get ImageData object containing color values for each pixel of the snapshot.
   #
   # Data produced by this method has a resolution of the snapshot (which depends
@@ -291,6 +341,9 @@ class Snapshot
   # @return [void]
   discard: ->
     @camera._discard @
+    delete @_extra_canvas
+    delete @_image_data
+    delete @_blob
     undefined
 
   # Snapshot options
