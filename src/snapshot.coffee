@@ -97,7 +97,7 @@ class Snapshot
           "transform", "scalex(-1.0)"
 
         callback.call that, that._extra_canvas
-      , 10
+      , 1
     true
 
   _extra_canvas: null
@@ -144,12 +144,11 @@ class Snapshot
     setTimeout ->
         that._image_data ||= that.camera._engine_get_image_data that
         callback.call that, that._image_data
-      , 5
+      , 1
 
     null
 
   _image_data: null
-
 
   # Upload the snapshot to the server.
   #
