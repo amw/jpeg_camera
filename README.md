@@ -74,7 +74,7 @@ to also load Canvas-to-Blob. You don't need SWFObject for HTML5.
 
 Require the gem in your Gemfile.
 
-    gem "jpeg_camera", "~> 1.2.1"
+    gem "jpeg_camera", "~> 1.3.0"
 
 Add appropriate requires to your application.js. SWFObject and Canvas-to-Blob
 are stored in separate files so that you don't have to load them again if you

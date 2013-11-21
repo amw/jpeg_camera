@@ -1,14 +1,15 @@
-/*! JpegCamera 1.2.1 | 2013-11-21
+/*! JpegCamera 1.3.0 | 2013-11-21
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
-  var JpegCamera, JpegCameraHtml5, Snapshot, Stats, check_canvas_to_blob, _ref,
+  var JpegCamera, JpegCameraHtml5, Snapshot, Stats, can_play, check_canvas_to_blob, mpeg_audio, vorbis_audio, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   JpegCamera = (function() {
     JpegCamera.DefaultOptions = {
-      shutter_url: "/jpeg_camera/shutter.mp3",
+      shutter_ogg_url: "/jpeg_camera/shutter.ogg",
+      shutter_mp3_url: "/jpeg_camera/shutter.mp3",
       swf_url: "/jpeg_camera/jpeg_camera.swf",
       on_debug: function(message) {
         if (console && console.log) {
@@ -237,6 +238,8 @@
 
   navigator.getUserMedia || (navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
+  window.AudioContext || (window.AudioContext = window.webkitAudioContext);
+
   check_canvas_to_blob = function() {
     var canvas;
     canvas = document.createElement("canvas");
@@ -247,6 +250,13 @@
 
   if (navigator.getUserMedia) {
     check_canvas_to_blob();
+    vorbis_audio = "audio/ogg; codecs=vorbis";
+    mpeg_audio = "audio/mpeg; ";
+    can_play = function(type) {
+      var elem;
+      elem = document.createElement("video");
+      return !!(elem.canPlayType && elem.canPlayType(type).replace(/no/, ''));
+    };
     JpegCameraHtml5 = (function(_super) {
       __extends(JpegCameraHtml5, _super);
 
@@ -285,9 +295,12 @@
         this.video = document.createElement('video');
         this.video.autoplay = true;
         JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
-        window.AudioContext || (window.AudioContext = window.webkitAudioContext);
         if (window.AudioContext) {
-          this._load_shutter_sound();
+          if (can_play(vorbis_audio)) {
+            this._load_shutter_sound(this.options.shutter_ogg_url);
+          } else if (can_play(mpeg_audio)) {
+            this._load_shutter_sound(this.options.shutter_mp3_url);
+          }
         }
         get_user_media_options = {
           video: {
@@ -461,14 +474,14 @@
         return this.message.style.display = "none";
       };
 
-      JpegCameraHtml5.prototype._load_shutter_sound = function() {
+      JpegCameraHtml5.prototype._load_shutter_sound = function(url) {
         var request, that;
         if (this.audio_context) {
           return;
         }
         this.audio_context = new AudioContext();
         request = new XMLHttpRequest();
-        request.open('GET', this.options.shutter_url, true);
+        request.open('GET', url, true);
         request.responseType = 'arraybuffer';
         that = this;
         request.onload = function() {

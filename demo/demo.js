@@ -133,7 +133,8 @@ $(function() {
     $("#show_stream").click(show_stream);
 
     var options = {
-      shutter_url: "../dist/shutter.mp3",
+      shutter_ogg_url: "../dist/shutter.ogg",
+      shutter_mp3_url: "../dist/shutter.mp3",
       swf_url: "../dist/jpeg_camera.swf"
     }
 

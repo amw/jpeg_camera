@@ -15,7 +15,8 @@
 #     }
 class JpegCamera
   @DefaultOptions =
-    shutter_url: "/jpeg_camera/shutter.mp3"
+    shutter_ogg_url: "/jpeg_camera/shutter.ogg"
+    shutter_mp3_url: "/jpeg_camera/shutter.mp3"
     swf_url: "/jpeg_camera/jpeg_camera.swf"
     on_debug: (message) ->
       console.log "JpegCamera: #{message}" if console && console.log
@@ -63,8 +64,10 @@ class JpegCamera
   # @option options swf_url [String] URL to the SWF file that should be used
   #   for fallback if HTML5 cannot be used. "/jpeg_camera/jpeg_camera.swf" by
   #   default.
-  # @option options shutter_url [String] URL to the shutter sound file.
-  #   "/jpeg_camera/shutter.mp3" by default.
+  # @option options shutter_mp3_url [String] URL to the shutter mp3 sound file.
+  #   Used by flash. "/jpeg_camera/shutter.mp3" by default.
+  # @option options shutter_ogg_url [String] URL to the shutter ogg sound file.
+  #   Used by HTML5. "/jpeg_camera/shutter.ogg" by default.
   # @option options on_ready [Function] Function to call when camera is ready.
   #   Inside the callback camera object can be accessed as `this`. This
   #   function will receive object with `video_width` and `video_height`

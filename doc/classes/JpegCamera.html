@@ -25,7 +25,6 @@
     </nav>
     <div id='search'>
       <a id='class_list_link' href='../class_list.html'>Classes</a>
-      <a id='file_list_link' href='../file_list.html'>Files</a>
       <a id='method_list_link' href='../method_list.html'>Methods</a>
       <a id='extra_list_link' href='../extra_list.html'>Extras</a>
     </div>
@@ -287,12 +286,20 @@ full camera frame without showing the whole frame to the user.</p><p>Resizing co
       <span class='desc'>URL to the SWF file that should be used for fallback if HTML5 cannot be used. &quot;/jpeg_camera/jpeg_camera.swf&quot; by default.</span>
     </li>
     <li>
-      <span class='name'>shutter_url</span>
+      <span class='name'>shutter_mp3_url</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>URL to the shutter sound file. &quot;/jpeg_camera/shutter.mp3&quot; by default.</span>
+      <span class='desc'>URL to the shutter mp3 sound file. Used by flash. &quot;/jpeg_camera/shutter.mp3&quot; by default.</span>
+    </li>
+    <li>
+      <span class='name'>shutter_ogg_url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>URL to the shutter ogg sound file. Used by HTML5. &quot;/jpeg_camera/shutter.ogg&quot; by default.</span>
     </li>
     <li>
       <span class='name'>on_ready</span>

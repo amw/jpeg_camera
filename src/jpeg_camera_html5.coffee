@@ -3,6 +3,9 @@ navigator.getUserMedia ||=
   navigator.mozGetUserMedia ||
   navigator.msGetUserMedia
 
+window.AudioContext ||=
+  window.webkitAudioContext
+
 # @private
 check_canvas_to_blob = ->
   canvas = document.createElement "canvas"
@@ -11,6 +14,14 @@ check_canvas_to_blob = ->
 
 if navigator.getUserMedia
   check_canvas_to_blob()
+
+  vorbis_audio = "audio/ogg; codecs=vorbis"
+  mpeg_audio = "audio/mpeg; "
+
+  # @private
+  can_play = (type) ->
+    elem = document.createElement "video"
+    !!(elem.canPlayType && elem.canPlayType(type).replace(/no/, ''))
 
   # JpegCamera implementation that uses _getUserMedia_ to capture snapshots,
   # _canvas_element_ to display them, _XHR_ to upload them to the server and
@@ -56,8 +67,11 @@ if navigator.getUserMedia
       @video.autoplay = true
       JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
 
-      window.AudioContext ||= window.webkitAudioContext
-      @_load_shutter_sound() if window.AudioContext
+      if window.AudioContext
+        if can_play vorbis_audio
+          @_load_shutter_sound @options.shutter_ogg_url
+        else if can_play mpeg_audio
+          @_load_shutter_sound @options.shutter_mp3_url
 
       get_user_media_options =
         video:
@@ -222,13 +236,13 @@ if navigator.getUserMedia
     _remove_message: ->
       @message.style.display = "none"
 
-    _load_shutter_sound: ->
+    _load_shutter_sound: (url) ->
       return if @audio_context
 
       @audio_context = new AudioContext()
 
       request = new XMLHttpRequest()
-      request.open 'GET', @options.shutter_url, true
+      request.open 'GET', url, true
       request.responseType = 'arraybuffer'
 
       that = this

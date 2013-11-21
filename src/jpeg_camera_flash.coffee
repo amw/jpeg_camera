@@ -1,11 +1,17 @@
-supported_flash_version = '9'
-
 if !window.swfobject
   throw "JpegCamera: SWFObject is not loaded"
 
-if (!window.JpegCamera || window.jpeg_camera_force_flash) &&
-   window.swfobject &&
-   swfobject.hasFlashPlayerVersion(supported_flash_version)
+supported_flash_version = '9'
+
+should_try_flash =
+  !window.JpegCamera || !window.AudioContext || window.jpeg_camera_force_flash
+
+# @private
+can_use_flash = ->
+  window.swfobject && swfobject.hasFlashPlayerVersion(supported_flash_version)
+
+
+if should_try_flash && can_use_flash()
 
   # JpegCamera implementation that uses Flash to capture, display and upload
   # snapshots.
@@ -51,7 +57,7 @@ if (!window.JpegCamera || window.jpeg_camera_force_flash) &&
         id: @_id
         width: @view_width
         height: @view_height
-        shutter_url: @options.shutter_url
+        shutter_url: @options.shutter_mp3_url
       that = this
       callback = (event) ->
         if !event.success
