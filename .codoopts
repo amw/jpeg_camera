@@ -2,7 +2,9 @@
 --readme     README.md
 --title      "JpegCamera Documentation"
 --output-dir ./doc
-src/
 --
 README.md
 LICENSE.md
+src/jpeg_camera.coffee
+src/snapshot.coffee
+src/stats.coffee

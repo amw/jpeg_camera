@@ -18,7 +18,6 @@ if navigator.getUserMedia
   #
   # @private
   class JpegCameraHtml5 extends JpegCamera
-    # @private
     _engine_init: ->
       @_debug "Using HTML5 engine"
 
