@@ -1,4 +1,4 @@
-/*! JpegCamera 1.2.0 | 2013-11-07
+/*! JpegCamera 1.2.1 | 2013-11-21
     (c) 2013 Adam Wrobel
     http://amw.github.io/jpeg_camera */
 (function() {
@@ -573,7 +573,7 @@
     throw "JpegCamera: SWFObject is not loaded";
   }
 
-  if (!window.JpegCamera && window.swfobject && swfobject.hasFlashPlayerVersion(supported_flash_version)) {
+  if ((!window.JpegCamera || window.jpeg_camera_force_flash) && window.swfobject && swfobject.hasFlashPlayerVersion(supported_flash_version)) {
     JpegCameraFlash = (function(_super) {
       __extends(JpegCameraFlash, _super);
 

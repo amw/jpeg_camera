@@ -3,7 +3,7 @@ supported_flash_version = '9'
 if !window.swfobject
   throw "JpegCamera: SWFObject is not loaded"
 
-if !window.JpegCamera &&
+if (!window.JpegCamera || window.jpeg_camera_force_flash) &&
    window.swfobject &&
    swfobject.hasFlashPlayerVersion(supported_flash_version)
 
