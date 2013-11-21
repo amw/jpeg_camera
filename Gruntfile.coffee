@@ -81,6 +81,8 @@ module.exports = (grunt) ->
       "vendor/assets/images/jpeg_camera/jpeg_camera.swf"
     grunt.file.copy "dist/shutter.mp3",
       "vendor/assets/audios/jpeg_camera/shutter.mp3"
+    grunt.file.copy "dist/shutter.ogg",
+      "vendor/assets/audios/jpeg_camera/shutter.ogg"
 
   grunt.registerTask "js",
     ["coffee", "uglify", "concat:add_banner", "concat:with_dependencies"]
