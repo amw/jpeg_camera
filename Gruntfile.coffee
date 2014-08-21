@@ -78,11 +78,11 @@ module.exports = (grunt) ->
       grunt.file.copy "dist/#{file}",
         "vendor/assets/javascripts/jpeg_camera/#{file}"
     grunt.file.copy "dist/jpeg_camera.swf",
-      "vendor/assets/images/jpeg_camera/jpeg_camera.swf"
+      "app/assets/images/jpeg_camera/jpeg_camera.swf"
     grunt.file.copy "dist/shutter.mp3",
-      "vendor/assets/audios/jpeg_camera/shutter.mp3"
+      "app/assets/audios/jpeg_camera/shutter.mp3"
     grunt.file.copy "dist/shutter.ogg",
-      "vendor/assets/audios/jpeg_camera/shutter.ogg"
+      "app/assets/audios/jpeg_camera/shutter.ogg"
 
   grunt.registerTask "js",
     ["coffee", "uglify", "concat:add_banner", "concat:with_dependencies"]

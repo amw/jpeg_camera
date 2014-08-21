@@ -76,7 +76,7 @@ SWFObject for HTML5.
 If you use Ruby on Rails version 3.1 (or higher) then you can use a gem and
 take advantage of the assets pipeline.
 
-    gem "jpeg_camera", "~> 1.3.1"
+    gem "jpeg_camera", "~> 1.3.2"
 
 Create a file `jpeg_camera.js.coffee.erb` somewhere in the
 `app/assets/javascripts` tree.

@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "railties", ">= 3.1"
 
-  s.files        = Dir.glob("{lib,vendor}/**/*") + %w{README.md LICENSE.md}
+  s.files        = Dir.glob("{app,lib,vendor}/**/*") + %w{README.md LICENSE.md}
   s.require_path = 'lib'
 end
