@@ -1,6 +1,6 @@
-/*! JpegCamera 1.3.2 | 2014-08-21
+/*! JpegCamera 1.3.2 | 2015-10-19
     (c) 2013 Adam Wrobel
-    http://amw.github.io/jpeg_camera */
+    https://amw.github.io/jpeg_camera */
 (function() {
   var JpegCamera, JpegCameraFlash, JpegCameraHtml5, Snapshot, Stats, can_play, can_use_flash, check_canvas_to_blob, mpeg_audio, should_try_flash, supported_flash_version, vorbis_audio, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
