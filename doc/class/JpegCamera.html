@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>JpegCamera Documentation</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/README.md.html' title='JpegCamera'>
+      JpegCamera
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>JpegCamera</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        JpegCamera
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;jpeg_camera.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for JpegCamera implementations. Subclasses provide functionality
+defined by this API using different engines. On supported browsers HTML5
+implementation will be used, otherwise Flash will be used if available.</p><pre><code>if (!window.JpegCamera) {
+  alert(&quot;Neither getUserMedia nor Flash are available!&quot;);
+}
+else {
+  // either HTML5 or Flash are available
+  var camera = JpegCamera(&quot;#camera&quot;).ready(function () {
+    var snapshot = camera.capture().show()
+  }).error(function () {
+    alert(&quot;Camera access was declined.&quot;);
+  });
+}
+</code></pre>
+</div>
+<div class='tags'>
+</div>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='DefaultOptions-variable'>
+    DefaultOptions
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  shutter_ogg_url: &quot;&#47;jpeg_camera&#47;shutter.ogg&quot;,
+  shutter_mp3_url: &quot;&#47;jpeg_camera&#47;shutter.mp3&quot;,
+  swf_url: &quot;&#47;jpeg_camera&#47;jpeg_camera.swf&quot;,
+  on_debug: function(message) {
+    if (console &amp;&amp; console.log) {
+      return console.log(&quot;JpegCamera: &quot; + message);
+    }
+  },
+  quality: 0.9,
+  shutter: true,
+  mirror: false,
+  timeout: 0,
+  retry_success: false,
+  scale: 1.0
+}</code></pre>
+    
+  </dd>
+  <dt id='_is_ready-variable'>
+    _is_ready
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='_error_occured-variable'>
+    _error_occured
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='StatsCaptureScale-variable'>
+    StatsCaptureScale
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>0.2</code></pre>
+    
+  </dd>
+  <dt id='_snapshots-variable'>
+    _snapshots
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{}</code></pre>
+    
+  </dd>
+  <dt id='_displayed_snapshot-variable'>
+    _displayed_snapshot
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_overlay-variable'>
+    _overlay
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='view_width-variable'>
+    view_width
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='view_height-variable'>
+    view_height
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+</dl>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#canvas_supported-static'>
+        .
+(Boolean)
+<b>canvas_supported</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      <p>Tells whether the browser supports <code>canvas</code> element and you can use <a href='../class/Snapshot.html#get_canvas-dynamic'>Snapshot#get_canvas</a> method to display snapshots outside the camera
+container.</p>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_add_prefixed_style-static'>
+        .
+(void)
+<b>_add_prefixed_style</b><span>(element, style, value)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Helper for setting prefixed CSS declarations. 
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#ready-dynamic'>
+        #
+(JpegCamera)
+<b>ready</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for camera ready event. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#error-dynamic'>
+        #
+(JpegCamera)
+<b>error</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for camera error events. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_stats-dynamic'>
+        #
+(void)
+<b>get_stats</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Peak into video stream and calculate pixel statistics. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#capture-dynamic'>
+        #
+(Snapshot)
+<b>capture</b><span>(options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Capture camera snapshot. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#show_stream-dynamic'>
+        #
+(JpegCamera)
+<b>show_stream</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Hide currently displayed snapshot and show the video stream. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#discard_all-dynamic'>
+        #
+(JpegCamera)
+<b>discard_all</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Discard all snapshots and show video stream. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_extend-dynamic'>
+        #
+(void)
+<b>_extend</b><span>(object)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Used to extend options objects. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_debug-dynamic'>
+        #
+(void)
+<b>_debug</b><span>(message)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Log debug messages 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_display-dynamic'>
+        #
+(void)
+<b>_display</b><span>(snapshot)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_discard-dynamic'>
+        #
+(void)
+<b>_discard</b><span>(snapshot)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_prepared-dynamic'>
+        #
+(void)
+<b>_prepared</b><span>(video_width, video_height)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Called by the engine when camera is ready. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_wait_until_stream_looks_ok-dynamic'>
+        #
+(void)
+<b>_wait_until_stream_looks_ok</b><span>(show_debug)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      This peaks into the video stream using very small rendering and calculates colors mean value and standard deviation.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_got_error-dynamic'>
+        #
+(void)
+<b>_got_error</b><span>(error)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Called by the engine when error occurs. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_block_element_access-dynamic'>
+        #
+(void)
+<b>_block_element_access</b><span>()</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Shows an overlay over the container to block mouse access. 
+    </span>
+  </li>
+</ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='canvas_supported-static'>
+      .
+(Boolean)
+<b>canvas_supported</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Tells whether the browser supports <code>canvas</code> element and you can use
+<a href='../class/Snapshot.html#get_canvas-dynamic'>Snapshot#get_canvas</a> method to display snapshots outside the camera
+container.</p><p>All browsers except Internet Explorer 8 and earlier support <code>canvas</code>
+element.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>True if <code>canvas</code> is supported. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_add_prefixed_style-static'>
+      .
+(void)
+<b>_add_prefixed_style</b><span>(element, style, value)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Helper for setting prefixed CSS declarations.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(container, options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Construct new camera.</p><p>JpegCamera will fill the entire container element. If the element&#39;s aspect
+ratio is different than that of the camera stream (usually 4:3, but
+sometimes 16:9) the stream will be clipped horizontally or vertically.</p><p>To display the image on the client side the image might additionally get
+resized to match container element, but the file sent to the server will
+always be in camera&#39;s native resolution.</p><p>By design the file sent to the server will only contain the area that was
+visible to the user during capture. There is no way of sending unclipped,
+full camera frame without showing the whole frame to the user.</p><p>Resizing container after the camera has been initialized is not supported.</p><p>Various options provided here can be overwritten when calling
+<a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>container</span>
+      <span class='type'>
+        (
+          <tt>DOMElement, String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>DOM element or element&#39;s ID. </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>swf_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to the SWF file that should be used for fallback if HTML5 cannot be used. &quot;/jpeg_camera/jpeg_camera.swf&quot; by default. </span>
+    </li>
+    <li>
+      <span class='name'>shutter_mp3_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to the shutter mp3 sound file. Used by flash. &quot;/jpeg_camera/shutter.mp3&quot; by default. </span>
+    </li>
+    <li>
+      <span class='name'>shutter_ogg_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to the shutter ogg sound file. Used by HTML5. &quot;/jpeg_camera/shutter.ogg&quot; by default. </span>
+    </li>
+    <li>
+      <span class='name'>on_ready</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when camera is ready. Inside the callback camera object can be accessed as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution. See also <a href='../class/JpegCamera.html#ready-dynamic'>JpegCamera#ready</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_error</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when camera error occurs. Error message will be passed as the first argument. Inside the callback camera object can be accessed as <code>this</code>. See also <a href='../class/JpegCamera.html#error-dynamic'>JpegCamera#error</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_debug</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>This callback can be used to log various events and information that can be useful when debugging JpegCamera. Debug message will be passed as the first argument. Inside the callback camera object can be accessed as <code>this</code>. There is a default implementation of this callback that logs messages to window.console if available. </span>
+    </li>
+    <li>
+      <span class='name'>quality</span>
+      <span class='type'>
+        (
+          <tt>Float</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Quality of the JPEG file that will be uploaded to the server. Should be between 0 and 1. 0.9 by default. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a>. <em>Cannot</em> be overwritten at the time of upload. </span>
+    </li>
+    <li>
+      <span class='name'>mirror</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The video stream and images displayed on the client side mimic a mirror, because that&#39;s how people are used to seeing themselves. By default images are uploaded to the server in their natural orientation - how the front facing camera sees the user. This option can be set to true to upload images the way the user sees them. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a>. <em>Cannot</em> be overwritten at the time of upload. </span>
+    </li>
+    <li>
+      <span class='name'>shutter</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether to play shutter sound when capturing snapshots. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a>. </span>
+    </li>
+    <li>
+      <span class='name'>api_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL where the snapshots will be uploaded. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>csrf_token</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>CSRF token to be sent in the <strong>X-CSRF-Token</strong> header during upload. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>timeout</span>
+      <span class='type'>
+        (
+          <tt>Integer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'><strong>IGNORED</strong> (<strong>NOT</strong> <strong>IMPLEMENTED</strong>) The number of milliseconds a request can take before automatically being terminated. Default of 0 means there is no timeout. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_done</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_fail</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument followed by error message and response body. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>retry_if</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to be called before any upload done/fail callbacks to decide if the upload should be retried. By default it&#39;s null and uploads are never retried. Inside the function snapshot object will be available as <code>this</code> and the arguments will be: <code>status_code</code>, <code>error_message</code>, <code>response</code>, <code>retry</code>. <code>retry</code> is a number incremented for each retry and starting with 1 when the upload finishes for the first time. If the function returns <code>true</code> or <code>0</code> then upload will be retried immediately. Number greater than <code>0</code> will delay the retry by that many milliseconds. Any other value will be treated as a decision not to retry the upload and one of the <code>on_upload_done</code> or <code>on_upload_fail</code> callbacks will be fired instead. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>retry_success</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>By default <code>retry_if</code> is not called for uploads that finish with a status code from the 2XX range. Set this to <code>true</code> if you want to retry some of these responses. This can be useful if you&#39;re experiencing some network oddities. Can be overwritten when calling <a href='../class/JpegCamera.html#capture-dynamic'>capture</a> or <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='ready-dynamic'>
+      #
+(JpegCamera)
+<b>ready</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for camera ready event.</p><p>Replaces the callback set using <strong>on_ready</strong> option during initialization.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>function to call when camera is ready. Camera object will be available as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution.  </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/JpegCamera.html'>JpegCamera</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='error-dynamic'>
+      #
+(JpegCamera)
+<b>error</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for camera error events.</p><p>Replaces the callback set using <strong>on_error</strong> option during initialization.</p><p>Errors can occur if user declines camera access, flash fails to load, etc.
+Furthermore error event can occur even after camera was ready if for example
+user revokes access.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>function to call when errors occur. Camera object will be available as <code>this</code>, error message will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/JpegCamera.html'>JpegCamera</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_stats-dynamic'>
+      #
+(void)
+<b>get_stats</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Peak into video stream and calculate pixel statistics.</p><p>Can be useful to give the user hints about bad lighting. It uses full
+capture area, but at much lower resolution. It&#39;s more efficient than taking
+a regular capture and calling <a href='../class/Snapshot.html#get_stats-dynamic'>Snapshot#get_stats</a>.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with a <a href='../class/Stats.html'>Stats</a> instance as an argument.
+The camera object will be available as <code>this</code>.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Camera object will be available as <code>this</code>, the <a href='../class/Stats.html'>Stats</a> instance will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      <tt>void</tt>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='capture-dynamic'>
+      #
+(Snapshot)
+<b>capture</b><span>(options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Capture camera snapshot.</p><p>All of the options can have their defaults set when constructing camera
+object.</p>
+</div>
+<div class='tags'>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>quality</span>
+      <span class='type'>
+        (
+          <tt>Float</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Quality of the JPEG file that will be uploaded to the server. Should be between 0 and 1. Defaults to 0.9 or whatever was set during camera initialization. <em>Cannot</em> be overwritten at the time of upload. </span>
+    </li>
+    <li>
+      <span class='name'>mirror</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The video stream and images displayed on the client side mimic a mirror, because that&#39;s how people are used to seeing themselves. By default images are uploaded to the server in their natural orientation - how the front facing camera sees the user. This option can be set to true to upload images the way the user sees them. <em>Cannot</em> be overwritten at the time of upload. </span>
+    </li>
+    <li>
+      <span class='name'>scale</span>
+      <span class='type'>
+        (
+          <tt>Float</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>By default snapshots are captured and uploaded using highest possible resolution. Set this to a number less than 1.0 to get smaller snapshots. </span>
+    </li>
+    <li>
+      <span class='name'>shutter</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether to play the shutter sound. </span>
+    </li>
+    <li>
+      <span class='name'>api_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL where the snapshots will be uploaded. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>csrf_token</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>CSRF token to be sent in the <strong>X-CSRF-Token</strong> header during upload. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>timeout</span>
+      <span class='type'>
+        (
+          <tt>Integer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'><strong>IGNORED</strong> (<strong>NOT</strong> <strong>IMPLEMENTED</strong>) The number of milliseconds a request can take before automatically being terminated. Default of 0 means there is no timeout. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_done</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_fail</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument followed by error message and response body. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>retry_if</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to be called before any upload done/fail callbacks to decide if the upload should be retried. By default it&#39;s null and uploads are never retried. Inside the function snapshot object will be available as <code>this</code> and the arguments will be: <code>status_code</code>, <code>error_message</code>, <code>response</code>, <code>retry</code>. <code>retry</code> is a number incremented for each retry and starting with 1 when the upload finishes for the first time. If the function returns <code>true</code> or <code>0</code> then upload will be retried immediately. Number greater than <code>0</code> will delay the retry by that many milliseconds. Any other value will be treated as a decision not to retry the upload and one of the <code>on_upload_done</code> or <code>on_upload_fail</code> callbacks will be fired instead. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+    <li>
+      <span class='name'>retry_success</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>By default <code>retry_if</code> is not called for uploads that finish with a status code from the 2XX range. Set this to <code>true</code> if you want to retry some of these responses. This can be useful if you&#39;re experiencing some network oddities. Can be overwritten when calling <a href='../class/Snapshot.html#upload-dynamic'>Snapshot#upload</a>. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>The snapshot that was taken. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='show_stream-dynamic'>
+      #
+(JpegCamera)
+<b>show_stream</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Hide currently displayed snapshot and show the video stream.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/JpegCamera.html'>JpegCamera</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='discard_all-dynamic'>
+      #
+(JpegCamera)
+<b>discard_all</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Discard all snapshots and show video stream.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/JpegCamera.html'>JpegCamera</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_extend-dynamic'>
+      #
+(void)
+<b>_extend</b><span>(object)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Used to extend options objects.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_debug-dynamic'>
+      #
+(void)
+<b>_debug</b><span>(message)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Log debug messages</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_display-dynamic'>
+      #
+(void)
+<b>_display</b><span>(snapshot)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_discard-dynamic'>
+      #
+(void)
+<b>_discard</b><span>(snapshot)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_prepared-dynamic'>
+      #
+(void)
+<b>_prepared</b><span>(video_width, video_height)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Called by the engine when camera is ready.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_wait_until_stream_looks_ok-dynamic'>
+      #
+(void)
+<b>_wait_until_stream_looks_ok</b><span>(show_debug)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>This peaks into the video stream using very small rendering and calculates
+colors mean value and standard deviation. If standard deviation is
+negligible then we assume camera isn&#39;t ready yet and wait a little longer.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_got_error-dynamic'>
+      #
+(void)
+<b>_got_error</b><span>(error)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Called by the engine when error occurs.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_block_element_access-dynamic'>
+      #
+(void)
+<b>_block_element_access</b><span>()</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Shows an overlay over the container to block mouse access.</p><p>Prevents changing flash permission after camera has been enabled or stopping
+the HTML5 video stream - both options available through context menu of
+Flash object or <video> elements.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  October 19, 15 16:56:38 by
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.11
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

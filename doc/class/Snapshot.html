@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>JpegCamera Documentation</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/README.md.html' title='JpegCamera'>
+      JpegCamera
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Snapshot</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Snapshot
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>src&#47;snapshot.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Snapshot taken using <a href='../class/JpegCamera.html'>JpegCamera</a>.</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='_next_snapshot_id-variable'>
+    _next_snapshot_id
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>1</code></pre>
+    <div class='docstring'>
+  <p>Snapshot IDs are unique within browser session. This class variable holds
+the value of the next ID to use.</p>
+</div>
+<div class='tags'>
+</div>
+  </dd>
+  <dt id='_discarded-variable'>
+    _discarded
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='_extra_canvas-variable'>
+    _extra_canvas
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_blob-variable'>
+    _blob
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_blob_mime-variable'>
+    _blob_mime
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_image_data-variable'>
+    _image_data
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_upload_options-variable'>
+    _upload_options
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{}</code></pre>
+    
+  </dd>
+  <dt id='_uploading-variable'>
+    _uploading
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='_retry-variable'>
+    _retry
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>1</code></pre>
+    
+  </dd>
+  <dt id='_done-variable'>
+    _done
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='_response-variable'>
+    _response
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_fail-variable'>
+    _fail
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>false</code></pre>
+    
+  </dd>
+  <dt id='_status-variable'>
+    _status
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_error_message-variable'>
+    _error_message
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+  <dt id='_stats-variable'>
+    _stats
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>null</code></pre>
+    
+  </dd>
+</dl>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#show-dynamic'>
+        #
+(Snapshot)
+<b>show</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Display the snapshot with the camera element it was taken with. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#hide-dynamic'>
+        #
+(Snapshot)
+<b>hide</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Stop displaying the snapshot and return to showing live camera stream. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_stats-dynamic'>
+        #
+(void)
+<b>get_stats</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Calculate snapshot pixel statistics (mean gray value, std). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_canvas-dynamic'>
+        #
+(Boolean)
+<b>get_canvas</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get canvas element showing the snapshot. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_blob-dynamic'>
+        #
+(Boolean)
+<b>get_blob</b><span>(callback, mime_type = &quot;image&#47;jpeg&quot;)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the file that would be uploaded to the server as a Blob object. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get_image_data-dynamic'>
+        #
+(void)
+<b>get_image_data</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get ImageData object containing color values for each pixel of the snapshot. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#upload-dynamic'>
+        #
+(Snapshot)
+<b>upload</b><span>(options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Upload the snapshot to the server. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#done-dynamic'>
+        #
+(Snapshot)
+<b>done</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for upload complete event. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fail-dynamic'>
+        #
+(Snapshot)
+<b>fail</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Bind callback for upload error event. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#discard-dynamic'>
+        #
+(void)
+<b>discard</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Hide and discard this snapshot. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_options-dynamic'>
+        #
+(void)
+<b>_options</b><span>()</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Snapshot options 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_start_upload-dynamic'>
+        #
+(void)
+<b>_start_upload</b><span>(cache)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Send the upload request 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_get_stats-dynamic'>
+        #
+(void)
+<b>_get_stats</b><span>(data, callback)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Calculate the snapshot pixel statistics given image data and call callback. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_upload_done-dynamic'>
+        #
+(void)
+<b>_upload_done</b><span>()</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Called by the camera engine when upload completes. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_upload_fail-dynamic'>
+        #
+(void)
+<b>_upload_fail</b><span>()</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Called by the camera engine when upload fails. 
+    </span>
+  </li>
+</ul>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(camera, options)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='show-dynamic'>
+      #
+(Snapshot)
+<b>show</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Display the snapshot with the camera element it was taken with.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='hide-dynamic'>
+      #
+(Snapshot)
+<b>hide</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Stop displaying the snapshot and return to showing live camera stream.</p><p>Ignored if camera is displaying different snapshot.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_stats-dynamic'>
+      #
+(void)
+<b>get_stats</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Calculate snapshot pixel statistics (mean gray value, std).</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with a <a href='../class/Stats.html'>Stats</a> object as an argument.
+Snapshot will be available as <code>this</code>.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the <a href='../class/Stats.html'>Stats</a> instance will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      <tt>void</tt>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_canvas-dynamic'>
+      #
+(Boolean)
+<b>get_canvas</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get canvas element showing the snapshot.</p><p>This can be used to display the snapshot outside the camera&#39;s container.
+You can show multiple snapshots at a time and allow the user to pick one
+he likes best.</p><p>Canvas produced by this method has a resolution of the snapshot (which
+depends on the camera&#39;s native resolution), not that of the camera&#39;s
+container. Use CSS to display this canvas in different sizes.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the <code>canvas</code> element immediately. Instead
+it accepts a callback that later will be called with the <code>canvas</code> element as
+an argument. Snapshot will be available as <code>this</code>.</p><p>Multiple calls to this method will yield the same canvas element.</p><p>One caveat is that the underlaying data of this canvas is not mirrored like
+the stream shown in the camera container. Special CSS transform directive
+is applied on it so that it looks like the picture in the camera when
+displayed. This only matters when manipulating the canvas or reading it&#39;s
+data. You can read more about mirroring in <a href='../class/JpegCamera.html#capture-dynamic'>JpegCamera#capture</a>.</p><p>This method doesn&#39;t work in Internet Explorer 8 or earlier, because it does
+not support <code>canvas</code> element. Call <a href='../class/JpegCamera.html#canvas_supported-static'>JpegCamera.canvas_supported</a> to learn
+whether you can use this method.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when <code>canvas</code> element is available. Snapshot object will be available as <code>this</code>, the <code>canvas</code> element will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>Whether canvas is supported in this browser. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_blob-dynamic'>
+      #
+(Boolean)
+<b>get_blob</b><span>(callback, mime_type = &quot;image&#47;jpeg&quot;)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the file that would be uploaded to the server as a Blob object.</p><p>This can be useful if you want to stream the data via a websocket. Note that
+using <code>upload</code> is more efficient if all you want to do is upload this file
+to a server via POST call.</p><p>This method doesn&#39;t work in Internet Explorer 8 or earlier, because it does
+not support <code>canvas</code> element. Call <a href='../class/JpegCamera.html#canvas_supported-static'>JpegCamera.canvas_supported</a> to learn
+whether you can use this method.</p><p>Because preparing image blob can take a while this method does not return
+the data immediately. Instead it accepts a callback that later will be
+called with the data object as an argument. Snapshot will be available as
+<code>this</code>.</p><p>Multiple calls to this method will yield the same data object.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the blob object will be passed as the first argument. </span>
+    </li>
+    <li>
+      <span class='name'>mime_type</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Mime type of the requested blob. &quot;image/jpeg&quot; by default. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>Whether canvas is supported in this browser. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get_image_data-dynamic'>
+      #
+(void)
+<b>get_image_data</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get ImageData object containing color values for each pixel of the snapshot.</p><p>Data produced by this method has a resolution of the snapshot (which depends
+on the camera&#39;s native resolution), not that of the camera&#39;s container.</p><p>Read more about ImageData object on <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">Mozilla&#39;s website
+</a>.</p><p>Because reading image data can take a while when Flash fallback is being
+used this method does not return the data immediately. Instead it accepts
+a callback that later will be called with the data object as an argument.
+Snapshot will be available as <code>this</code>.</p><p>Multiple calls to this method will yield the same data object.</p><p>One caveat is that the returned data is not mirrored like the stream shown
+in the camera container. This only matters when manipulating the canvas or
+reading it&#39;s data. You can read more about mirroring in
+<a href='../class/JpegCamera.html#capture-dynamic'>JpegCamera#capture</a>.</p><p>This method returns native <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData
+</a> object in all
+browsers except Internet Explorer 8 or earlier which does not support
+the <code>canvas</code> element. In that browser a generic JavaScript object will be
+returned that mimics the native format. Call <a href='../class/JpegCamera.html#canvas_supported-static'>JpegCamera.canvas_supported</a>
+to learn whether <code>canvas</code> is supported by the browser.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when data is available. Snapshot object will be available as <code>this</code>, the data will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      <tt>void</tt>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='upload-dynamic'>
+      #
+(Snapshot)
+<b>upload</b><span>(options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Upload the snapshot to the server.</p><p>The snapshot is uploaded using a POST request with JPEG file sent as RAW
+data. This not like a multipart form upload using file element where the
+file is given a name and is encoded along with other form keys. To read
+file contents on the server side use <code>request.raw_post</code> in Ruby on Rails or
+<code>$HTTP_RAW_POST_DATA</code> in PHP.</p><p>Upload completes successfully only if the server responds with status code</p><ol>
+<li>Any other code will be handled via on_upload_fail callback. Your
+application is free to inspect the status code and response text in that
+handler to decide whether that response is acceptable or not.</li>
+</ol><p>You cannot have multiple uploads for one snapshot running at the same time,
+but you are free to start another upload after one succeeds or fails.</p><p>All of the options can have their defaults set when constructing camera
+object or calling <a href='../class/JpegCamera.html#capture-dynamic'>JpegCamera#capture</a>.</p>
+</div>
+<div class='tags'>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>api_url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL where the snapshots will be uploaded. </span>
+    </li>
+    <li>
+      <span class='name'>csrf_token</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>CSRF token to be sent in the <strong>X-CSRF-Token</strong> header during upload. </span>
+    </li>
+    <li>
+      <span class='name'>timeout</span>
+      <span class='type'>
+        (
+          <tt>Integer</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'><strong>IGNORED</strong> (<strong>NOT</strong> <strong>IMPLEMENTED</strong>) The number of milliseconds a request can take before automatically being terminated. Default of 0 means there is no timeout. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_done</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument. Calling <a href='../class/Snapshot.html#done-dynamic'>done</a> before the upload exits will change the handler for this upload. </span>
+    </li>
+    <li>
+      <span class='name'>on_upload_fail</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument followed by error message and response body. Calling <a href='../class/Snapshot.html#fail-dynamic'>fail</a> before the upload exits will change the handler for this upload. </span>
+    </li>
+    <li>
+      <span class='name'>retry_if</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to be called before any upload done/fail callbacks to decide if the upload should be retried. By default it&#39;s null and uploads are never retried. Inside the function snapshot object will be available as <code>this</code> and the arguments will be: <code>status_code</code>, <code>error_message</code>, <code>response</code>, <code>retry</code>. <code>retry</code> is a number incremented for each retry and starting with 1 when the upload finishes for the first time. If the function returns <code>true</code> or <code>0</code> then upload will be retried immediately. Number greater than <code>0</code> will delay the retry by that many milliseconds. Any other value will be treated as a decision not to retry the upload and one of the <code>on_upload_done</code> or <code>on_upload_fail</code> callbacks will be fired instead. </span>
+    </li>
+    <li>
+      <span class='name'>retry_success</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>By default <code>retry_if</code> is not called for uploads that finish with a status code from the 2XX range. Set this to <code>true</code> if you want to retry some of these responses. This can be useful if you&#39;re experiencing some network oddities. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='done-dynamic'>
+      #
+(Snapshot)
+<b>done</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for upload complete event.</p><p>The callback to fire when the previously requested <a href='../class/Snapshot.html#upload-dynamic'>upload</a>
+operation succeeds. This is just a syntactic sugar that allows one to write:
+<code>snapshot.upload().done(done_callback)</code> instead of
+<code>snapshot.upload(on_upload_done: done_callback)</code>. This callback will be
+forgotten after the next call to <a href='../class/Snapshot.html#upload-dynamic'>upload</a>.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload completes. Snapshot object will be available as <code>this</code>, response body will be passed as the first argument. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fail-dynamic'>
+      #
+(Snapshot)
+<b>fail</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Bind callback for upload error event.</p><p>The callback to fire when the previously requested <a href='../class/Snapshot.html#upload-dynamic'>upload</a>
+operation fails. This is just a syntactic sugar that allows one to write:
+<code>snapshot.upload().fail(fail_callback)</code> instead of
+<code>snapshot.upload(on_upload_fail: fail_callback)</code>. This callback will be
+forgotten after the next call to <a href='../class/Snapshot.html#upload-dynamic'>upload</a>.</p><p>If the event has already happened the argument will be called immediately.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Function to call when upload fails. Snapshot object will be available as <code>this</code>, response code will be passed as the first argument with response body or error message as the second argument if available. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/Snapshot.html'>Snapshot</a></tt>
+      )
+      &mdash;
+      <span class='desc'>Self for chaining. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='discard-dynamic'>
+      #
+(void)
+<b>discard</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Hide and discard this snapshot.</p><p>After discarding a snapshot an attempt to show or upload it will raise
+an error.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      <tt>void</tt>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_options-dynamic'>
+      #
+(void)
+<b>_options</b><span>()</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Snapshot options</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_start_upload-dynamic'>
+      #
+(void)
+<b>_start_upload</b><span>(cache)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Send the upload request</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_get_stats-dynamic'>
+      #
+(void)
+<b>_get_stats</b><span>(data, callback)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Calculate the snapshot pixel statistics given image data and call callback.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_upload_done-dynamic'>
+      #
+(void)
+<b>_upload_done</b><span>()</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Called by the camera engine when upload completes.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_upload_fail-dynamic'>
+      #
+(void)
+<b>_upload_fail</b><span>()</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Called by the camera engine when upload fails.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  October 19, 15 16:56:38 by
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.11
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

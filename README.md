@@ -121,8 +121,8 @@ directive into this one:
     });
 
 A detailed documentation using in-code comments is maintained for
-[JpegCamera](https://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html) and
-[Snapshot](https://amw.github.io/jpeg_camera/doc/classes/Snapshot.html)
+[JpegCamera](https://amw.github.io/jpeg_camera/doc/class/JpegCamera.html) and
+[Snapshot](https://amw.github.io/jpeg_camera/doc/class/Snapshot.html)
 classes.
 
 ## Caveats
