@@ -31,7 +31,7 @@ has some nice, new features.
 
 ## Demo
 
-Check out the [demo page](http://amw.github.io/jpeg_camera/demo/).
+Check out the [demo page](https://amw.github.io/jpeg_camera/demo/).
 
 ## Dependencies
 
@@ -121,8 +121,8 @@ directive into this one:
     });
 
 A detailed documentation using in-code comments is maintained for
-[JpegCamera](http://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html) and
-[Snapshot](http://amw.github.io/jpeg_camera/doc/classes/Snapshot.html)
+[JpegCamera](https://amw.github.io/jpeg_camera/doc/classes/JpegCamera.html) and
+[Snapshot](https://amw.github.io/jpeg_camera/doc/classes/Snapshot.html)
 classes.
 
 ## Caveats
