@@ -56,7 +56,7 @@ module.exports = (grunt) ->
         cmd: "rm -fr doc"
       doc:
         cmd: "PATH=\"$(npm bin):$PATH\" codo; " +
-          "cp doc/README.md.html doc/index.html"
+          "cp index.html doc/index.html"
 
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-uglify"
