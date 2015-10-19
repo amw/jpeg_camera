@@ -115,7 +115,14 @@ snapshot.upload({api_url: &quot;/upload_image&quot;}).done(function(response) {
 </code></pre><p>A detailed documentation using in-code comments is maintained for
 <a href="https://amw.github.io/jpeg_camera/doc/class/JpegCamera.html">JpegCamera</a> and
 <a href="https://amw.github.io/jpeg_camera/doc/class/Snapshot.html">Snapshot</a>
-classes.</p><h2 id="caveats">Caveats</h2><p>To use Flash fallback your camera container must be at least 215 pixels wide and
+classes.</p><h2 id="user-privacy">User privacy</h2><p>Respect your users privacy. Make sure they understand why you want to capture
+their webcam image and what you&#39;re going to do with it. A useful information
+is whether you&#39;re only going to use the image on the client side or if
+you&#39;re going to upload it to some server.</p><p>To protect their identity and their data host your app on HTTPS servers.
+JpegCamera does not enforce this, but some browsers promise to do so in the
+future. Google Chrome already forbids HTTP websites from accessing camera
+through <code>getUserMedia</code> in their Canary release channel.
+<a href="https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins">Read more</a>.</p><h2 id="caveats">Caveats</h2><p>To use Flash fallback your camera container must be at least 215 pixels wide and
 138 pixels tall. This is the minimum to display privacy settings dialog.</p><p>With Flash in some browsers it&#39;s impossible to read response body for requests
 that finish with status codes from outside the 2XX range (like 404 Not Found or
 422 Unprocessable Entity). If you&#39;re using version of JpegCamera with Flash
@@ -140,7 +147,7 @@ that project.</p><p>Copyright <a href="http://adamwrobel.com">Adam Wróbel</a>, 
       </div>
     </div>
     <div id='footer'>
-  October 19, 15 16:56:38 by
+  October 19, 15 18:35:30 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

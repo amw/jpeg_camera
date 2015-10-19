@@ -125,6 +125,19 @@ A detailed documentation using in-code comments is maintained for
 [Snapshot](https://amw.github.io/jpeg_camera/doc/class/Snapshot.html)
 classes.
 
+## User privacy
+
+Respect your users privacy. Make sure they understand why you want to capture
+their webcam image and what you're going to do with it. A useful information
+is whether you're only going to use the image on the client side or if
+you're going to upload it to some server.
+
+To protect their identity and their data host your app on HTTPS servers.
+JpegCamera does not enforce this, but some browsers promise to do so in the
+future. Google Chrome already forbids HTTP websites from accessing camera
+through `getUserMedia` in their Canary release channel.
+[Read more](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins).
+
 ## Caveats
 
 To use Flash fallback your camera container must be at least 215 pixels wide and
