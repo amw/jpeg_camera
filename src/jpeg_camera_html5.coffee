@@ -75,6 +75,7 @@ if navigator.getUserMedia
 
       get_user_media_options =
         video:
+          facingMode: "environment",
           optional: [
             {minWidth: 1280},
             {minWidth: 640},
@@ -86,7 +87,7 @@ if navigator.getUserMedia
       success =
         (stream) ->
           that._remove_message()
-
+          that.activeTrack = stream.getTracks()[0]
           if window.URL
             that.video.src = URL.createObjectURL stream
           else
@@ -197,6 +198,10 @@ if navigator.getUserMedia
         snapshot._xhr.abort()
       delete snapshot._xhr
       delete snapshot._canvas
+
+    stop: ->
+        if @activeTrack
+          @activeTrack.stop()   
 
     _engine_show_stream: ->
       if @displayed_canvas
