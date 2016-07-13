@@ -65,7 +65,8 @@ if navigator.getUserMedia
 
       @video = document.createElement 'video'
       @video.autoplay = true
-      JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
+      if not @options.mirror is false
+        JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
 
       if window.AudioContext
         if can_play vorbis_audio
@@ -155,8 +156,9 @@ if navigator.getUserMedia
       @displayed_canvas.style.left = 0
       @displayed_canvas.style.position = "absolute"
       @displayed_canvas.style.zIndex = 2
-      JpegCamera._add_prefixed_style @displayed_canvas,
-        "transform", "scalex(-1.0)"
+      if not @options.mirror is false 
+        JpegCamera._add_prefixed_style @displayed_canvas,
+          "transform", "scalex(-1.0)"
 
       @container.appendChild @displayed_canvas
 
