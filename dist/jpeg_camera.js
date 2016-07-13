@@ -296,7 +296,9 @@
         this.container.appendChild(this.video_container);
         this.video = document.createElement('video');
         this.video.autoplay = true;
-        JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
+        if (!this.options.mirror === false) {
+          JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
+        }
         if (window.AudioContext) {
           if (can_play(vorbis_audio)) {
             this._load_shutter_sound(this.options.shutter_ogg_url);
@@ -306,19 +308,18 @@
         }
         get_user_media_options = {
           video: {
-            optional: [
-              {
-                minWidth: 1280
-              }, {
-                minWidth: 640
-              }, {
-                minWidth: 480
-              }, {
-                minWidth: 360
-              }
-            ]
+            width: {
+              min: 360,
+              ideal: 1024,
+              max: 1920
+            }
           }
         };
+        if (this.options.deviceId) {
+          get_user_media_options.video.deviceId = {
+            exact: this.options.deviceId
+          };
+        }
         that = this;
         success = function(stream) {
           that._remove_message();
@@ -388,7 +389,9 @@
         this.displayed_canvas.style.left = 0;
         this.displayed_canvas.style.position = "absolute";
         this.displayed_canvas.style.zIndex = 2;
-        JpegCamera._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
+        if (!this.options.mirror === false) {
+          JpegCamera._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
+        }
         return this.container.appendChild(this.displayed_canvas);
       };
 

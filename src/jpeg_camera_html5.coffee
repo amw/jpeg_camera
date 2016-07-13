@@ -65,7 +65,8 @@ if navigator.getUserMedia
 
       @video = document.createElement 'video'
       @video.autoplay = true
-      JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
+      if not @options.mirror is false
+        JpegCamera._add_prefixed_style @video, "transform", "scalex(-1.0)"
 
       if window.AudioContext
         if can_play vorbis_audio
@@ -75,13 +76,10 @@ if navigator.getUserMedia
 
       get_user_media_options =
         video:
-          optional: [
-            {minWidth: 1280},
-            {minWidth: 640},
-            {minWidth: 480},
-            {minWidth: 360}
-          ]
+          width: {min: 360, ideal: 1024, max: 1920 }
 
+      if(@options.deviceId)
+           get_user_media_options.video.deviceId = {exact: @options.deviceId}
       that = this
       success =
         (stream) ->
@@ -158,8 +156,9 @@ if navigator.getUserMedia
       @displayed_canvas.style.left = 0
       @displayed_canvas.style.position = "absolute"
       @displayed_canvas.style.zIndex = 2
-      JpegCamera._add_prefixed_style @displayed_canvas,
-        "transform", "scalex(-1.0)"
+      if not @options.mirror is false 
+        JpegCamera._add_prefixed_style @displayed_canvas,
+          "transform", "scalex(-1.0)"
 
       @container.appendChild @displayed_canvas
 
