@@ -319,6 +319,11 @@
             ]
           }
         };
+        if (this.options.deviceId) {
+          get_user_media_options.video.deviceId = {
+            exact: this.options.deviceId
+          };
+        }
         that = this;
         success = function(stream) {
           that._remove_message();

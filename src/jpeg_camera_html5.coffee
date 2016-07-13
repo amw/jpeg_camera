@@ -81,7 +81,8 @@ if navigator.getUserMedia
             {minWidth: 480},
             {minWidth: 360}
           ]
-
+      if(@options.deviceId)
+           get_user_media_options.video.deviceId = {exact: @options.deviceId}
       that = this
       success =
         (stream) ->
