@@ -55,11 +55,11 @@ Copy all the files from `dist` into `jpeg_camera` directory under your server's
 root.
 
 Load JpegCamera and it's dependencies in the `HEAD` section of your page.
-
-    <script src="/jpeg_camera/swfobject.min.js" type="text/javascript"></script>
-    <script src="/jpeg_camera/canvas-to-blob.min.js" type="text/javascript"></script>
-    <script src="/jpeg_camera/jpeg_camera.min.js" type="text/javascript"></script>
-
+```html
+<script src="/jpeg_camera/swfobject.min.js" type="text/javascript"></script>
+<script src="/jpeg_camera/canvas-to-blob.min.js" type="text/javascript"></script>
+<script src="/jpeg_camera/jpeg_camera.min.js" type="text/javascript"></script>
+```
 SWFObject and Canvas-to-Blob are stored in separate files so that you don't have
 to load them again if you already use them in your project. If you want to cut
 down on HTTP requests then there is a concatenated version you can use.
@@ -106,19 +106,25 @@ directive into this one:
     #= require jpeg_camera/jpeg_camera_no_flash
 
 ## Usage
+```js
+var camera = new JpegCamera("#camera");
 
-    var camera = new JpegCamera("#camera");
+var snapshot = camera.capture();
 
-    var snapshot = camera.capture();
+snapshot.show(); // Display the snapshot
 
-    snapshot.show(); // Display the snapshot
+snapshot.upload({api_url: "/upload_image"}).done(function(response) {
+  response_container.innerHTML = response;
+  this.discard(); // discard snapshot and show video stream again
+}).fail(function(status_code, error_message, response) {
+  alert("Upload failed with status " + status_code);
+});
+```
 
-    snapshot.upload({api_url: "/upload_image"}).done(function(response) {
-      response_container.innerHTML = response;
-      this.discard(); // discard snapshot and show video stream again
-    }).fail(function(status_code, error_message, response) {
-      alert("Upload failed with status " + status_code);
-    });
+When you are done using the camera you should call the `stop` method and remove #camera element from the DOM.
+```js
+camera.stop();
+```
 
 A detailed documentation using in-code comments is maintained for
 [JpegCamera](https://amw.github.io/jpeg_camera/doc/class/JpegCamera.html) and
@@ -159,15 +165,15 @@ The source code is available on [Github](https://github.com/amw/jpeg_camera).
 Please send pull requests on topic branches.
 
 To build dist files from source you need `npm` — Node Package Manager.
-
-    npm install              # install required dependencies
-    npm install -g grunt-cli # install grunt command
-    grunt dist               # build js & swf files
-    grunt js                 # only builds js files
-    grunt swf                # only builds swf file
-    grunt doc                # update documentation
-    grunt                    # build dist files and update documentation
-
+```bash
+npm install              # install required dependencies
+npm install -g grunt-cli # install grunt command
+grunt dist               # build js & swf files
+grunt js                 # only builds js files
+grunt swf                # only builds swf file
+grunt doc                # update documentation
+grunt                    # build dist files and update documentation
+```
 To build swf file you need to have `mxmlc` available in your `$PATH`. It comes
 in the [Flex SDK](http://www.adobe.com/devnet/flex/flex-sdk-download.html).
 

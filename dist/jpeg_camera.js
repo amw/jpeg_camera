@@ -1,4 +1,4 @@
-/*! JpegCamera 1.3.2 | 2016-07-11
+/*! JpegCamera 1.3.2 | 2016-07-13
     (c) 2013 Adam Wrobel
     https://amw.github.io/jpeg_camera */
 (function() {
@@ -102,6 +102,8 @@
     };
 
     JpegCamera.prototype._snapshots = {};
+
+    JpegCamera.prototype.stop = function() {};
 
     JpegCamera.prototype.show_stream = function() {
       this._engine_show_stream();
@@ -304,7 +306,6 @@
         }
         get_user_media_options = {
           video: {
-            facingMode: "environment",
             optional: [
               {
                 minWidth: 1280

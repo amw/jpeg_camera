@@ -75,7 +75,6 @@ if navigator.getUserMedia
 
       get_user_media_options =
         video:
-          facingMode: "environment",
           optional: [
             {minWidth: 1280},
             {minWidth: 640},
