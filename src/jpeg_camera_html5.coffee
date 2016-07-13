@@ -75,12 +75,8 @@ if navigator.getUserMedia
 
       get_user_media_options =
         video:
-          optional: [
-            {minWidth: 1280},
-            {minWidth: 640},
-            {minWidth: 480},
-            {minWidth: 360}
-          ]
+          width: {min: 360, ideal: 1024, max: 1920 }
+
       if(@options.deviceId)
            get_user_media_options.video.deviceId = {exact: @options.deviceId}
       that = this
