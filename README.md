@@ -59,10 +59,11 @@ Load JpegCamera and it's dependencies in the `HEAD` section of your page.
 <script src="/jpeg_camera/swfobject.min.js" type="text/javascript"></script>
 <script src="/jpeg_camera/canvas-to-blob.min.js" type="text/javascript"></script>
 <script src="/jpeg_camera/jpeg_camera.min.js" type="text/javascript"></script>
-``
+```
 SWFObject and Canvas-to-Blob are stored in separate files so that you don't have
 to load them again if you already use them in your project. If you want to cut
 down on HTTP requests then there is a concatenated version you can use.
+
 ```html
 <script src="/jpeg_camera/jpeg_camera_with_dependencies.min.js" type="text/javascript"></script>
 ```
