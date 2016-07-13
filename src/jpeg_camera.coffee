@@ -303,6 +303,9 @@ class JpegCamera
 
   _snapshots: {}
 
+  # Stop the camera capture
+  stop: ->
+
   # Hide currently displayed snapshot and show the video stream.
   #
   # @return [JpegCamera] Self for chaining.

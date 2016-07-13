@@ -1,4 +1,4 @@
-/*! JpegCamera 1.3.2 | 2015-10-19
+/*! JpegCamera 1.3.2 | 2016-07-13
     (c) 2013 Adam Wrobel
     https://amw.github.io/jpeg_camera */
 (function() {
@@ -102,6 +102,8 @@
     };
 
     JpegCamera.prototype._snapshots = {};
+
+    JpegCamera.prototype.stop = function() {};
 
     JpegCamera.prototype.show_stream = function() {
       this._engine_show_stream();
@@ -294,7 +296,9 @@
         this.container.appendChild(this.video_container);
         this.video = document.createElement('video');
         this.video.autoplay = true;
-        JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
+        if (!this.options.mirror === false) {
+          JpegCamera._add_prefixed_style(this.video, "transform", "scalex(-1.0)");
+        }
         if (window.AudioContext) {
           if (can_play(vorbis_audio)) {
             this._load_shutter_sound(this.options.shutter_ogg_url);
@@ -304,22 +308,22 @@
         }
         get_user_media_options = {
           video: {
-            optional: [
-              {
-                minWidth: 1280
-              }, {
-                minWidth: 640
-              }, {
-                minWidth: 480
-              }, {
-                minWidth: 360
-              }
-            ]
+            width: {
+              min: 360,
+              ideal: 1024,
+              max: 1920
+            }
           }
         };
+        if (this.options.deviceId) {
+          get_user_media_options.video.deviceId = {
+            exact: this.options.deviceId
+          };
+        }
         that = this;
         success = function(stream) {
           that._remove_message();
+          that.activeTrack = stream.getTracks()[0];
           if (window.URL) {
             that.video.src = URL.createObjectURL(stream);
           } else {
@@ -385,7 +389,9 @@
         this.displayed_canvas.style.left = 0;
         this.displayed_canvas.style.position = "absolute";
         this.displayed_canvas.style.zIndex = 2;
-        JpegCamera._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
+        if (!this.options.mirror === false) {
+          JpegCamera._add_prefixed_style(this.displayed_canvas, "transform", "scalex(-1.0)");
+        }
         return this.container.appendChild(this.displayed_canvas);
       };
 
@@ -431,6 +437,12 @@
         }
         delete snapshot._xhr;
         return delete snapshot._canvas;
+      };
+
+      JpegCameraHtml5.prototype.stop = function() {
+        if (this.activeTrack) {
+          return this.activeTrack.stop();
+        }
       };
 
       JpegCameraHtml5.prototype._engine_show_stream = function() {
