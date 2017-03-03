@@ -230,7 +230,7 @@ package {
       }
 
       camera.setMotionLevel(100); // (may help reduce CPU usage)
-      camera.setMode(640, 480, 30);
+      camera.setMode(1280, 720, 30);
 
       camera.addEventListener(StatusEvent.STATUS, cameraStatusChanged);
 
