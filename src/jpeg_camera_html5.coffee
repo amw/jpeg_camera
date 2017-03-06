@@ -58,7 +58,7 @@ if navigator.getUserMedia
       @video_container.style.width = "#{@view_width}px"
       @video_container.style.height = "#{@view_height}px"
       @video_container.style.overflow = "hidden"
-      @video_container.style.position = "absolute"
+      #@video_container.style.position = "absolute"
       @video_container.style.zIndex = 1
 
       @container.appendChild @video_container
@@ -120,6 +120,16 @@ if navigator.getUserMedia
         navigator.getUserMedia get_user_media_options, success, failure
       catch error
         navigator.getUserMedia "video", success, failure
+
+    _engine_viewport_resize: (new_width, new_height) ->
+      @view_width = new_width
+      @view_height = new_height
+      @video.width = new_width
+      @video.height = new_height
+      @video_container.style.width = "#{new_width}px"
+      @video_container.style.height = "#{new_height}px"
+      @video.style.width = "#{new_width}px"
+      @video.style.height = "#{new_height}px"
 
     _engine_play_shutter_sound: ->
       return unless @shutter_buffer

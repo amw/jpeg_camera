@@ -21,7 +21,8 @@ class JpegCamera
     on_debug: (message) ->
       console.log "JpegCamera: #{message}" if console && console.log
     quality: 0.9
-    shutter: true
+    shutter: true,
+    resolution: [640, 480]
     mirror: false
     timeout: 0
     retry_success: false
@@ -154,7 +155,6 @@ class JpegCamera
     container.appendChild @container
 
     @options = @_extend {}, @constructor.DefaultOptions, options
-
     @_engine_init()
 
   # Bind callback for camera ready event.
@@ -166,7 +166,7 @@ class JpegCamera
   # @param callback [Function] function to call when camera is ready. Camera
   #   object will be available as `this`. This function will receive object with
   #   `video_width` and `video_height` properties as the first argument. These
-  #   indicate camera's native resolution. 
+  #   indicate camera's native resolution.
   #
   # @return [JpegCamera] Self for chaining.
   ready: (callback) ->
@@ -302,6 +302,11 @@ class JpegCamera
     snapshot
 
   _snapshots: {}
+
+  resize_viewport: (newWidth, newHeight) ->
+    @view_width = parseInt newWidth, 10
+    @view_height = parseInt newHeight, 10
+    @_engine_viewport_resize(@view_width, @view_height)
 
   # Hide currently displayed snapshot and show the video stream.
   #
