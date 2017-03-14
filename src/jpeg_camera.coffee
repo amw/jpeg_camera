@@ -27,7 +27,15 @@ class JpegCamera
     timeout: 0
     retry_success: false
     scale: 1.0
+    initial_message_html: "Please allow camera access when prompted by the browser.<br><br>" +
+        "Look for camera icon around your address bar."
+    denied_access_message_html: "<span style=\"color: red;\">" +
+        "You have denied camera access." +
+        "</span><br><br>" +
+        "Look for camera icon around your address bar to change your " +
+        "decision."
 
+  engine_name: ""
   @_canvas_supported: !!document.createElement('canvas').getContext
 
   # Tells whether the browser supports `canvas` element and you can use

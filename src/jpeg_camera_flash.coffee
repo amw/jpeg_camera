@@ -30,6 +30,8 @@ if should_try_flash && can_use_flash()
     @_instances: {}
     @_next_id: 1
 
+    engine_name: "flash"
+
     _engine_init: ->
       @_debug "Using Flash engine"
 
