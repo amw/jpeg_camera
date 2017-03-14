@@ -1,4 +1,4 @@
-/*! JpegCamera 1.3.3 | 2016-09-18
+/*! JpegCamera 1.3.3 | 2017-03-10
     (c) 2013 Adam Wrobel
     https://amw.github.io/jpeg_camera */
 (function() {
@@ -18,11 +18,16 @@
       },
       quality: 0.9,
       shutter: true,
+      resolution: [640, 480],
       mirror: false,
       timeout: 0,
       retry_success: false,
-      scale: 1.0
+      scale: 1.0,
+      initial_message_html: "Please allow camera access when prompted by the browser.<br><br>" + "Look for camera icon around your address bar.",
+      denied_access_message_html: "<span style=\"color: red;\">" + "You have denied camera access." + "</span><br><br>" + "Look for camera icon around your address bar to change your " + "decision."
     };
+
+    JpegCamera.prototype.engine_name = "";
 
     JpegCamera._canvas_supported = !!document.createElement('canvas').getContext;
 
@@ -102,6 +107,12 @@
     };
 
     JpegCamera.prototype._snapshots = {};
+
+    JpegCamera.prototype.resize_viewport = function(newWidth, newHeight) {
+      this.view_width = parseInt(newWidth, 10);
+      this.view_height = parseInt(newHeight, 10);
+      return this._engine_viewport_resize(this.view_width, this.view_height);
+    };
 
     JpegCamera.prototype.show_stream = function() {
       this._engine_show_stream();
@@ -265,6 +276,8 @@
         return _ref;
       }
 
+      JpegCameraHtml5.prototype.engine_name = "html5";
+
       JpegCameraHtml5.prototype._engine_init = function() {
         var error, failure, get_user_media_options, horizontal_padding, success, that, vertical_padding;
         this._debug("Using HTML5 engine");
@@ -283,7 +296,7 @@
         this.message.style.paddingRight = "" + horizontal_padding + "px";
         this.message.style.position = "absolute";
         this.message.style.zIndex = 3;
-        this.message.innerHTML = "Please allow camera access when prompted by the browser.<br><br>" + "Look for camera icon around your address bar.";
+        this.message.innerHTML = this.options.initial_message_html;
         this.container.appendChild(this.message);
         this.video_container = document.createElement("div");
         this.video_container.style.width = "" + this.view_width + "px";
@@ -306,7 +319,13 @@
           video: {
             optional: [
               {
+                minWidth: 1920
+              }, {
                 minWidth: 1280
+              }, {
+                minWidth: 1024
+              }, {
+                minWidth: 800
               }, {
                 minWidth: 640
               }, {
@@ -330,7 +349,7 @@
         };
         failure = function(error) {
           var code, key, value;
-          that.message.innerHTML = "<span style=\"color: red;\">" + "You have denied camera access." + "</span><br><br>" + "Look for camera icon around your address bar to change your " + "decision.";
+          that.message.innerHTML = this.options.denied_access_message_html;
           code = error.code;
           for (key in error) {
             value = error[key];
@@ -348,6 +367,17 @@
           error = _error;
           return navigator.getUserMedia("video", success, failure);
         }
+      };
+
+      JpegCameraHtml5.prototype._engine_viewport_resize = function(new_width, new_height) {
+        this.view_width = new_width;
+        this.view_height = new_height;
+        this.video.width = new_width;
+        this.video.height = new_height;
+        this.video_container.style.width = "" + new_width + "px";
+        this.video_container.style.height = "" + new_height + "px";
+        this.video.style.width = "" + new_width + "px";
+        return this.video.style.height = "" + new_height + "px";
       };
 
       JpegCameraHtml5.prototype._engine_play_shutter_sound = function() {
@@ -521,30 +551,15 @@
       JpegCameraHtml5.prototype._status_checks_count = 0;
 
       JpegCameraHtml5.prototype._get_video_crop = function() {
-        var scaled_video_height, scaled_video_width, video_ratio, video_scale, view_ratio;
+        var video_ratio, view_ratio;
         video_ratio = this.video_width / this.video_height;
         view_ratio = this.view_width / this.view_height;
-        if (video_ratio >= view_ratio) {
-          this._debug("Filling height");
-          video_scale = this.view_height / this.video_height;
-          scaled_video_width = Math.round(this.video_width * video_scale);
-          return {
-            width: scaled_video_width,
-            height: this.view_height,
-            x_offset: -Math.floor((scaled_video_width - this.view_width) / 2.0),
-            y_offset: 0
-          };
-        } else {
-          this._debug("Filling width");
-          video_scale = this.view_width / this.video_width;
-          scaled_video_height = Math.round(this.video_height * video_scale);
-          return {
-            width: this.view_width,
-            height: scaled_video_height,
-            x_offset: 0,
-            y_offset: -Math.floor((scaled_video_height - this.view_height) / 2.0)
-          };
-        }
+        return {
+          width: this.view_width,
+          height: this.view_height,
+          x_offset: 0,
+          y_offset: 0
+        };
       };
 
       JpegCameraHtml5.prototype._get_capture_crop = function() {

@@ -21,12 +21,21 @@ class JpegCamera
     on_debug: (message) ->
       console.log "JpegCamera: #{message}" if console && console.log
     quality: 0.9
-    shutter: true
+    shutter: true,
+    resolution: [640, 480]
     mirror: false
     timeout: 0
     retry_success: false
     scale: 1.0
+    initial_message_html: "Please allow camera access when prompted by the browser.<br><br>" +
+        "Look for camera icon around your address bar."
+    denied_access_message_html: "<span style=\"color: red;\">" +
+        "You have denied camera access." +
+        "</span><br><br>" +
+        "Look for camera icon around your address bar to change your " +
+        "decision."
 
+  engine_name: ""
   @_canvas_supported: !!document.createElement('canvas').getContext
 
   # Tells whether the browser supports `canvas` element and you can use
@@ -154,7 +163,6 @@ class JpegCamera
     container.appendChild @container
 
     @options = @_extend {}, @constructor.DefaultOptions, options
-
     @_engine_init()
 
   # Bind callback for camera ready event.
@@ -166,7 +174,7 @@ class JpegCamera
   # @param callback [Function] function to call when camera is ready. Camera
   #   object will be available as `this`. This function will receive object with
   #   `video_width` and `video_height` properties as the first argument. These
-  #   indicate camera's native resolution. 
+  #   indicate camera's native resolution.
   #
   # @return [JpegCamera] Self for chaining.
   ready: (callback) ->
@@ -302,6 +310,11 @@ class JpegCamera
     snapshot
 
   _snapshots: {}
+
+  resize_viewport: (newWidth, newHeight) ->
+    @view_width = parseInt newWidth, 10
+    @view_height = parseInt newHeight, 10
+    @_engine_viewport_resize(@view_width, @view_height)
 
   # Hide currently displayed snapshot and show the video stream.
   #

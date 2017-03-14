@@ -30,6 +30,8 @@ if should_try_flash && can_use_flash()
     @_instances: {}
     @_next_id: 1
 
+    engine_name: "flash"
+
     _engine_init: ->
       @_debug "Using Flash engine"
 
@@ -57,6 +59,8 @@ if should_try_flash && can_use_flash()
         id: @_id
         width: @view_width
         height: @view_height
+        hres: @options.resolution[0]
+        vres: @options.resolution[1]
         shutter_url: @options.shutter_mp3_url
       that = this
       callback = (event) ->
@@ -68,6 +72,7 @@ if should_try_flash && can_use_flash()
 
       container_to_be_replaced = document.createElement "div"
       container_to_be_replaced.id = "jpeg_camera_flash_" + @_id
+      container_to_be_replaced.style.display = 'block';
       container_to_be_replaced.style.width = "100%"
       container_to_be_replaced.style.height = "100%"
 
@@ -76,6 +81,11 @@ if should_try_flash && can_use_flash()
       swfobject.embedSWF @options.swf_url, container_to_be_replaced.id,
         @view_width, @view_height, '9', null, flashvars, params, attributes,
         callback
+
+    _engine_viewport_resize: (new_width, new_height) ->
+      @_flash.width = new_width
+      @_flash.height = new_height
+      @_flash._viewport_resize(new_width, new_height)
 
     _engine_play_shutter_sound: ->
       @_flash._play_shutter()

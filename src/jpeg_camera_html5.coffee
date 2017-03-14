@@ -29,6 +29,8 @@ if navigator.getUserMedia
   #
   # @private
   class JpegCameraHtml5 extends JpegCamera
+    engine_name: "html5"
+
     _engine_init: ->
       @_debug "Using HTML5 engine"
 
@@ -48,9 +50,7 @@ if navigator.getUserMedia
       @message.style.paddingRight = "#{horizontal_padding}px"
       @message.style.position = "absolute"
       @message.style.zIndex = 3
-      @message.innerHTML =
-        "Please allow camera access when prompted by the browser.<br><br>" +
-        "Look for camera icon around your address bar."
+      @message.innerHTML = @options.initial_message_html
 
       @container.appendChild @message
 
@@ -76,7 +76,10 @@ if navigator.getUserMedia
       get_user_media_options =
         video:
           optional: [
+            {minWidth: 1920},
             {minWidth: 1280},
+            {minWidth: 1024},
+            {minWidth: 800},
             {minWidth: 640},
             {minWidth: 480},
             {minWidth: 360}
@@ -101,12 +104,7 @@ if navigator.getUserMedia
         # version this will always evaluate to
         # `that._got_error("PERMISSION_DENIED")`.
         (error) ->
-          that.message.innerHTML =
-            "<span style=\"color: red;\">" +
-              "You have denied camera access." +
-            "</span><br><br>" +
-            "Look for camera icon around your address bar to change your " +
-            "decision."
+          that.message.innerHTML = @options.denied_access_message_html
 
           code = error.code
           for key, value of error
@@ -120,6 +118,16 @@ if navigator.getUserMedia
         navigator.getUserMedia get_user_media_options, success, failure
       catch error
         navigator.getUserMedia "video", success, failure
+
+    _engine_viewport_resize: (new_width, new_height) ->
+      @view_width = new_width
+      @view_height = new_height
+      @video.width = new_width
+      @video.height = new_height
+      @video_container.style.width = "#{new_width}px"
+      @video_container.style.height = "#{new_height}px"
+      @video.style.width = "#{new_width}px"
+      @video.style.height = "#{new_height}px"
 
     _engine_play_shutter_sound: ->
       return unless @shutter_buffer
@@ -283,26 +291,10 @@ if navigator.getUserMedia
       video_ratio = @video_width / @video_height
       view_ratio = @view_width / @view_height
 
-      if video_ratio >= view_ratio
-        # fill height, crop width
-        @_debug "Filling height"
-        video_scale = @view_height / @video_height
-        scaled_video_width = Math.round @video_width * video_scale
-
-        width: scaled_video_width
-        height: @view_height
-        x_offset: -Math.floor((scaled_video_width - @view_width) / 2.0)
-        y_offset: 0
-      else
-        # fill width, crop height
-        @_debug "Filling width"
-        video_scale = @view_width / @video_width
-        scaled_video_height = Math.round @video_height * video_scale
-
-        width: @view_width
-        height: scaled_video_height
-        x_offset: 0
-        y_offset: -Math.floor((scaled_video_height - @view_height) / 2.0)
+      width: @view_width
+      height: @view_height
+      x_offset: 0
+      y_offset: 0
 
     _get_capture_crop: ->
       video_ratio = @video_width / @video_height

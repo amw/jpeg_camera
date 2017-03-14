@@ -70,11 +70,22 @@ else {
   },
   quality: 0.9,
   shutter: true,
+  resolution: [640, 480],
   mirror: false,
   timeout: 0,
   retry_success: false,
-  scale: 1.0
+  scale: 1.0,
+  initial_message_html: &quot;Please allow camera access when prompted by the browser.&lt;br&gt;&lt;br&gt;&quot; + &quot;Look for camera icon around your address bar.&quot;,
+  denied_access_message_html: &quot;&lt;span style=\&quot;color: red;\&quot;&gt;&quot; + &quot;You have denied camera access.&quot; + &quot;&lt;&#47;span&gt;&lt;br&gt;&lt;br&gt;&quot; + &quot;Look for camera icon around your address bar to change your &quot; + &quot;decision.&quot;
 }</code></pre>
+    
+  </dd>
+  <dt id='engine_name-variable'>
+    engine_name
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>&quot;&quot;</code></pre>
     
   </dd>
   <dt id='_is_ready-variable'>
@@ -219,6 +230,17 @@ container.</p>
     </span>
     <span class='desc'>
       Capture camera snapshot. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#resize_viewport-dynamic'>
+        #
+(void)
+<b>resize_viewport</b><span>(newWidth, newHeight)</span>
+      </a>
+    </span>
+    <span class='desc'>
     </span>
   </li>
   <li>
@@ -618,7 +640,7 @@ full camera frame without showing the whole frame to the user.</p><p>Resizing co
         )
       </span>
       &mdash;
-      <span class='desc'>function to call when camera is ready. Camera object will be available as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution.  </span>
+      <span class='desc'>function to call when camera is ready. Camera object will be available as <code>this</code>. This function will receive object with <code>video_width</code> and <code>video_height</code> properties as the first argument. These indicate camera&#39;s native resolution. </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -853,6 +875,15 @@ object.</p>
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='resize_viewport-dynamic'>
+      #
+(void)
+<b>resize_viewport</b><span>(newWidth, newHeight)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
     <p class='signature' id='show_stream-dynamic'>
       #
 (JpegCamera)
@@ -1013,7 +1044,7 @@ Flash object or <video> elements.</p>
 </div>
     </div>
     <div id='footer'>
-  October 19, 15 16:56:38 by
+  March 10, 17 18:20:09 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

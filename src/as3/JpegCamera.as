@@ -100,7 +100,9 @@ package {
         shutterSound.load(new URLRequest(flashvars.shutter_url));
       }
 
-      initCamera();
+      var hres:uint = flashvars.hres;
+      var vres:uint = flashvars.vres;
+      initCamera(hres, vres);
 
       ExternalInterface.addCallback("_play_shutter", playShutter);
       ExternalInterface.addCallback("_capture", capture);
@@ -109,6 +111,7 @@ package {
       ExternalInterface.addCallback("_show_stream", showStream);
       ExternalInterface.addCallback("_upload", upload);
       ExternalInterface.addCallback("_get_image_data", getImageData);
+      ExternalInterface.addCallback("_viewport_resize", viewportResize);
     }
 
     //
@@ -135,6 +138,16 @@ package {
         size.width, size.height,
         mirror, quality, scale
       );
+
+      return true;
+    }
+
+    public function viewportResize(newWidth:uint, newHeight:uint):Boolean {
+      viewWidth = newWidth;
+      viewHeight = newHeight;
+      stage.stageWidth = newWidth;
+      stage.stageHeight = newHeight;
+      rescaleVideo();
 
       return true;
     }
@@ -206,7 +219,7 @@ package {
     // Private methods
     //
 
-    private function initCamera():void {
+    private function initCamera(hres:uint, vres:uint):void {
       for (var i:uint = 0, len:uint = Camera.names.length; i < len; i++) {
         debug("Found camera \"" + Camera.names[i] + "\"");
       }
@@ -230,7 +243,7 @@ package {
       }
 
       camera.setMotionLevel(100); // (may help reduce CPU usage)
-      camera.setMode(640, 480, 30);
+      camera.setMode(hres, vres, 30);
 
       camera.addEventListener(StatusEvent.STATUS, cameraStatusChanged);
 
@@ -252,11 +265,7 @@ package {
       }
     }
 
-    private function cameraUnmuted():void {
-      video = new Video(camera.width, camera.height);
-      video.attachCamera(camera);
-      video.smoothing = true;
-
+    private function rescaleVideo():void {
       var videoRatio:Number = camera.width / camera.height;
       var viewRatio:Number = viewWidth / viewHeight;
       var videoScale:Number;
@@ -284,7 +293,14 @@ package {
         video.x = Math.round(camera.width * videoScale);
         video.y = -Math.floor((scaledVideoHeight - viewHeight) / 2.0);
       }
+    }
 
+    private function cameraUnmuted():void {
+      video = new Video(camera.width, camera.height);
+      video.attachCamera(camera);
+      video.smoothing = true;
+
+      rescaleVideo();
       addChild(video);
 
       if (!showingSettings) {
@@ -329,15 +345,6 @@ package {
 
       var snapshotWidth:uint = camera.width;
       var snapshotHeight:uint = camera.height;
-
-      if (videoRatio > viewRatio) {
-        // crop width
-        snapshotWidth = Math.round(camera.height * viewRatio);
-      }
-      else if (videoRatio < viewRatio) {
-        // crop height
-        snapshotHeight = Math.round(camera.width / viewRatio);
-      }
 
       var result:Object = new Object();
       result.width = snapshotWidth;
