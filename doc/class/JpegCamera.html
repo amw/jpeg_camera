@@ -52,96 +52,6 @@ else {
 </div>
 <div class='tags'>
 </div>
-      <h2>Variables Summary</h2>
-      <dl class='constants'>
-  <dt id='DefaultOptions-variable'>
-    DefaultOptions
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{
-  shutter_ogg_url: &quot;&#47;jpeg_camera&#47;shutter.ogg&quot;,
-  shutter_mp3_url: &quot;&#47;jpeg_camera&#47;shutter.mp3&quot;,
-  swf_url: &quot;&#47;jpeg_camera&#47;jpeg_camera.swf&quot;,
-  on_debug: function(message) {
-    if (console &amp;&amp; console.log) {
-      return console.log(&quot;JpegCamera: &quot; + message);
-    }
-  },
-  quality: 0.9,
-  shutter: true,
-  mirror: false,
-  timeout: 0,
-  retry_success: false,
-  scale: 1.0
-}</code></pre>
-    
-  </dd>
-  <dt id='_is_ready-variable'>
-    _is_ready
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>false</code></pre>
-    
-  </dd>
-  <dt id='_error_occured-variable'>
-    _error_occured
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>false</code></pre>
-    
-  </dd>
-  <dt id='StatsCaptureScale-variable'>
-    StatsCaptureScale
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>0.2</code></pre>
-    
-  </dd>
-  <dt id='_snapshots-variable'>
-    _snapshots
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>{}</code></pre>
-    
-  </dd>
-  <dt id='_displayed_snapshot-variable'>
-    _displayed_snapshot
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>null</code></pre>
-    
-  </dd>
-  <dt id='_overlay-variable'>
-    _overlay
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>null</code></pre>
-    
-  </dd>
-  <dt id='view_width-variable'>
-    view_width
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>null</code></pre>
-    
-  </dd>
-  <dt id='view_height-variable'>
-    view_height
-    =
-  </dt>
-  <dd>
-    <pre><code class='coffeescript'>null</code></pre>
-    
-  </dd>
-</dl>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -155,19 +65,6 @@ else {
     <span class='desc'>
       <p>Tells whether the browser supports <code>canvas</code> element and you can use <a href='../class/Snapshot.html#get_canvas-dynamic'>Snapshot#get_canvas</a> method to display snapshots outside the camera
 container.</p>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_add_prefixed_style-static'>
-        .
-(void)
-<b>_add_prefixed_style</b><span>(element, style, value)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Helper for setting prefixed CSS declarations. 
     </span>
   </li>
 </ul>
@@ -245,109 +142,6 @@ container.</p>
       Discard all snapshots and show video stream. 
     </span>
   </li>
-  <li>
-    <span class='signature'>
-      <a href='#_extend-dynamic'>
-        #
-(void)
-<b>_extend</b><span>(object)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Used to extend options objects. 
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_debug-dynamic'>
-        #
-(void)
-<b>_debug</b><span>(message)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Log debug messages 
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_display-dynamic'>
-        #
-(void)
-<b>_display</b><span>(snapshot)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_discard-dynamic'>
-        #
-(void)
-<b>_discard</b><span>(snapshot)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_prepared-dynamic'>
-        #
-(void)
-<b>_prepared</b><span>(video_width, video_height)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Called by the engine when camera is ready. 
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_wait_until_stream_looks_ok-dynamic'>
-        #
-(void)
-<b>_wait_until_stream_looks_ok</b><span>(show_debug)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      This peaks into the video stream using very small rendering and calculates colors mean value and standard deviation.
-
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_got_error-dynamic'>
-        #
-(void)
-<b>_got_error</b><span>(error)</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Called by the engine when error occurs. 
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#_block_element_access-dynamic'>
-        #
-(void)
-<b>_block_element_access</b><span>()</span>
-      </a>
-    </span>
-    <span class='note private title'>Private</span>
-    <span class='desc'>
-      Shows an overlay over the container to block mouse access. 
-    </span>
-  </li>
 </ul>
       <h2>Class Method Details</h2>
       <div class='methods'>
@@ -376,20 +170,6 @@ element.</p>
       <span class='desc'>True if <code>canvas</code> is supported. </span>
     </li>
   </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_add_prefixed_style-static'>
-      .
-(void)
-<b>_add_prefixed_style</b><span>(element, style, value)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Helper for setting prefixed CSS declarations.</p>
-</div>
-<div class='tags'>
 </div>
   </div>
 </div>
@@ -900,120 +680,10 @@ object.</p>
   </ul>
 </div>
   </div>
-  <div class='method_details'>
-    <p class='signature' id='_extend-dynamic'>
-      #
-(void)
-<b>_extend</b><span>(object)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Used to extend options objects.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_debug-dynamic'>
-      #
-(void)
-<b>_debug</b><span>(message)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Log debug messages</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_display-dynamic'>
-      #
-(void)
-<b>_display</b><span>(snapshot)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_discard-dynamic'>
-      #
-(void)
-<b>_discard</b><span>(snapshot)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_prepared-dynamic'>
-      #
-(void)
-<b>_prepared</b><span>(video_width, video_height)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Called by the engine when camera is ready.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_wait_until_stream_looks_ok-dynamic'>
-      #
-(void)
-<b>_wait_until_stream_looks_ok</b><span>(show_debug)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>This peaks into the video stream using very small rendering and calculates
-colors mean value and standard deviation. If standard deviation is
-negligible then we assume camera isn&#39;t ready yet and wait a little longer.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_got_error-dynamic'>
-      #
-(void)
-<b>_got_error</b><span>(error)</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Called by the engine when error occurs.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='_block_element_access-dynamic'>
-      #
-(void)
-<b>_block_element_access</b><span>()</span>
-      <span class='note private'>Private</span>
-      <br>
-    </p>
-    <div class='docstring'>
-  <p>Shows an overlay over the container to block mouse access.</p><p>Prevents changing flash permission after camera has been enabled or stopping
-the HTML5 video stream - both options available through context menu of
-Flash object or <video> elements.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
 </div>
     </div>
     <div id='footer'>
-  October 19, 15 16:56:38 by
+  June 06, 17 22:09:31 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
