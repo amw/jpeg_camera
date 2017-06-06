@@ -3,13 +3,17 @@ class Snapshot
   # Snapshot IDs are unique within browser session. This class variable holds
   # the value of the next ID to use.
   #
+  # @nodoc
   # @private
   @_next_snapshot_id: 1
 
+  # @nodoc
   # @private
   constructor: (@camera, @options) ->
     @id = @constructor._next_snapshot_id++
 
+  # @nodoc
+  # @private
   _discarded: false
 
   # Display the snapshot with the camera element it was taken with.
@@ -100,6 +104,8 @@ class Snapshot
       , 1
     true
 
+  # @nodoc
+  # @private
   _extra_canvas: null
 
   # Get the file that would be uploaded to the server as a Blob object.
@@ -149,7 +155,11 @@ class Snapshot
       , 1
     true
 
+  # @nodoc
+  # @private
   _blob: null
+  # @nodoc
+  # @private
   _blob_mime: null
 
   # Get ImageData object containing color values for each pixel of the snapshot.
@@ -198,6 +208,8 @@ class Snapshot
 
     null
 
+  # @nodoc
+  # @private
   _image_data: null
 
   # Upload the snapshot to the server.
@@ -272,8 +284,14 @@ class Snapshot
 
     @
 
+  # @nodoc
+  # @private
   _upload_options: {}
+  # @nodoc
+  # @private
   _uploading: false
+  # @nodoc
+  # @private
   _retry: 1
 
   # Bind callback for upload complete event.
@@ -300,7 +318,11 @@ class Snapshot
       cache.on_upload_done.call @, @_response
     @
 
+  # @nodoc
+  # @private
   _done: false
+  # @nodoc
+  # @private
   _response: null
 
   # Bind callback for upload error event.
@@ -329,8 +351,14 @@ class Snapshot
       cache.on_upload_fail.call @, @_status, @_error_message, @_response
     @
 
+  # @nodoc
+  # @private
   _fail: false
+  # @nodoc
+  # @private
   _status: null
+  # @nodoc
+  # @private
   _error_message: null
 
   # Hide and discard this snapshot.
@@ -348,12 +376,14 @@ class Snapshot
 
   # Snapshot options
   #
+  # @nodoc
   # @private
   _options: ->
     @camera._extend {}, @camera.options, @options, @_upload_options
 
   # Send the upload request
   #
+  # @nodoc
   # @private
   _start_upload: (cache) ->
     if "string" == typeof cache.csrf_token && cache.csrf_token.length > 0
@@ -371,6 +401,7 @@ class Snapshot
 
   # Calculate the snapshot pixel statistics given image data and call callback.
   #
+  # @nodoc
   # @private
   _get_stats: (data, callback) ->
     unless @_stats
@@ -400,10 +431,13 @@ class Snapshot
       @_stats.std = Math.round(Math.sqrt(sum_of_square_distances / n))
     callback.call @, @_stats
 
+  # @nodoc
+  # @private
   _stats: null
 
   # Called by the camera engine when upload completes.
   #
+  # @nodoc
   # @private
   _upload_done: ->
     @camera._debug "Upload completed with status #{@_status}"
@@ -438,6 +472,7 @@ class Snapshot
 
   # Called by the camera engine when upload fails.
   #
+  # @nodoc
   # @private
   _upload_fail: ->
     @camera._debug "Upload failed with status #{@_status}"

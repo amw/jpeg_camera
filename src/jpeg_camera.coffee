@@ -14,6 +14,8 @@
 #       });
 #     }
 class JpegCamera
+  # @nodoc
+  # @private
   @DefaultOptions =
     shutter_ogg_url: "/jpeg_camera/shutter.ogg"
     shutter_mp3_url: "/jpeg_camera/shutter.mp3"
@@ -27,6 +29,8 @@ class JpegCamera
     retry_success: false
     scale: 1.0
 
+  # @nodoc
+  # @private
   @_canvas_supported: !!document.createElement('canvas').getContext
 
   # Tells whether the browser supports `canvas` element and you can use
@@ -177,6 +181,8 @@ class JpegCamera
         video_height: @video_height
     @
 
+  # @nodoc
+  # @private
   _is_ready: false
 
   # Bind callback for camera error events.
@@ -200,8 +206,12 @@ class JpegCamera
       @options.on_error.call @, @_error_occured
     @
 
+  # @nodoc
+  # @private
   _error_occured: false
 
+  # @nodoc
+  # @private
   @StatsCaptureScale = 0.2
 
   # Peak into video stream and calculate pixel statistics.
@@ -301,6 +311,8 @@ class JpegCamera
 
     snapshot
 
+  # @nodoc
+  # @private
   _snapshots: {}
 
   # Hide currently displayed snapshot and show the video stream.
@@ -325,6 +337,7 @@ class JpegCamera
 
   # Used to extend options objects.
   #
+  # @nodoc
   # @private
   _extend: (object) ->
     sources = Array.prototype.slice.call arguments, 1
@@ -336,17 +349,22 @@ class JpegCamera
 
   # Log debug messages
   #
+  # @nodoc
   # @private
   _debug: (message) ->
     @options.on_debug.call @, message if @options.on_debug
 
+  # @nodoc
   # @private
   _display: (snapshot) ->
     @_engine_display snapshot
     @_displayed_snapshot = snapshot
 
+  # @nodoc
+  # @private
   _displayed_snapshot: null
 
+  # @nodoc
   # @private
   _discard: (snapshot) ->
     if @_displayed_snapshot == snapshot
@@ -357,6 +375,7 @@ class JpegCamera
 
   # Called by the engine when camera is ready.
   #
+  # @nodoc
   # @private
   _prepared: (video_width, video_height) ->
     @video_width = video_width
@@ -373,6 +392,7 @@ class JpegCamera
   # colors mean value and standard deviation. If standard deviation is
   # negligible then we assume camera isn't ready yet and wait a little longer.
   #
+  # @nodoc
   # @private
   _wait_until_stream_looks_ok: (show_debug) ->
     @get_stats (stats) ->
@@ -395,6 +415,7 @@ class JpegCamera
 
   # Called by the engine when error occurs.
   #
+  # @nodoc
   # @private
   _got_error: (error) ->
     @_debug "Error - #{error}"
@@ -408,6 +429,7 @@ class JpegCamera
   # the HTML5 video stream - both options available through context menu of
   # Flash object or <video> elements.
   #
+  # @nodoc
   # @private
   _block_element_access: ->
     @_overlay = document.createElement "div"
@@ -420,13 +442,20 @@ class JpegCamera
 
     @container.appendChild @_overlay
 
+  # @nodoc
+  # @private
   _overlay: null
 
+  # @nodoc
+  # @private
   view_width: null
+  # @nodoc
+  # @private
   view_height: null
 
   # Helper for setting prefixed CSS declarations.
   #
+  # @nodoc
   # @private
   @_add_prefixed_style: (element, style, value) ->
     uppercase_style = style.charAt(0).toUpperCase() + style.slice(1)
