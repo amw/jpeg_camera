@@ -103,6 +103,14 @@
 
     JpegCamera.prototype._snapshots = {};
 
+    JpegCamera.prototype.stop = function() {
+      if (navigator.getUserMedia) {
+        if (this.activeTrack) {
+           return this.activeTrack.stop();
+         }
+      }
+    };
+
     JpegCamera.prototype.show_stream = function() {
       this._engine_show_stream();
       this._displayed_snapshot = null;
