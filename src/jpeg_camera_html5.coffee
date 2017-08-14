@@ -73,7 +73,7 @@ if navigator.getUserMedia
         else if can_play mpeg_audio
           @_load_shutter_sound @options.shutter_mp3_url
 
-      get_user_media_options =
+      default_media_options =
         video:
           optional: [
             {minWidth: 1280},
@@ -81,6 +81,11 @@ if navigator.getUserMedia
             {minWidth: 480},
             {minWidth: 360}
           ]
+
+      if typeof @options.get_media_options is 'function'
+        get_user_media_options = @options.get_media_options default_media_options
+      else
+        get_user_media_options = default_media_options
 
       that = this
       success =
