@@ -85,6 +85,8 @@ if navigator.getUserMedia
       that = this
       success =
         (stream) ->
+          that.stream = stream
+
           that._remove_message()
 
           if window.URL
