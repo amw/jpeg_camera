@@ -321,10 +321,23 @@
         success = function(stream) {
           that._remove_message();
           if (window.URL) {
-            that.video.src = URL.createObjectURL(stream);
-          } else {
-            that.video.src = stream;
-          }
+		    /**
+		     * Try to use srcObject and gracefully
+		     * falls back to src if srcObject throws an error.
+		     */
+		    try {
+		      that.video.srcObject = stream;
+		    } catch (error) {
+		      /**
+		       * [Deprecation] URL.createObjectURL with media streams is deprecated and will be removed in M68,
+		       *  around July 2018. Please use HTMLMediaElement.srcObject instead.
+		       *  See https://www.chromestatus.com/features/5618491470118912 for more details.
+		       */
+		      that.video.src = URL.createObjectURL(stream);
+			}
+		  } else {
+		    that.video.src = stream;
+		  }
           that._block_element_access();
           return that._wait_for_video_ready();
         };
