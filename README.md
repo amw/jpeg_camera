@@ -1,3 +1,9 @@
+# Project Status
+
+This project is no longer actively maintained. The main selling point of this library was that it worked with either Flash or HTML5 – it abstracted both technologies behind a simple API. In 2018 Flash is irrelevant and the simple API of this library is a limiting factor of what one can do with a camera in HTML5.
+
+Thanks to everyone for the interest over the years.
+
 ## About
 
 JpegCamera is a JavaScript library that allows you to display a camera stream on
