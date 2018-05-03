@@ -1,4 +1,4 @@
-/*! JpegCamera 1.3.3 | 2016-09-18
+/*! JpegCamera 1.3.3 | 2017-08-16
     (c) 2013 Adam Wrobel
     https://amw.github.io/jpeg_camera */
 (function() {
@@ -319,6 +319,7 @@
         };
         that = this;
         success = function(stream) {
+          that.stream = stream;
           that._remove_message();
           if (window.URL) {
             that.video.src = URL.createObjectURL(stream);
