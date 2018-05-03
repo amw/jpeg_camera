@@ -1,4 +1,4 @@
-/*! JpegCamera 1.3.3 | 2016-09-18
+/*! JpegCamera 1.3.3 | 2017-08-16
     (c) 2013 Adam Wrobel
     https://amw.github.io/jpeg_camera */
 (function() {
@@ -266,7 +266,7 @@
       }
 
       JpegCameraHtml5.prototype._engine_init = function() {
-        var error, failure, get_user_media_options, horizontal_padding, success, that, vertical_padding;
+        var default_media_options, error, failure, get_user_media_options, horizontal_padding, success, that, vertical_padding;
         this._debug("Using HTML5 engine");
         vertical_padding = Math.floor(this.view_height * 0.2);
         horizontal_padding = Math.floor(this.view_width * 0.2);
@@ -302,7 +302,7 @@
             this._load_shutter_sound(this.options.shutter_mp3_url);
           }
         }
-        get_user_media_options = {
+        default_media_options = {
           video: {
             optional: [
               {
@@ -317,6 +317,11 @@
             ]
           }
         };
+        if (typeof this.options.get_media_options === 'function') {
+          get_user_media_options = this.options.get_media_options(default_media_options);
+        } else {
+          get_user_media_options = default_media_options;
+        }
         that = this;
         success = function(stream) {
           that._remove_message();
