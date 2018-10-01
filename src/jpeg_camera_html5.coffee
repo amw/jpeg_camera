@@ -87,10 +87,13 @@ if navigator.getUserMedia
         (stream) ->
           that._remove_message()
 
-          if window.URL
-            that.video.src = URL.createObjectURL stream
+          #patch for FF 62
+          if typeof that.video.srcObject is "object"
+              that.video.srcObject = stream
+          else if window.URL
+              that.video.src = URL.createObjectURL stream
           else
-            that.video.src = stream
+              that.video.src = stream
 
           that._block_element_access()
 
